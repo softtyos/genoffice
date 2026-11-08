@@ -43,12 +43,12 @@ import {
   parseRedactionNameMirror,
   parseRedactionPart,
   type SheetRedactionState,
-} from '@genoffice/xlsx-gateway/gateway/xlsx-redaction'
-import { parseSheetElements } from '@genoffice/xlsx-gateway/gateway/xlsx-sheets'
+} from '@softty/xlsx-gateway/gateway/xlsx-redaction'
+import { parseSheetElements } from '@softty/xlsx-gateway/gateway/xlsx-sheets'
 import {
   readArchiveEntryText,
   type ArchiveClient,
-} from '@genoffice/xlsx-gateway/gateway/xlsx-package-io'
+} from '@softty/xlsx-gateway/gateway/xlsx-package-io'
 
 /// Only the entry names are needed, so this stays structural rather than
 /// re-validating every CRC and size the save path checks. Shared with the

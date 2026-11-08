@@ -8,7 +8,7 @@
  * this list rather than an invisible one.
  */
 
-import { LANGS } from '@genoffice/i18n'
+import { LANGS } from '@softty/i18n'
 import { topicTitle } from './help-titles'
 
 export type HelpGroupId = 'start' | 'apps' | 'ai' | 'manage'

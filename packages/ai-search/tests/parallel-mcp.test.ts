@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defaultAiSettings } from '@genoffice/ai-provider'
+import { defaultAiSettings } from '@softty/ai-provider'
 import { webSearch } from '../src/index'
 import { searchOptionsFromSettings, testSearchProvider } from '../src/search-tools'
 

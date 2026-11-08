@@ -1,23 +1,22 @@
 <p align="center">
-  <a href="https://genoffice.ai/">
+  <a href="https://office.softty.net/">
     <picture>
       <source srcset="docs/assets/readme/hero-dark.webp" media="(prefers-color-scheme: dark)">
-      <img src="docs/assets/readme/hero.webp" alt="GenOffice — the open-source AI Office suite: Docs, Sheets, Slides, PDF, Markdown and HTML with a built-in AI panel" width="100%">
+      <img src="docs/assets/readme/hero.webp" alt="Softty Office — the open-source AI Office suite: Docs, Sheets, Slides, PDF, Markdown and HTML with a built-in AI panel" width="100%">
     </picture>
   </a>
 </p>
 
-<h1 align="center">GenOffice</h1>
+<h1 align="center">Softty Office</h1>
 
-<p align="center"><b>The world's first full-featured open-source AI Office suite.</b><br>
-Word, Excel, PowerPoint and PDF files, edited by you and your AI, saved back in the real formats.</p>
+<p align="center"><b>Personal &amp; Enterprise Open-Source AI Office Suite for Softty.net.</b><br>
+Word, Excel, PowerPoint and PDF files, edited by you and your AI, saved back in the real formats.<br>
+<sub>Based on GenOffice (Apache 2.0). Maintained &amp; Developed by <a href="https://office.softty.net">Softty.net</a>.</sub></p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/genspark-ai/genoffice" alt="License: Apache-2.0"></a>
-  <a href="https://github.com/genspark-ai/genoffice/releases/latest"><img src="https://img.shields.io/github/v/release/genspark-ai/genoffice" alt="Latest release"></a>
-  <a href="https://github.com/genspark-ai/genoffice/releases"><img src="https://img.shields.io/github/downloads/genspark-ai/genoffice/total" alt="Downloads"></a>
-  <a href="https://github.com/genspark-ai/genoffice/stargazers"><img src="https://img.shields.io/github/stars/genspark-ai/genoffice?style=flat" alt="GitHub stars"></a>
-  <a href="https://x.com/merrickbuilds"><img src="https://img.shields.io/badge/follow-%40merrickbuilds-000000?logo=x&logoColor=white" alt="Follow @merrickbuilds on X"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0"></a>
+  <a href="https://office.softty.net"><img src="https://img.shields.io/badge/portal-office.softty.net-2563eb" alt="Portal: office.softty.net"></a>
+  <a href="https://github.com/softtyos/genoffice"><img src="https://img.shields.io/badge/repo-softtyos%2Fgenoffice-111827" alt="Repository"></a>
 </p>
 
 <p align="center"><b>English</b> · <a href="docs/i18n/README.es.md">Español</a> · <a href="docs/i18n/README.pt-BR.md">Português</a> · <a href="docs/i18n/README.de.md">Deutsch</a> · <a href="docs/i18n/README.fr.md">Français</a> · <a href="docs/i18n/README.zh-CN.md">简体中文</a> · <a href="docs/i18n/README.zh-TW.md">繁體中文</a> · <a href="docs/i18n/README.ko.md">한국어</a> · <a href="docs/i18n/README.ja.md">日本語</a> · <a href="docs/i18n/README.ar.md">العربية</a> · <a href="docs/i18n/README.ru.md">Русский</a> · <a href="docs/i18n/README.it.md">Italiano</a> · <a href="docs/i18n/README.nl.md">Nederlands</a> · <a href="docs/i18n/README.pl.md">Polski</a> · <a href="docs/i18n/README.cs.md">Čeština</a> · <a href="docs/i18n/README.id.md">Bahasa Indonesia</a> · <a href="docs/i18n/README.ms.md">Bahasa Melayu</a> · <a href="docs/i18n/README.th.md">ไทย</a> · <a href="docs/i18n/README.hi.md">हिन्दी</a> · <a href="docs/i18n/README.he.md">עברית</a> · <a href="docs/i18n/README.vi.md">Tiếng Việt</a> · <a href="docs/i18n/README.tr.md">Türkçe</a></p><!-- lang-switcher · public-hygiene: allow -->
@@ -603,7 +602,7 @@ npm run dist:linux   # package Linux AppImage + deb + rpm
 ```
 
 The sheets app additionally needs a Rust toolchain for its xlsx sidecar
-(`cargo` on PATH); `npm run build -w @genoffice/sheets` compiles it
+(`cargo` on PATH); `npm run build -w @softty/sheets` compiles it
 automatically. See [CONTRIBUTING.md](CONTRIBUTING.md) for the checks every
 change must pass and how pull requests land.
 

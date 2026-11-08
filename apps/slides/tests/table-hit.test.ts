@@ -1,4 +1,4 @@
-import type { TableRenderNode } from '@genoffice/pptx-render'
+import type { TableRenderNode } from '@softty/pptx-render'
 import { describe, expect, it } from 'vitest'
 import {
   tableCellAtPoint,

@@ -13,8 +13,8 @@ import {
   mindMapToMermaid,
   parseMindMapTree,
   wrapLabel,
-} from '@genoffice/agent-core/mind-map'
-import type { MindMapTreeNode } from '@genoffice/agent-core'
+} from '@softty/agent-core/mind-map'
+import type { MindMapTreeNode } from '@softty/agent-core'
 
 // Undestroyed views leave DOMObserver flush timers that fire after jsdom teardown
 // ("document is not defined" unhandled error) — destroy every editor we create.

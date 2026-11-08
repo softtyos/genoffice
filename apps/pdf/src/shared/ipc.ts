@@ -1,8 +1,8 @@
-import type { AiPanelPrefs } from '@genoffice/ui'
-import type { Lang } from '@genoffice/i18n'
-import type { AiSettings, AiStreamChunk, AiStreamRequest } from '@genoffice/ai-provider'
-import type { PrintDuplex, PrintJobOptions, PrinterInfo } from '@genoffice/electron-utils/print-job'
-import type { PrinterOption } from '@genoffice/electron-utils/printer-options'
+import type { AiPanelPrefs } from '@softty/ui'
+import type { Lang } from '@softty/i18n'
+import type { AiSettings, AiStreamChunk, AiStreamRequest } from '@softty/ai-provider'
+import type { PrintDuplex, PrintJobOptions, PrinterInfo } from '@softty/electron-utils/print-job'
+import type { PrinterOption } from '@softty/electron-utils/printer-options'
 export type { PrintDuplex, PrintJobOptions, PrinterInfo }
 export type { PrinterOption }
 

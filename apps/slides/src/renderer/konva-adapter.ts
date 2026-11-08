@@ -16,8 +16,8 @@ import type {
   ShapeRenderNode,
   PictureRenderNode,
   GlyphRun,
-} from '@genoffice/pptx-render'
-import { patternGrid } from '@genoffice/pptx-render'
+} from '@softty/pptx-render'
+import { patternGrid } from '@softty/pptx-render'
 import { classifyCjkScript } from '../shared/cjk-script'
 
 /**

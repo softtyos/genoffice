@@ -191,7 +191,7 @@ import {
   spliceCharColors,
 } from './color-runs'
 import type { CharStyle } from './color-runs'
-import { platformShortcuts } from '@genoffice/i18n'
+import { platformShortcuts } from '@softty/i18n'
 import {
   Dropdown,
   aiPanelInitiallyOpen,
@@ -199,7 +199,7 @@ import {
   useDismissablePopover,
   useRibbonCollapse,
   useAiSidebarEnabled,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import { useI18n } from './i18n/locale'
 import { useAutosave } from './useAutosave'
 import type {

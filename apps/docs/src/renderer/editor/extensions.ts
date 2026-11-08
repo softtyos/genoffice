@@ -88,7 +88,7 @@ import {
   type TableModel,
   type TextboxDisplay,
   type TextboxListMarker,
-} from '@genoffice/docx-engine'
+} from '@softty/docx-engine'
 import {
   substituteBullet,
   markerFallbackFace,

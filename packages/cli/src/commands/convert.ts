@@ -1,7 +1,7 @@
 import { mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, dirname, extname, join } from 'node:path'
-import { PdfLoadError } from '@genoffice/pdf2docx'
+import { PdfLoadError } from '@softty/pdf2docx'
 import { flagBool, flagString, type ParsedArgs } from '../args'
 import { csvToXlsx, sheetNameFromStem } from '../formats/csv'
 import { convertHwp } from '../formats/hwp'

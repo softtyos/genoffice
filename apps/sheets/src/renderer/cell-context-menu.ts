@@ -16,7 +16,7 @@ import {
   getDisplayValueFromCell,
 } from '@univerjs/core'
 import type { IAccessor, ICommand, IDisposable, ILocales } from '@univerjs/core'
-import type { Lang } from '@genoffice/i18n'
+import type { Lang } from '@softty/i18n'
 import { SheetsSelectionsService, getSheetCommandTarget } from '@univerjs/sheets'
 import {
   ClearSheetsFilterCriteriaCommand,

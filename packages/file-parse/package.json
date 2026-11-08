@@ -1,5 +1,5 @@
 {
-  "name": "@genoffice/file-parse",
+  "name": "@softty/file-parse",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "private": true,
@@ -14,8 +14,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@genoffice/docx-engine": "*",
-    "@genoffice/xlsx-gateway": "*",
+    "@softty/docx-engine": "*",
+    "@softty/xlsx-gateway": "*",
     "cfb": "^1.2.2",
     "fast-xml-parser": "^5.3.4",
     "jszip": "^3.10.1",

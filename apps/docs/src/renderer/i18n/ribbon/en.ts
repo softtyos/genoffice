@@ -1,5 +1,5 @@
 import type { zh } from './zh'
-import { ribbonCommonEn } from '@genoffice/i18n'
+import { ribbonCommonEn } from '@softty/i18n'
 
 export const en = {
   ...ribbonCommonEn,

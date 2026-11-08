@@ -9,51 +9,51 @@ const local = (rel: string) => fileURLToPath(new URL(rel, import.meta.url))
 export default defineConfig({
   resolve: {
     alias: {
-      '@genoffice/docx-engine/lazy-media': local('../../packages/docx-engine/src/lazy-media.ts'),
-      '@genoffice/docx-engine/zip-splice': local('../../packages/docx-engine/src/zip-splice.ts'),
-      '@genoffice/docx-engine': local('../../packages/docx-engine/src/index.ts'),
-      '@genoffice/font-metrics/resolve': local('../../packages/font-metrics/src/resolve.ts'),
-      '@genoffice/font-metrics/word-faces.json': local(
+      '@softty/docx-engine/lazy-media': local('../../packages/docx-engine/src/lazy-media.ts'),
+      '@softty/docx-engine/zip-splice': local('../../packages/docx-engine/src/zip-splice.ts'),
+      '@softty/docx-engine': local('../../packages/docx-engine/src/index.ts'),
+      '@softty/font-metrics/resolve': local('../../packages/font-metrics/src/resolve.ts'),
+      '@softty/font-metrics/word-faces.json': local(
         '../../packages/font-metrics/word-faces.json',
       ),
-      '@genoffice/font-metrics': local('../../packages/font-metrics/src/index.ts'),
+      '@softty/font-metrics': local('../../packages/font-metrics/src/index.ts'),
       // subpath before the bare name: string aliases are prefix replacements
-      '@genoffice/electron-utils/headless-export': local(
+      '@softty/electron-utils/headless-export': local(
         '../../packages/electron-utils/src/headless-export.ts',
       ),
-      '@genoffice/electron-utils/atomic-write': local(
+      '@softty/electron-utils/atomic-write': local(
         '../../packages/electron-utils/src/atomic-write.ts',
       ),
-      '@genoffice/electron-utils/safe-external-url': local(
+      '@softty/electron-utils/safe-external-url': local(
         '../../packages/electron-utils/src/safe-external-url.ts',
       ),
-      '@genoffice/electron-utils/print-cups': local(
+      '@softty/electron-utils/print-cups': local(
         '../../packages/electron-utils/src/print-cups.ts',
       ),
-      '@genoffice/electron-utils/print-job': local(
+      '@softty/electron-utils/print-job': local(
         '../../packages/electron-utils/src/print-job.ts',
       ),
-      '@genoffice/electron-utils/generated-images': local(
+      '@softty/electron-utils/generated-images': local(
         '../../packages/electron-utils/src/generated-images.ts',
       ),
-      '@genoffice/electron-utils/remote-image': local(
+      '@softty/electron-utils/remote-image': local(
         '../../packages/electron-utils/src/remote-image.ts',
       ),
-      '@genoffice/electron-utils/safe-remote-url': local(
+      '@softty/electron-utils/safe-remote-url': local(
         '../../packages/electron-utils/src/safe-remote-url.ts',
       ),
-      '@genoffice/electron-utils': local('../../packages/electron-utils/src/index.ts'),
-      '@genoffice/ai-provider/codex-app-server': local(
+      '@softty/electron-utils': local('../../packages/electron-utils/src/index.ts'),
+      '@softty/ai-provider/codex-app-server': local(
         '../../packages/ai-provider/src/codex-app-server.ts',
       ),
-      '@genoffice/ai-provider/trace': local('../../packages/ai-provider/src/trace.ts'),
-      '@genoffice/ai-provider/custom-models': local(
+      '@softty/ai-provider/trace': local('../../packages/ai-provider/src/trace.ts'),
+      '@softty/ai-provider/custom-models': local(
         '../../packages/ai-provider/src/custom-models.ts',
       ),
-      '@genoffice/ai-provider/browser': local('../../packages/ai-provider/src/browser.ts'),
-      '@genoffice/ai-provider': local('../../packages/ai-provider/src/index.ts'),
-      '@genoffice/i18n': local('../../packages/i18n/src/index.ts'),
-      '@genoffice/ui': local('../../packages/ui/src/index.ts'),
+      '@softty/ai-provider/browser': local('../../packages/ai-provider/src/browser.ts'),
+      '@softty/ai-provider': local('../../packages/ai-provider/src/index.ts'),
+      '@softty/i18n': local('../../packages/i18n/src/index.ts'),
+      '@softty/ui': local('../../packages/ui/src/index.ts'),
     },
   },
   test: {

@@ -1,0 +1,14 @@
+<svg width="1160" height="240" viewBox="0 0 1160 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#softty_clip)">
+    <rect width="240" height="240" rx="54" fill="black"/>
+    <rect x="46" y="44" width="96" height="96" rx="22" fill="white"/>
+    <rect x="98" y="100" width="96" height="96" rx="22" fill="white"/>
+    <path d="M98 118C98 108.059 106.059 100 116 100H142V122C142 131.941 133.941 140 124 140H98V118Z" fill="black"/>
+  </g>
+  <text x="296" y="168" fill="black" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Inter, Roboto, Helvetica, Arial, sans-serif" font-size="136" font-weight="800" letter-spacing="-4">Softty Office</text>
+  <defs>
+    <clipPath id="softty_clip">
+      <rect width="240" height="240" fill="white"/>
+    </clipPath>
+  </defs>
+</svg>

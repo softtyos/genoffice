@@ -8,7 +8,7 @@
  * like a bundling mistake tomorrow.
  */
 
-import type { SkillRelevance } from '@genoffice/agent-core'
+import type { SkillRelevance } from '@softty/agent-core'
 
 /** one SKILL.md we found, with everything the palette needs to show it */
 export interface FoundSkill {

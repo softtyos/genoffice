@@ -1,4 +1,4 @@
-import { printHtmlDocument, type PrintDialogWindow } from '@genoffice/electron-utils'
+import { printHtmlDocument, type PrintDialogWindow } from '@softty/electron-utils'
 
 export type PrintWindow = PrintDialogWindow
 

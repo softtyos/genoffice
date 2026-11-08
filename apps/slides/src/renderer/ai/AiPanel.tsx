@@ -5,7 +5,7 @@ import {
   type AiModelPickerBridge,
   AiSkillChips,
   AiSkillsMenu,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import {
   AgentLoop,
@@ -14,9 +14,9 @@ import {
   IPC_STREAM_SILENCE_TIMEOUT_MS,
   type AgentImage,
   type ToolDisplay,
-} from '@genoffice/agent-core'
-import type { RenderSlide } from '@genoffice/pptx-render'
-import { imageGenerationAvailable, mediaAnalysisAvailable } from '@genoffice/ai-provider/browser'
+} from '@softty/agent-core'
+import type { RenderSlide } from '@softty/pptx-render'
+import { imageGenerationAvailable, mediaAnalysisAvailable } from '@softty/ai-provider/browser'
 import type { AiSettings, AttachmentAddResult, AttachmentMeta } from '../../shared/ipc'
 import { ATTACHMENT_IMAGE_EXTS } from '../../shared/ipc'
 import {
@@ -27,7 +27,7 @@ import {
   formatAttachmentSize,
   SentAttachments,
   truncateCardName,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import {
   createSlidesSkill,
   type DeckAccess,
@@ -69,7 +69,7 @@ import {
   useChatRunQueue,
   type AiScopeQuoteData,
   type AiTokenUsageView,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import { GensparkMark } from '../components/icons'
 import sendEnterOn from '../assets/send-enter-on.png'
 import sendEnterOff from '../assets/send-enter-off.png'

@@ -1,11 +1,11 @@
-import type { AiPanelPrefs } from '@genoffice/ui'
-import type { Lang } from '@genoffice/i18n'
+import type { AiPanelPrefs } from '@softty/ui'
+import type { Lang } from '@softty/i18n'
 import type {
   AiSettings,
   AiStreamChunk,
   AiStreamRequest,
   GenSparkAccountStatus,
-} from '@genoffice/ai-provider'
+} from '@softty/ai-provider'
 import type { ExportImageMime } from './export-image-mime'
 
 export const MAX_PASTED_IMAGE_BYTES = 50 * 1024 * 1024

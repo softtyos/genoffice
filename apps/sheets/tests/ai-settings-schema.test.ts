@@ -4,7 +4,7 @@ import {
   resolveCustomEndpoints,
   resolveProfileCredential,
   type AiCustomProfile,
-} from '@genoffice/ai-provider'
+} from '@softty/ai-provider'
 import {
   aiChatRequestSchema,
   aiSettingsInputSchema,

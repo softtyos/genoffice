@@ -36,7 +36,7 @@ import { installGridGrowth } from './grid-growth'
 import {
   pollUntilReady,
   runHeadlessRendererExport,
-} from '@genoffice/electron-utils/headless-export'
+} from '@softty/electron-utils/headless-export'
 import {
   commitActiveCellEditor,
   installJournalSuppressionUndoFilter,
@@ -54,7 +54,7 @@ import {
 import {
   hashSheetPassword,
   type SheetPasswordHash,
-} from '@genoffice/xlsx-gateway/gateway/xlsx-protection-hash'
+} from '@softty/xlsx-gateway/gateway/xlsx-protection-hash'
 import { applyChangePlan, planFromOps, type OpExecutorContext } from './op-executor'
 import { installSheetsMcpBridge, type McpSheetHandlers } from './mcp-bridge'
 import { renameChartRefsForSheet } from './workbook-ops'
@@ -79,7 +79,7 @@ import {
   ImageViewer,
   type AiTokenUsageView,
   type AiScopeQuoteData,
-} from '@genoffice/ui'
+} from '@softty/ui'
 
 import {
   CellValueType,
@@ -147,14 +147,14 @@ import {
   composeSkills,
   withAttachedSkills,
   type AgentImage,
-} from '@genoffice/agent-core'
-import { imageGenerationAvailable, type AiSettings } from '@genoffice/ai-provider/browser'
-import { type WorkbookOperation } from '@genoffice/xlsx-gateway/domain/workbook-dsl'
+} from '@softty/agent-core'
+import { imageGenerationAvailable, type AiSettings } from '@softty/ai-provider/browser'
+import { type WorkbookOperation } from '@softty/xlsx-gateway/domain/workbook-dsl'
 import {
   columnLabel,
   parseAddress,
   rangeCellCount,
-} from '@genoffice/xlsx-gateway/domain/cell-address'
+} from '@softty/xlsx-gateway/domain/cell-address'
 import { aggregateWorkbookRange } from './ai/aggregate-range'
 import { collectCellFormulaTexts, quadraticFormulaError } from './formula-cost'
 import {
@@ -163,10 +163,10 @@ import {
   chartSupportsSeriesReplace,
   withDefaultBarLabels,
   type CellBounds,
-} from '@genoffice/xlsx-gateway/domain/chart-visual'
-import { InMemoryWorkbookAdapter } from '@genoffice/xlsx-gateway/domain/in-memory-workbook'
-import { cfRuleUnsaveableReason, iconSetSaveable } from '@genoffice/xlsx-gateway/gateway/xlsx-cf'
-import type { SheetRedactionState } from '@genoffice/xlsx-gateway/gateway/xlsx-redaction'
+} from '@softty/xlsx-gateway/domain/chart-visual'
+import { InMemoryWorkbookAdapter } from '@softty/xlsx-gateway/domain/in-memory-workbook'
+import { cfRuleUnsaveableReason, iconSetSaveable } from '@softty/xlsx-gateway/gateway/xlsx-cf'
+import type { SheetRedactionState } from '@softty/xlsx-gateway/gateway/xlsx-redaction'
 import { statesOnScreen } from './redact-marks-shift'
 import { installLazyFindBridge } from './lazy-find'
 import { startFullLoad } from './full-load'
@@ -189,7 +189,7 @@ import {
   toggleOutlineGroup,
 } from './outline-actions'
 import { moveOutlineEntries, shiftOutlineEntries } from './outline-model'
-import type { ApplyOutcome, ChangePlan } from '@genoffice/xlsx-gateway/domain/workbook.types'
+import type { ApplyOutcome, ChangePlan } from '@softty/xlsx-gateway/domain/workbook.types'
 import { createElectronTransport } from './ai/transport'
 import {
   MAX_READ_RANGE_CELLS,
@@ -214,7 +214,7 @@ import { findWorkbookCells, selectWorkbookRange } from './ai/workbook-search'
 import {
   a1RangeToTarget,
   planTableRefresh,
-} from '@genoffice/xlsx-gateway/gateway/xlsx-connection-refresh'
+} from '@softty/xlsx-gateway/gateway/xlsx-connection-refresh'
 import { traceWorkbookDependents, traceWorkbookPrecedents } from './ai/formula-audit'
 import { createFilesSkill } from './ai/files-skill'
 import { createMergeSkill } from './ai/merge-skill'
@@ -328,7 +328,7 @@ import {
   type SlicerPickerState,
   type TimelinePickerState,
 } from './pivot-actions'
-import type { ChartRecommendations } from '@genoffice/xlsx-gateway/domain/chart-recommend'
+import type { ChartRecommendations } from '@softty/xlsx-gateway/domain/chart-recommend'
 import {
   cellAtClientPoint,
   handleInsertChart as handleInsertChartImpl,
@@ -381,7 +381,7 @@ import { installCfFormulaFold } from './cf-formula-fold'
 import { installSheetRenameFix } from './sheet-rename-fix'
 import { installArrowCollapse } from './arrow-collapse-fix'
 import { effectiveSheetProtection, installSheetProtectionGuard } from './sheet-protection'
-import type { SheetProtectionAllow } from '@genoffice/xlsx-gateway/gateway/xlsx-protection'
+import type { SheetProtectionAllow } from '@softty/xlsx-gateway/gateway/xlsx-protection'
 import { installCtrlDragFill } from './ctrl-drag-fill'
 import { installContextSubmenuReopenFix } from './context-submenu-reopen-fix'
 import { installMenuInputEnter } from './menu-input-enter'

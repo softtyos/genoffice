@@ -4,7 +4,7 @@ import {
   cleanMoveRangeMarkers,
   resolvePropChangeXml,
 } from './revision-xml'
-import { REDACT_EL, REDACT_NS, REDACT_PREFIX } from '@genoffice/agent-core/redact-range'
+import { REDACT_EL, REDACT_NS, REDACT_PREFIX } from '@softty/agent-core/redact-range'
 import {
   applyImageWrap,
   generateParagraphXml,

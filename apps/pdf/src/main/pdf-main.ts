@@ -27,17 +27,17 @@ import {
   installRendererProtocol,
   registerRendererScheme,
   rendererUrl,
-} from '@genoffice/electron-utils'
-import { createI18n, getUiLang } from '@genoffice/i18n'
-import { generateImageTool, documentMediaRoots } from '@genoffice/ai-search'
+} from '@softty/electron-utils'
+import { createI18n, getUiLang } from '@softty/i18n'
+import { generateImageTool, documentMediaRoots } from '@softty/ai-search'
 import { PDF_CHANNELS, PDF_READ_CHUNK_BYTES } from '../shared/ipc'
-import { printJobOptions, printOutcome } from '@genoffice/electron-utils/print-job'
+import { printJobOptions, printOutcome } from '@softty/electron-utils/print-job'
 import {
   printFileViaCups,
   printPdfViaCups,
   printToPdfOptionsFor,
-} from '@genoffice/electron-utils/print-cups'
-import { DRIVER_OPTION_NAMES, queryPrinterOptions } from '@genoffice/electron-utils/printer-options'
+} from '@softty/electron-utils/print-cups'
+import { DRIVER_OPTION_NAMES, queryPrinterOptions } from '@softty/electron-utils/printer-options'
 
 /** 1-based file page positions for the lp `-P` page-list: integers within a
  * real document's reach, undefined = the whole document. Anything else is
@@ -2378,7 +2378,7 @@ export function createPdfView(openPath?: string | null): WebContentsView {
   return view
 }
 
-/** Standalone window mode: `npm run dev -w @genoffice/pdf`, pdf path passed via argv */
+/** Standalone window mode: `npm run dev -w @softty/pdf`, pdf path passed via argv */
 export function startPdfStandalone(): void {
   registerRendererScheme()
   installNavigationGuard(app)

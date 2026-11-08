@@ -7,9 +7,9 @@ import {
   Dropdown,
   aiPanelFontPx,
   clampAiCustomFontSize,
-} from '@genoffice/ui'
-import type { AiFontSize, AiPanelPrefs, AiPanelSide } from '@genoffice/ui'
-import { getProviderAdapter, thinkingShapeFor } from '@genoffice/ai-provider/browser'
+} from '@softty/ui'
+import type { AiFontSize, AiPanelPrefs, AiPanelSide } from '@softty/ui'
+import { getProviderAdapter, thinkingShapeFor } from '@softty/ai-provider/browser'
 import type { DecisionEndpoint, DefaultAppStatus, FileSearchSettings } from '../../shared/home-api'
 import { AUTHOR_NAME_MAX, isCloudflareEndpoint } from '../../shared/home-api'
 import type { UpdateUiState } from '../../shared/update-api'
@@ -25,7 +25,7 @@ import {
   selectCustomEndpoint,
   upsertCustomEndpoint,
   AI_CUSTOM_PROTOCOLS,
-} from '@genoffice/ai-provider/browser'
+} from '@softty/ai-provider/browser'
 import type {
   AiCustomCompat,
   AiCustomEndpoint,
@@ -38,7 +38,7 @@ import type {
   AiSearchProviderMeta,
   AiSearchSettings,
   AiSettings,
-} from '@genoffice/ai-provider'
+} from '@softty/ai-provider'
 import { useI18n } from './locale'
 import type { StringKey, TFunc } from './locale'
 import type {
@@ -838,7 +838,11 @@ function AiModelPane({ t }: { t: TFunc }) {
                 <label className="set-field-label" htmlFor="set-ai-base-url">
                   {t('setAiBaseUrl')}
                 </label>
-                {!meta?.needsBaseUrl && (
+                {meta?.needsBaseUrl ? (
+                  <div className="set-field-desc">
+                    Softty Proxy / OpenAI-Compatible Endpoint (e.g., https://api.softty.net/v1 or https://office.softty.net/api/v1)
+                  </div>
+                ) : (
                   <div className="set-field-desc">{t('setAiBaseUrlHint')}</div>
                 )}
               </div>
@@ -848,7 +852,7 @@ function AiModelPane({ t }: { t: TFunc }) {
               className="set-input"
               type="text"
               value={config.baseUrl ?? ''}
-              placeholder={meta?.needsBaseUrl ? 'https://…/v1' : meta?.defaultBaseUrl}
+              placeholder={meta?.needsBaseUrl ? 'https://api.softty.net/v1' : meta?.defaultBaseUrl}
               spellCheck={false}
               onChange={(e) => updateConfig({ baseUrl: e.target.value.trim() })}
             />
@@ -2035,21 +2039,9 @@ export function SettingsModal({
                       {loggingOut ? t('loggingOut') : t('logout')}
                     </button>
                   ) : (
-                    <>
-                      {loginWaiting && loginUrl && (
-                        <>
-                          <button className="set-btn" onClick={onOpenLoginUrl}>
-                            {t('loginOpenManually')}
-                          </button>
-                          <button className="set-btn" onClick={onCopyLoginUrl}>
-                            {urlCopied ? t('loginCopied') : t('loginCopyUrl')}
-                          </button>
-                        </>
-                      )}
-                      <button className="set-btn primary" onClick={onLogin}>
-                        {loginWaiting ? t('waitingShort') : t('loginGenspark')}
-                      </button>
-                    </>
+                    <button className="set-btn primary" onClick={() => setSection('aiModel')}>
+                      {t('setSecAiModel')}
+                    </button>
                   )}
                 </div>
               </>
@@ -2446,18 +2438,28 @@ export function SettingsModal({
                   label={t('setGithub')}
                   value={
                     githubStars === null
-                      ? 'github.com/genspark-ai/genoffice'
-                      : `github.com/genspark-ai/genoffice · ★ ${formatStars(githubStars)}`
+                      ? 'https://office.softty.net'
+                      : `https://office.softty.net · ★ ${formatStars(githubStars)}`
                   }
                   action={
                     <button
                       className="set-btn"
                       onClick={() => void window.aiOffice.openGitHubRepo?.()}
                     >
-                      {t('starOnGitHub')}
+                      office.softty.net
                     </button>
                   }
                 />
+                <div className="set-field">
+                  <div className="set-field-text">
+                    <div className="set-field-stack">
+                      <div className="set-field-label">License &amp; Attribution</div>
+                      <div className="set-field-desc">
+                        Based on GenOffice (Apache 2.0). Maintained &amp; Developed by Softty.net (https://office.softty.net)
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </>
             )}
           </div>

@@ -57,7 +57,7 @@ import {
   replacePictureBytes,
   type PictureElement,
   type TextElement,
-} from '@genoffice/pptx-engine'
+} from '@softty/pptx-engine'
 import { registerSlidesIpc } from '../src/main/slides-main'
 import {
   buildAllRenderSlides,
@@ -71,7 +71,7 @@ import {
 } from '../src/main/session-state'
 import { mergeSlideUpdate } from '../src/shared/slide-update'
 import type { PasteSlideResult } from '../src/shared/ipc'
-import type { PictureRenderNode, RenderSlide } from '@genoffice/pptx-render'
+import type { PictureRenderNode, RenderSlide } from '@softty/pptx-render'
 
 const FIT = 1280
 const WC = 1

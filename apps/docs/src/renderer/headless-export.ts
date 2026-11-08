@@ -12,7 +12,7 @@ import {
   runHeadlessRendererExport,
   type HeadlessExportReport,
   type HeadlessWaitOptions,
-} from '@genoffice/electron-utils/headless-export'
+} from '@softty/electron-utils/headless-export'
 
 /** Pagination publishes its PageCut signature here on every remeasure (App.tsx). */
 interface PageDebug {

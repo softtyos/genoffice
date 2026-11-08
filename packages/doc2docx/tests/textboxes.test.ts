@@ -1,6 +1,6 @@
 import JSZip from 'jszip'
 import { describe, expect, it } from 'vitest'
-import { parseDocx } from '@genoffice/docx-engine'
+import { parseDocx } from '@softty/docx-engine'
 import {
   convertLegacyDocToDocx,
   openLegacyDoc,

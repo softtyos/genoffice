@@ -14,16 +14,16 @@ import {
   type DeckPageIssue,
   type OutlineIssue,
   type PageSpec,
-} from '@genoffice/pipelines/slides'
+} from '@softty/pipelines/slides'
 import {
   deleteSlide,
   mergeSlideFromPptx,
   moveSlide,
   promoteSlideBackground,
   type OpenedPptx,
-} from '@genoffice/pptx-engine'
-import { HeuristicMetrics } from '@genoffice/pptx-render'
-import { extract } from '@genoffice/pdf2docx'
+} from '@softty/pptx-engine'
+import { HeuristicMetrics } from '@softty/pptx-render'
+import { extract } from '@softty/pdf2docx'
 import { assertAllowed, type PathContext } from '../fs'
 import { CliError, EXIT, type ErrorHints } from '../result'
 

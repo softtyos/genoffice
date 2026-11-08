@@ -1,4 +1,4 @@
-import type { AgentSkill } from '@genoffice/agent-core'
+import type { AgentSkill } from '@softty/agent-core'
 import type { UserCliRun } from '../../shared/ipc'
 import { t } from '../i18n/locale'
 

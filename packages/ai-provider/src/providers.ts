@@ -552,7 +552,7 @@ export const AI_PROVIDERS: AiProviderMeta[] = [
   },
   {
     id: 'custom',
-    label: 'Custom',
+    label: 'Custom (OpenAI-Compatible API)',
     models: [],
     defaultModel: '',
     keyPlaceholder: 'API Key',
@@ -579,7 +579,7 @@ export function defaultAiSettings(
     }
   }
   return {
-    provider: 'genspark',
+    provider: 'custom',
     providers,
     gskToolsEnabled: true,
     media: defaultAiMediaSettings(),

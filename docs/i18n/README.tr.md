@@ -600,7 +600,7 @@ npm run dist:linux   # package Linux AppImage + deb + rpm
 ```
 
 Sheets uygulaması xlsx yardımcı süreci için ayrıca bir Rust araç zincirine
-(PATH üzerinde `cargo`) ihtiyaç duyar; `npm run build -w @genoffice/sheets`
+(PATH üzerinde `cargo`) ihtiyaç duyar; `npm run build -w @softty/sheets`
 bunu otomatik derler. Her değişikliğin geçmesi gereken kontroller ve çekme
 isteklerinin nasıl birleştirildiği için [CONTRIBUTING.md](../../CONTRIBUTING.md)
 dosyasına bakın.

@@ -4,8 +4,8 @@ import type {
   LegacySkillCopy,
   SkillInstallState,
   SkillInstallStatus,
-} from '@genoffice/cli/agent-skills'
-import type { InstallOutcome } from '@genoffice/cli/install'
+} from '@softty/cli/agent-skills'
+import type { InstallOutcome } from '@softty/cli/install'
 import type { FoundSkill, RecommendedSkill } from './found-skill'
 
 export type { AgentId, AgentTarget, LegacySkillCopy, SkillInstallState, SkillInstallStatus }

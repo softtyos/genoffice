@@ -5,7 +5,7 @@
  * sheet's threads; edits mark the sheet note-dirty and the save snapshots
  * the store next to the live notes (collectNoteStates).
  */
-import { personIdFor } from '@genoffice/xlsx-gateway/gateway/xlsx-threaded-comments'
+import { personIdFor } from '@softty/xlsx-gateway/gateway/xlsx-threaded-comments'
 
 import type { WorkbookFile } from '../shared/desktop-api'
 import type { StructuralJournalOp } from './edit-journal'

@@ -41,16 +41,16 @@ import {
   readBodyCapped,
   printHtmlDocument,
   type PrintDialogOutcome,
-} from '@genoffice/electron-utils'
-import { createI18n, getUiLang } from '@genoffice/i18n'
-import { generateImageTool, documentMediaRoots } from '@genoffice/ai-search'
-import { parseFileToText } from '@genoffice/file-parse'
+} from '@softty/electron-utils'
+import { createI18n, getUiLang } from '@softty/i18n'
+import { generateImageTool, documentMediaRoots } from '@softty/ai-search'
+import { parseFileToText } from '@softty/file-parse'
 import { convertHtmlToDocx } from '../../../../packages/html2docx/src'
 import { atomicWriteFile } from './atomic-write'
 import {
   createDocumentDiskWatcher,
   type DocumentDiskWatcher,
-} from '@genoffice/electron-utils/disk-watch'
+} from '@softty/electron-utils/disk-watch'
 import { ElectronBrowserDriver } from '../../../../packages/html2docx/src/drivers/electron'
 import {
   copyImageIntoOwnedAssets,
@@ -706,7 +706,7 @@ const TEXT_EXTS = new Set([
   'sql',
   'css',
 ])
-/** office/pdf formats get text extracted via @genoffice/file-parse; images skip extraction and go multimodal */
+/** office/pdf formats get text extracted via @softty/file-parse; images skip extraction and go multimodal */
 const ATTACHMENT_EXTS = new Set([
   ...TEXT_EXTS,
   'doc',
@@ -2016,7 +2016,7 @@ export function createHtmlView(openPath?: string | null): WebContentsView {
   return view
 }
 
-/** Standalone window mode: `npm run dev -w @genoffice/html`, md path passed via argv */
+/** Standalone window mode: `npm run dev -w @softty/html`, md path passed via argv */
 export function startHtmlStandalone(): void {
   registerPrivilegedSchemes()
   installNavigationGuard(app)

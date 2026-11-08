@@ -166,15 +166,15 @@ describe('Settings → Integrations', () => {
     expect(examples).toHaveLength(3)
     expect(examples.every((row) => row.querySelector('button'))).toBe(true)
     expect(host.textContent).toContain('through the command line or MCP')
-    expect(host.textContent).toContain('npx skills add genspark-ai/genoffice')
+    expect(host.textContent).toContain('npx skills add softtyos/genoffice')
     // MCP block: the launcher itself while genoffice is not on the PATH, as a command and as JSON
     const mcp = [...host.querySelectorAll('.set-intg-mcp code')].map((c) => c.textContent)
     expect(mcp[0]).toBe(
-      'claude mcp add --transport stdio genoffice -- /Applications/GenOffice.app/Contents/Resources/cli/genoffice mcp',
+      'claude mcp add --transport stdio softty-office-mcp -- /Applications/GenOffice.app/Contents/Resources/cli/genoffice mcp',
     )
     expect(JSON.parse(mcp[1]!)).toEqual({
       mcpServers: {
-        genoffice: {
+        'softty-office-mcp': {
           command: '/Applications/GenOffice.app/Contents/Resources/cli/genoffice',
           args: ['mcp'],
         },
@@ -226,13 +226,13 @@ describe('Settings → Integrations', () => {
     expect(mcpLaunch({ status: 'missing', launcherDir: winDir })).toEqual(win)
     expect(mcpLaunch({ status: 'present', launcherDir: winDir })).toEqual(win)
     expect(mcpClaudeCommand(win)).toBe(
-      `claude mcp add -e ELECTRON_RUN_AS_NODE=1 --transport stdio genoffice -- "${win.command}" "${win.args[0]}" mcp`,
+      `claude mcp add -e ELECTRON_RUN_AS_NODE=1 --transport stdio softty-office-mcp -- "${win.command}" "${win.args[0]}" mcp`,
     )
-    expect(JSON.parse(mcpConfigJson(win))).toEqual({ mcpServers: { genoffice: win } })
+    expect(JSON.parse(mcpConfigJson(win))).toEqual({ mcpServers: { 'softty-office-mcp': win } })
     expect(
       mcpClaudeCommand({ command: '/Applications/Gen Office.app/cli/genoffice', args: ['mcp'] }),
     ).toBe(
-      'claude mcp add --transport stdio genoffice -- "/Applications/Gen Office.app/cli/genoffice" mcp',
+      'claude mcp add --transport stdio softty-office-mcp -- "/Applications/Gen Office.app/cli/genoffice" mcp',
     )
   })
 

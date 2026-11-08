@@ -484,7 +484,7 @@ npm run dist:linux   # אריזת AppImage + deb + rpm עבור Linux
 ```
 
 אפליקציית ה-sheets דורשת בנוסף toolchain של Rust בשביל ה-sidecar של
-ה-xlsx (`cargo` נגיש ב-PATH); `npm run build -w @genoffice/sheets` מקמפל
+ה-xlsx (`cargo` נגיש ב-PATH); `npm run build -w @softty/sheets` מקמפל
 אותו אוטומטית. ראו [CONTRIBUTING.md](../../CONTRIBUTING.md) לבדיקות שכל
 שינוי חייב לעבור ולאופן שבו pull requests מתקבלים.
 

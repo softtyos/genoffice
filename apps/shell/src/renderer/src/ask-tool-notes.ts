@@ -4,7 +4,7 @@ import {
   READ_ATTACHMENT_TOOL,
   RUN_GENOFFICE_TOOL,
   type AgentToolCall,
-} from '@genoffice/agent-core'
+} from '@softty/agent-core'
 
 /**
  * The activity chips of one Ask AI answer: one per tool call, labelled with

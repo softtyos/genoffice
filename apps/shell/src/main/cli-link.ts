@@ -2,7 +2,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { app } from 'electron'
-import { installCliLink } from '@genoffice/cli/install'
+import { installCliLink } from '@softty/cli/install'
 import { writeAppSetting } from './app-settings'
 
 const SETTING_KEY = 'cliLink'

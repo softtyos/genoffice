@@ -1,4 +1,4 @@
-import { CREATE_DOCUMENT_TOOL, RUN_GENOFFICE_TOOL, type AgentToolCall } from '@genoffice/agent-core'
+import { CREATE_DOCUMENT_TOOL, RUN_GENOFFICE_TOOL, type AgentToolCall } from '@softty/agent-core'
 
 /**
  * The task card of one Ask AI answer: every file the turn set out to build,

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { Lang } from '@genoffice/i18n'
-import type { AiSettings } from '@genoffice/ai-provider/browser'
+import type { Lang } from '@softty/i18n'
+import type { AiSettings } from '@softty/ai-provider/browser'
 import {
   aiModelPickerGroups,
   aiModelPickerSelection,

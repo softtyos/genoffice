@@ -1,5 +1,5 @@
 {
-  "name": "@genoffice/xlsx-gateway",
+  "name": "@softty/xlsx-gateway",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "private": true,
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "jszip": "^3.10.1",
-    "@genoffice/zip-gate": "*",
+    "@softty/zip-gate": "*",
     "numfmt": "^3.2.6",
     "zod": "^4.6.7"
   },

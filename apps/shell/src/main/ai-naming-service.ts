@@ -1,9 +1,9 @@
 import { app, ipcMain } from 'electron'
 import { join } from 'node:path'
 import { readFileSync } from 'node:fs'
-import type { AgentMessage } from '@genoffice/agent-core'
-import { streamForProvider } from '@genoffice/ai-provider'
-import { gskApiKey } from '@genoffice/ai-search'
+import type { AgentMessage } from '@softty/agent-core'
+import { streamForProvider } from '@softty/ai-provider'
+import { gskApiKey } from '@softty/ai-search'
 import {
   buildNamingInstruction,
   excerptForNaming,

@@ -5,38 +5,38 @@ import {
   ResponseTooLargeError,
   fetchRemoteImage,
   readBodyCapped,
-} from '@genoffice/electron-utils/remote-image'
+} from '@softty/electron-utils/remote-image'
 import {
   columnIndex,
   columnLabel,
   parseAddress,
   parseRange,
   type RangeBounds,
-} from '@genoffice/xlsx-gateway/domain/cell-address'
-import type { ChartVisualState } from '@genoffice/xlsx-gateway/domain/chart-visual'
+} from '@softty/xlsx-gateway/domain/cell-address'
+import type { ChartVisualState } from '@softty/xlsx-gateway/domain/chart-visual'
 import {
   matchableCellText,
   type WorkbookOperation,
-} from '@genoffice/xlsx-gateway/domain/workbook-dsl'
+} from '@softty/xlsx-gateway/domain/workbook-dsl'
 import type {
   WorkbookSnapshot,
   WorksheetState,
-} from '@genoffice/xlsx-gateway/domain/workbook.types'
-import type { CfWireRule } from '@genoffice/xlsx-gateway/gateway/xlsx-cf'
+} from '@softty/xlsx-gateway/domain/workbook.types'
+import type { CfWireRule } from '@softty/xlsx-gateway/gateway/xlsx-cf'
 import type {
   DefinedNameEntry,
   DefinedNamesState,
-} from '@genoffice/xlsx-gateway/gateway/xlsx-defined-names'
-import type { ChartAdd, DrawingAnchor } from '@genoffice/xlsx-gateway/gateway/xlsx-drawing-add'
-import type { DvWireRule } from '@genoffice/xlsx-gateway/gateway/xlsx-dv'
+} from '@softty/xlsx-gateway/gateway/xlsx-defined-names'
+import type { ChartAdd, DrawingAnchor } from '@softty/xlsx-gateway/gateway/xlsx-drawing-add'
+import type { DvWireRule } from '@softty/xlsx-gateway/gateway/xlsx-dv'
 import {
   areasOverlap,
   buildPivotLayout,
   PivotLayoutError,
   pivotOutputArea,
   type PivotScalar,
-} from '@genoffice/xlsx-gateway/domain/pivot-layout'
-import type { SheetFilterState } from '@genoffice/xlsx-gateway/gateway/xlsx-filter'
+} from '@softty/xlsx-gateway/domain/pivot-layout'
+import type { SheetFilterState } from '@softty/xlsx-gateway/gateway/xlsx-filter'
 import type {
   SheetCfState,
   SheetDvState,
@@ -48,10 +48,10 @@ import type {
   SheetStructuralOps,
   SheetTableAddition,
   SheetVisualAddition,
-} from '@genoffice/xlsx-gateway/gateway/xlsx-gateway'
-import type { SheetNote } from '@genoffice/xlsx-gateway/gateway/xlsx-notes'
-import type { SheetPageSetupState } from '@genoffice/xlsx-gateway/gateway/xlsx-page-setup'
-import type { WorkbookChartEdit } from '@genoffice/xlsx-gateway/shared/edit-schemas'
+} from '@softty/xlsx-gateway/gateway/xlsx-gateway'
+import type { SheetNote } from '@softty/xlsx-gateway/gateway/xlsx-notes'
+import type { SheetPageSetupState } from '@softty/xlsx-gateway/gateway/xlsx-page-setup'
+import type { WorkbookChartEdit } from '@softty/xlsx-gateway/shared/edit-schemas'
 import { assertAllowed, type PathContext } from '../fs'
 import { classifyOpError } from '../op-errors'
 import { CliError, EXIT } from '../result'

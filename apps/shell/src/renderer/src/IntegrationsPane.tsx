@@ -1,4 +1,4 @@
-import { mcpLaunch, type McpLaunch } from '@genoffice/cli/mcp-launch'
+import { mcpLaunch, type McpLaunch } from '@softty/cli/mcp-launch'
 import { useCallback, useEffect, useState } from 'react'
 import type { TFunc } from './locale'
 import { McpServerSection } from './McpServerSection'
@@ -28,7 +28,7 @@ interface Pending {
   agentId?: AgentId
 }
 
-export const NPX_INSTALL_COMMAND = 'npx skills add genspark-ai/genoffice'
+export const NPX_INSTALL_COMMAND = 'npx skills add softtyos/genoffice'
 
 /** some detected assistant holds an older copy of the skill than the bundled one */
 export const skillUpdateDue = (s: IntegrationsStatus): boolean =>
@@ -44,11 +44,11 @@ const shellWord = (w: string) => (/\s/.test(w) ? `"${w}"` : w)
 export function mcpClaudeCommand(launch: McpLaunch): string {
   const env = Object.entries(launch.env ?? {}).map(([k, v]) => `-e ${k}=${v} `)
   const words = [launch.command, ...launch.args].map(shellWord).join(' ')
-  return `claude mcp add ${env.join('')}--transport stdio genoffice -- ${words}`
+  return `claude mcp add ${env.join('')}--transport stdio softty-office-mcp -- ${words}`
 }
 
 export function mcpConfigJson(launch: McpLaunch): string {
-  const json = JSON.stringify({ mcpServers: { genoffice: launch } }, null, 2)
+  const json = JSON.stringify({ mcpServers: { 'softty-office-mcp': launch } }, null, 2)
   return json.replace(/"args": \[[^\]]*\]/, `"args": ${JSON.stringify(launch.args)}`)
 }
 

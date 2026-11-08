@@ -15,8 +15,8 @@ import {
 import { readFile, readdir } from 'node:fs/promises'
 import { basename, dirname, isAbsolute, join, resolve, sep } from 'node:path'
 import JSZip from 'jszip'
-import { classifySkill, parseSkillFrontmatter } from '@genoffice/agent-core'
-import { getUiLang } from '@genoffice/i18n'
+import { classifySkill, parseSkillFrontmatter } from '@softty/agent-core'
+import { getUiLang } from '@softty/i18n'
 import type { FoundSkill, RecommendedSkill } from '../shared/found-skill'
 
 /**

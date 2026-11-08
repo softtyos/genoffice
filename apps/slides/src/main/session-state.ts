@@ -17,12 +17,12 @@ import {
   type Slide,
   type SlideElement,
   type TextElement,
-} from '@genoffice/pptx-engine'
+} from '@softty/pptx-engine'
 import {
   buildRenderSlide,
   type FontMetricsProvider,
   type RenderSlide,
-} from '@genoffice/pptx-render'
+} from '@softty/pptx-render'
 import { createSystemFontMetrics, resetFontRegistry } from './fonts'
 import { tiffToPng } from './tiff-decode'
 import { neutralizeJpegOrientation } from './jpeg-orientation'

@@ -4,7 +4,7 @@ import {
   mergeFieldText,
   splitInstruction,
   type MergeRecord,
-} from '@genoffice/docx-engine'
+} from '@softty/docx-engine'
 import type { PmNode } from '../editor/convert'
 
 /**

@@ -14,7 +14,7 @@ import {
   type UniverRenderingContext,
 } from '@univerjs/engine-render'
 import { SheetSkeletonManagerService } from '@univerjs/preset-sheets-core'
-import { columnLabel } from '@genoffice/xlsx-gateway/domain/cell-address'
+import { columnLabel } from '@softty/xlsx-gateway/domain/cell-address'
 
 import { t } from './i18n/locale'
 import {

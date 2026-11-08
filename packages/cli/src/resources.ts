@@ -30,7 +30,16 @@ export function repoRoot(): string | null {
     const pkg = join(dir, 'package.json')
     if (existsSync(pkg)) {
       try {
-        if (JSON.parse(readFileSync(pkg, 'utf-8')).name === 'genoffice') {
+        const parsed = JSON.parse(readFileSync(pkg, 'utf-8')) as {
+          name?: string
+          workspaces?: unknown
+        }
+        if (
+          Array.isArray(parsed.workspaces) ||
+          parsed.name === '@softty/monorepo' ||
+          parsed.name === 'softty-office' ||
+          parsed.name === 'genoffice'
+        ) {
           cachedRepo = dir
           return dir
         }
@@ -80,12 +89,22 @@ export function ocrHelperPath(): string | null {
   return candidates.find((p) => existsSync(p)) ?? null
 }
 
-/** skills/genoffice/SKILL.md as shipped beside this bundle (Resources/cli/skills) or in the checkout. */
+/** skills/softty-office/SKILL.md (or skills/genoffice/SKILL.md) as shipped beside this bundle or in the checkout. */
 export function bundledSkillPath(): string | null {
   const packaged = packagedResourcesDir()
   const candidates = [
-    ...(packaged ? [join(packaged, 'cli', 'skills', 'genoffice', 'SKILL.md')] : []),
-    ...(repoRoot() ? [join(repoRoot()!, 'skills', 'genoffice', 'SKILL.md')] : []),
+    ...(packaged
+      ? [
+          join(packaged, 'cli', 'skills', 'genoffice', 'SKILL.md'),
+          join(packaged, 'cli', 'skills', 'softty-office', 'SKILL.md'),
+        ]
+      : []),
+    ...(repoRoot()
+      ? [
+          join(repoRoot()!, 'skills', 'genoffice', 'SKILL.md'),
+          join(repoRoot()!, 'skills', 'softty-office', 'SKILL.md'),
+        ]
+      : []),
   ]
   return candidates.find((p) => existsSync(p)) ?? null
 }
@@ -122,17 +141,30 @@ function installedAppBinaries(
     case 'darwin':
       return [
         ...(shipped ? [shipped] : []),
+        '/Applications/Softty Office.app/Contents/MacOS/Softty Office',
+        join(homedir(), 'Applications/Softty Office.app/Contents/MacOS/Softty Office'),
         '/Applications/GenOffice.app/Contents/MacOS/GenOffice',
         join(homedir(), 'Applications/GenOffice.app/Contents/MacOS/GenOffice'),
       ]
     case 'win32':
       return [
         ...(shipped ? [shipped] : []),
+        env.LOCALAPPDATA
+          ? join(env.LOCALAPPDATA, 'Programs', 'Softty Office', 'Softty Office.exe')
+          : '',
+        env.ProgramFiles ? join(env.ProgramFiles, 'Softty Office', 'Softty Office.exe') : '',
         env.LOCALAPPDATA ? join(env.LOCALAPPDATA, 'Programs', 'GenOffice', 'GenOffice.exe') : '',
         env.ProgramFiles ? join(env.ProgramFiles, 'GenOffice', 'GenOffice.exe') : '',
       ].filter(Boolean)
     default:
-      return [...(shipped ? [shipped] : []), '/opt/GenOffice/genoffice', '/usr/bin/genoffice']
+      return [
+        ...(shipped ? [shipped] : []),
+        '/opt/Softty Office/Softty Office',
+        '/usr/bin/softty-office',
+        '/usr/bin/soffice',
+        '/opt/GenOffice/genoffice',
+        '/usr/bin/genoffice',
+      ]
   }
 }
 

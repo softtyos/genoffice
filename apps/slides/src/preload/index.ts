@@ -1,8 +1,8 @@
-import type { AiPanelPrefs } from '@genoffice/ui'
+import type { AiPanelPrefs } from '@softty/ui'
 import { contextBridge, ipcRenderer, webUtils } from 'electron'
 import type { IpcRendererEvent } from 'electron'
-import type { ProjectApi } from '@genoffice/project-store'
-import { installDropOpenBridge } from '@genoffice/electron-utils/drop-open'
+import type { ProjectApi } from '@softty/project-store'
+import { installDropOpenBridge } from '@softty/electron-utils/drop-open'
 import type {
   DeckChange,
   AddChartOp,

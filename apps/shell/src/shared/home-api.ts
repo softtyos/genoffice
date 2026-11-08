@@ -11,7 +11,7 @@ import type {
   AiStreamChunk,
   AiStreamRequest,
   CodexModelCatalog,
-} from '@genoffice/ai-provider'
+} from '@softty/ai-provider'
 import type { UpdateChannel, UpdateUiState } from './update-api'
 import type {
   AttachmentInfo,
@@ -21,8 +21,8 @@ import type {
   KbFileInfo,
   KbReadPage,
   KbSearchHit,
-} from '@genoffice/agent-core'
-import type { AiPanelPrefs } from '@genoffice/ui/ai-panel-prefs'
+} from '@softty/agent-core'
+import type { AiPanelPrefs } from '@softty/ui/ai-panel-prefs'
 
 export interface AttachmentAddResult {
   accepted: AttachmentInfo[]
@@ -46,7 +46,7 @@ export interface AttachmentImageResult {
   error?: string
 }
 
-/** UI language; kept self-contained here (mirrors Lang in @genoffice/i18n) */
+/** UI language; kept self-contained here (mirrors Lang in @softty/i18n) */
 
 export type UiLanguage =
   | 'zh'
@@ -83,7 +83,7 @@ export type UiTheme = 'light' | 'dark' | 'system'
 export type DocTheme = 'follow' | 'light' | 'dark'
 
 /** shell-wide AutoSave default for every editor; updatedAt is 0 until first set */
-/** mirrors AUTHOR_NAME_MAX in @genoffice/electron-utils (the renderer cannot import it) */
+/** mirrors AUTHOR_NAME_MAX in @softty/electron-utils (the renderer cannot import it) */
 export const AUTHOR_NAME_MAX = 120
 
 export interface AuthorNameSetting {

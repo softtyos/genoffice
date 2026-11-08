@@ -263,7 +263,7 @@ function assertUniversalSidecar() {
   const sidecar = join(__dirname, '../sheets/native/xlsx-engine/target/release/xlsx-sidecar')
   if (!existsSync(sidecar)) {
     throw new Error(
-      `mac extraResources source missing: ${sidecar} (run "npm run native:build:universal -w @genoffice/sheets" first)`,
+      `mac extraResources source missing: ${sidecar} (run "npm run native:build:universal -w @softty/sheets" first)`,
     )
   }
   const archs = execFileSync('lipo', ['-archs', sidecar], { encoding: 'utf8' }).trim().split(/\s+/)
@@ -271,7 +271,7 @@ function assertUniversalSidecar() {
     if (!archs.includes(want)) {
       throw new Error(
         `xlsx-sidecar is [${archs.join(', ')}] but both mac arch packages ship it — ` +
-          'run "npm run native:build:universal -w @genoffice/sheets" before packaging mac',
+          'run "npm run native:build:universal -w @softty/sheets" before packaging mac',
       )
     }
   }
@@ -560,8 +560,9 @@ const FILE_ASSOCIATIONS = [
 ]
 
 const config = {
-  appId: 'com.genoffice.app',
-  productName: 'GenOffice',
+  appId: 'net.softty.office',
+  productName: 'Softty Office',
+  executableName: 'Softty Office',
   // Resolved from the installed electron package so dependency bumps can
   // never leave a stale hard-coded pin behind (packaging would silently ship
   // the old runtime).
@@ -649,6 +650,22 @@ const config = {
       from: '../../packages/cli/bin/genoffice.cmd',
       to: 'cli/genoffice.cmd',
     },
+    {
+      from: '../../packages/cli/bin/soffice',
+      to: 'cli/soffice',
+    },
+    {
+      from: '../../packages/cli/bin/soffice.cmd',
+      to: 'cli/soffice.cmd',
+    },
+    {
+      from: '../../packages/cli/bin/softty-office',
+      to: 'cli/softty-office',
+    },
+    {
+      from: '../../packages/cli/bin/softty-office.cmd',
+      to: 'cli/softty-office.cmd',
+    },
     // the CLI's version (Settings → Integrations shows it) and the agent skill
     // the same pane installs into Claude Code / Codex / …; bytes identical to the repo file
     {
@@ -658,6 +675,10 @@ const config = {
     {
       from: '../../skills/genoffice/SKILL.md',
       to: 'cli/skills/genoffice/SKILL.md',
+    },
+    {
+      from: '../../skills/softty-office/SKILL.md',
+      to: 'cli/skills/softty-office/SKILL.md',
     },
     {
       from: '../../skills/recommended',
@@ -692,11 +713,13 @@ const config = {
   fileAssociations: FILE_ASSOCIATIONS,
   npmRebuild: false,
   mac: {
+    icon: 'build/icon.icns',
+    executableName: 'Softty Office',
     // Two separate arch packages (NOT universal): arm64 keeps the exact
     // artifact names and update-feed entries it always had, x64 (opt-in via
     // GENOFFICE_MAC_X64=1, see includeMacX64 above) adds Intel support with
-    // electron-builder's default arch-less names (GenOffice-<v>.dmg /
-    // GenOffice-<v>-mac.zip). Both zips land in one latest-mac.yml and
+    // electron-builder's default arch-less names (Softty Office-<v>.dmg /
+    // Softty Office-<v>-mac.zip). Both zips land in one latest-mac.yml and
     // electron-updater picks by process.arch. Dual-arch packs ship the same
     // lipo fat xlsx-sidecar (see assertUniversalSidecar above).
     target: [
@@ -712,7 +735,7 @@ const config = {
     // audio-input entitlement, and macOS asks for it with this text
     extendInfo: {
       NSMicrophoneUsageDescription:
-        'GenOffice records your narration when you record a slide show.',
+        'Softty Office records your narration when you record a slide show.',
     },
     notarize: true,
     extraResources: [
@@ -723,6 +746,8 @@ const config = {
     ],
   },
   win: {
+    icon: 'build/icon.ico',
+    executableName: 'Softty Office',
     target: [
       {
         target: 'nsis',
@@ -752,55 +777,22 @@ const config = {
   // ELF check). That flag is config support only: no second Linux pass runs
   // anywhere yet, so the arm64 artifacts are not produced by this repo.
   linux: {
-    // AppImage (self-contained, any distro) + deb (apt install, pulls in the
-    // GTK/NSS runtime deps) + rpm (dnf/zypper install on Fedora / RHEL /
-    // openSUSE). Default artifact names are kept on purpose —
-    // GenOffice-<v>.AppImage / genoffice_<v>_amd64.deb — because the public
-    // README download links and the already-published linux-v0.5.149 release
-    // use them. The arm64 targets reuse the ${arch}-templated deb/rpm names
-    // (genoffice_<v>_arm64.deb).
     target: [
       { target: 'AppImage', arch: [linuxArm64 ? 'arm64' : 'x64'] },
       { target: 'deb', arch: [linuxArm64 ? 'arm64' : 'x64'] },
       { target: 'rpm', arch: [linuxArm64 ? 'arm64' : 'x64'] },
     ],
-    // deb control metadata; values match the manually published 0.5.149 deb
-    // so apt sees the new packages as the same lineage. Homepage comes from
-    // package.json "homepage"; the Package field is pinned in the deb block
-    // below (packageName is a per-target option, rejected here by the schema).
-    maintainer: 'Mainfunc, Inc. <team@genspark.ai>',
-    vendor: 'Mainfunc, Inc. <team@genspark.ai>',
+    maintainer: 'Softty.net <support@softty.net>',
+    vendor: 'Softty.net',
     category: 'Office',
-    // Icon SET directory, not the single 1024px png: electron-builder does
-    // not resize a lone png, so deb/rpm would install only
-    // hicolor/1024x1024/apps/genoffice.png — a size absent from the hicolor
-    // theme index, leaving GNOME/KDE launchers on the generic fallback icon
-    // (genspark-ai/genoffice#90). The set ships every standard raster size.
-    icon: 'build/icons',
-    // mac and win name the binary from productName; linux instead derives it
-    // from package.json "name", and "@genoffice/shell" sanitizes to the
-    // invalid "@genofficeshell". Setting it explicitly also makes the
-    // generated genoffice.desktop match the WM_CLASS Electron reports (it
-    // takes that from the executable basename), so the running window links
-    // back to its launcher entry.
-    executableName: 'genoffice',
-    // Electron takes its X11 app_id from package.json "desktopName"
-    // (genoffice.desktop); syncDesktopName makes electron-builder name the
-    // .desktop file and its StartupWMClass from the same value. Without it
-    // StartupWMClass falls back to productName ("GenOffice"), which does not
-    // match the "genoffice" WM_CLASS the window actually reports — and X11
-    // compares case-sensitively, so the taskbar shows an unlinked window.
+    icon: 'build/icon.png',
+    executableName: 'Softty Office',
     syncDesktopName: true,
     extraResources: [
       {
         from: LINUX_SIDECAR,
         to: 'native/xlsx-sidecar',
       },
-      // Same blank templates the Windows installer registers for Explorer's
-      // "New" menu. The deb/rpm post-install step copies them into
-      // /usr/share/templates, which KDE Plasma's Dolphin "Create New" menu
-      // scans (genoffice#2384). AppImage gets the payload too but runs no
-      // install script, so it adds no templates.
       {
         from: 'build/shell-new',
         to: 'shell-new',
@@ -808,44 +800,18 @@ const config = {
       },
     ],
   },
-  // Same "@genoffice/shell" problem as executableName above: the default deb
-  // artifact name derives from package.json "name", and the scope's "/" makes
-  // fpm treat "@genoffice" as a directory. Spell the published name out
-  // (genoffice_<version>_amd64.deb, matching the linux-v0.5.149 release).
-  // packageName pins the control Package field to the same value the 0.5.149
-  // deb shipped with — apt treats a different Package name as an unrelated
-  // install, breaking upgrades. Without it, fpm receives productName
-  // "GenOffice" and only happens to downcase it to the right value.
   deb: {
-    artifactName: 'genoffice_${version}_${arch}.deb',
-    packageName: 'genoffice',
-    // expose the genoffice command line shipped inside the app
+    artifactName: 'softty-office_${version}_${arch}.deb',
+    packageName: 'softty-office',
     afterInstall: 'build/linux-after-install.sh',
     afterRemove: 'build/linux-after-remove.sh',
   },
-  // Same "@genoffice/shell" naming problem as deb: spell the artifact name
-  // out (${arch} expands to the rpm arch string, x86_64) and pin the rpm
-  // Package name so dnf/zypper treat successive releases as upgrades of the
-  // same package. Like deb, rpm installs run no in-app updater — users
-  // upgrade with `dnf install ./<new>.rpm`. Packaging needs rpmbuild on the
-  // build host (the `rpm` apt package on Ubuntu; CI installs it).
-  //
-  // publish: null (explicit) keeps the rpm out of the electron-updater feed
-  // and off the CDN entirely: the rpm is a GitHub-Release download only, so
-  // latest-linux.yml keeps listing exactly what the CDN pipeline uploads
-  // (AppImage + deb) and the promote workflow needs no rpm alias.
   rpm: {
-    artifactName: 'genoffice-${version}.${arch}.rpm',
-    packageName: 'genoffice',
+    artifactName: 'softty-office-${version}.${arch}.rpm',
+    packageName: 'softty-office',
     publish: null,
     afterInstall: 'build/linux-after-install.sh',
     afterRemove: 'build/linux-after-remove.sh',
-    // rpmbuild links every packaged ELF file into /usr/lib/.build-id/<hash>.
-    // Two Electron apps built on the same Electron release ship identical
-    // binaries, so the links are identical too and dnf refuses the install
-    // with a file conflict against the other app (genoffice#1145). The links exist only
-    // to locate detached debuginfo, which this package does not ship, so turn
-    // them off. rpm-level `fpm` (not linux-level) keeps it away from the deb.
     fpm: ['--rpm-rpmbuild-define=_build_id_links none'],
   },
   nsis: {
@@ -865,7 +831,7 @@ const config = {
     if (context.electronPlatformName === 'win32' && !existsSync(join(__dirname, WIN_SIDECAR))) {
       throw new Error(
         `win extraResources source missing: ${winSidecarCandidates.join(' or ')} ` +
-          `(run "npm run native:build -w @genoffice/sheets", or cargo build --target ${winSidecarTarget})`,
+          `(run "npm run native:build -w @softty/sheets", or cargo build --target ${winSidecarTarget})`,
       )
     }
     if (context.electronPlatformName === 'linux') {
@@ -876,7 +842,7 @@ const config = {
         const hint = linuxArm64
           ? 'cross-build with "cargo zigbuild --release --target aarch64-unknown-linux-gnu", ' +
             'or build natively on an arm64 Linux host'
-          : 'run "npm run native:build -w @genoffice/sheets" on an x64 Linux host, ' +
+          : 'run "npm run native:build -w @softty/sheets" on an x64 Linux host, ' +
             'or cross-build with "cargo zigbuild --release --target x86_64-unknown-linux-gnu"'
         throw new Error(
           `linux extraResources source missing: ${linuxSidecarCandidates.join(' or ')} (${hint})`,

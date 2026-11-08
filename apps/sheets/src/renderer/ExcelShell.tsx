@@ -1,6 +1,6 @@
 import type { IFunctionInfo } from '@univerjs/engine-formula'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { platformShortcuts } from '@genoffice/i18n'
+import { platformShortcuts } from '@softty/i18n'
 import {
   Dropdown,
   SHAPE_GALLERY_GROUPS,
@@ -11,7 +11,7 @@ import {
   rememberAiPanelOpen,
   useAiSidebarEnabled,
   type AiTokenUsageView,
-} from '@genoffice/ui'
+} from '@softty/ui'
 
 import {
   BorderAllIcon,
@@ -34,11 +34,11 @@ import { sheetContextMenuAction } from './sheet-context-menu'
 
 import { ColorDropdown } from './ColorDropdown'
 import { FormatCellsDialog } from './FormatCellsDialog'
-import type { SheetPasswordHash } from '@genoffice/xlsx-gateway/gateway/xlsx-protection-hash'
+import type { SheetPasswordHash } from '@softty/xlsx-gateway/gateway/xlsx-protection-hash'
 
 import { AllowEditRangesDialog } from './AllowEditRangesDialog'
 import { ProtectSheetDialog } from './ProtectSheetDialog'
-import type { SheetProtectionAllow } from '@genoffice/xlsx-gateway/gateway/xlsx-protection'
+import type { SheetProtectionAllow } from '@softty/xlsx-gateway/gateway/xlsx-protection'
 import { GoToDialog } from './GoToDialog'
 import { QueriesDialog } from './QueriesDialog'
 import { SheetTabContextMenu } from './SheetTabContextMenu'
@@ -76,8 +76,8 @@ import { isModalOpen, resolveGlobalShortcut } from './global-shortcuts'
 import { stepFontSize } from './font-size-ladder'
 import { scrollRibbonOnWheel } from './ribbon-wheel'
 
-import type { ChartSeriesVisualState } from '@genoffice/xlsx-gateway/domain/chart-visual'
-import type { ChangePlan } from '@genoffice/xlsx-gateway/domain/workbook.types'
+import type { ChartSeriesVisualState } from '@softty/xlsx-gateway/domain/chart-visual'
+import type { ChangePlan } from '@softty/xlsx-gateway/domain/workbook.types'
 import type {
   AttachmentMeta,
   WorkbookConnection as QueryConnection,

@@ -48,5 +48,5 @@ export function validPrintPaper(
   return { widthTwips: p.widthTwips, heightTwips: p.heightTwips }
 }
 
-export { printJobOptions } from '@genoffice/electron-utils/print-job'
-export type { PrintDuplex, PrintJobOptions } from '@genoffice/electron-utils/print-job'
+export { printJobOptions } from '@softty/electron-utils/print-job'
+export type { PrintDuplex, PrintJobOptions } from '@softty/electron-utils/print-job'

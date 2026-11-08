@@ -8,12 +8,12 @@ import { join } from 'node:path'
 
 import { BrowserWindow, dialog } from 'electron'
 
-import { isHeadlessMode, showSaveDialogWithMemory } from '@genoffice/electron-utils'
+import { isHeadlessMode, showSaveDialogWithMemory } from '@softty/electron-utils'
 
 import { atomicWriteFile } from './atomic-write'
 import { evenPageRanges, stitchPlan, type PageVariant } from './pdf-page-variants'
 import { printOptionsFor } from './print-options'
-import { printPdfViaCups, printToPdfOptionsFor } from '@genoffice/electron-utils/print-cups'
+import { printPdfViaCups, printToPdfOptionsFor } from '@softty/electron-utils/print-cups'
 
 import type { IpcMainInvokeEvent, WebContents } from 'electron'
 import type { PDFDocument } from 'pdf-lib'

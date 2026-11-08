@@ -2,7 +2,7 @@
 import { join } from 'node:path'
 import { readFileSync } from 'node:fs'
 import { app, net } from 'electron'
-import type { OpenedPptx } from '@genoffice/pptx-engine'
+import type { OpenedPptx } from '@softty/pptx-engine'
 import {
   downloadCatalogEntry as downloadEntry,
   downloadFontFamily as downloadFromStore,
@@ -11,8 +11,8 @@ import {
   normalizeCdnBaseUrl,
   type CatalogEntry,
   type FontStoreEnv,
-} from '@genoffice/electron-utils/font-store'
-import { FONT_CATALOG, type CatalogFamily } from '@genoffice/electron-utils/font-catalog'
+} from '@softty/electron-utils/font-store'
+import { FONT_CATALOG, type CatalogFamily } from '@softty/electron-utils/font-catalog'
 import { familyAvailable, fontFileFamilies, setUserFontDir } from './fonts'
 
 export { FONT_CATALOG, normalizeCdnBaseUrl }

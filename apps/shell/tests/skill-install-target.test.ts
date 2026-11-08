@@ -35,7 +35,7 @@ vi.mock('electron', () => ({
   },
 }))
 
-vi.mock('@genoffice/cli/agent-skills', () => {
+vi.mock('@softty/cli/agent-skills', () => {
   const skillsDir = '/home/me/.claude/skills'
   return {
     LEDGER_KEY: 'agentSkillInstalls',
@@ -56,7 +56,7 @@ vi.mock('@genoffice/cli/agent-skills', () => {
   }
 })
 
-vi.mock('@genoffice/cli/install', () => ({ inspectCliLink: () => ({ linked: false }) }))
+vi.mock('@softty/cli/install', () => ({ inspectCliLink: () => ({ linked: false }) }))
 
 import { registerIntegrationsIpc } from '../src/main/integrations-ipc'
 import { INTEGRATIONS_CHANNELS } from '../src/shared/integrations-api'

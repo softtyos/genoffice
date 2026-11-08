@@ -40,7 +40,7 @@ import {
   type WatermarkSpec,
   isContentControlLock,
   type ContentControlSpec,
-} from '@genoffice/docx-engine'
+} from '@softty/docx-engine'
 import type { FloatSpec } from '../../../../apps/docs/src/renderer/ai/floating-ops'
 import type { AiNotesAccess, NoteKind } from '../../../../apps/docs/src/renderer/ai/note-ops'
 import type { AiCommentsAccess } from '../../../../apps/docs/src/renderer/ai/tools'

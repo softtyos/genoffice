@@ -12,9 +12,9 @@ import {
   mergeCells,
   splitCell,
 } from '@tiptap/pm/tables'
-import { platformShortcuts } from '@genoffice/i18n'
+import { platformShortcuts } from '@softty/i18n'
 import { redactTextBetween, type RedactableNode } from '../ai/redact-view'
-import type { TextboxDisplay } from '@genoffice/docx-engine'
+import type { TextboxDisplay } from '@softty/docx-engine'
 
 import { useI18n, type StringKey } from '../i18n/locale'
 import { wordRangeAtCaret } from '../editor/comments'

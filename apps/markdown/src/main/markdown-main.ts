@@ -29,16 +29,16 @@ import {
   installRendererProtocol,
   registerRendererScheme,
   rendererUrl,
-} from '@genoffice/electron-utils'
-import { createI18n, getUiLang } from '@genoffice/i18n'
-import { generateImageTool, documentMediaRoots } from '@genoffice/ai-search'
+} from '@softty/electron-utils'
+import { createI18n, getUiLang } from '@softty/i18n'
+import { generateImageTool, documentMediaRoots } from '@softty/ai-search'
 import { ImageExportSessions } from './image-export'
 import { printMarkdownPdf } from './print-pdf'
 import { atomicWriteFile } from './atomic-write'
 import {
   createDocumentDiskWatcher,
   type DocumentDiskWatcher,
-} from '@genoffice/electron-utils/disk-watch'
+} from '@softty/electron-utils/disk-watch'
 import {
   copyImageIntoOwnedAssets,
   discardPendingOwnedAssets,
@@ -1454,7 +1454,7 @@ export function createMarkdownView(openPath?: string | null): WebContentsView {
   return view
 }
 
-/** Standalone window mode: `npm run dev -w @genoffice/markdown`, md path passed via argv */
+/** Standalone window mode: `npm run dev -w @softty/markdown`, md path passed via argv */
 export function startMarkdownStandalone(): void {
   registerRendererScheme()
   installNavigationGuard(app)

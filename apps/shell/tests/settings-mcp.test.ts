@@ -108,7 +108,7 @@ describe('MCP local server section', () => {
 
     // config example names the server apart from the stdio entry, with the streamable URL
     const code = host.querySelector('.set-code')
-    expect(code?.textContent).toContain('"genoffice-editor"')
+    expect(code?.textContent).toContain('"softty-office-mcp"')
     expect(code?.textContent).not.toContain('"genoffice"')
     expect(code?.textContent).toContain('http://127.0.0.1:3093/mcp')
 

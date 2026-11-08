@@ -26,7 +26,7 @@ import {
   createZoomWheelClassifier,
   useAutoSavePref,
   useAiSidebarEnabled,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import { commentAnchors, commentIdsAt, wordRangeAtCaret } from './editor/comments'
 import { setFieldInstr, toggleAllFieldCodes, type FieldRange } from './editor/field-codes'
 import { linkTarget } from './editor/link-actions'
@@ -97,7 +97,7 @@ import {
   type Watermark,
   type WatermarkSpec,
   type CommentImage,
-} from '@genoffice/docx-engine'
+} from '@softty/docx-engine'
 import type {
   AiDocContent,
   AiSettings,
@@ -2138,7 +2138,7 @@ export function App() {
 
   // window title follows the document, so the OS window list and Switch Window show file names
   useEffect(() => {
-    document.title = doc ? doc.fileName : 'GenOffice Docs'
+    document.title = doc ? doc.fileName : 'Softty Docs'
   }, [doc])
 
   useEffect(() => window.desktop.onTeardown?.(() => setTornDown(true)), [])

@@ -1,7 +1,7 @@
 import JSZip from 'jszip'
-import { parseAddress } from '@genoffice/xlsx-gateway/domain/cell-address'
-import { offsetFormulaRefs } from '@genoffice/xlsx-gateway/domain/formula-shift'
-import { assertZipInflatesWithinLimits, assertZipWithinLimits } from '@genoffice/docx-engine'
+import { parseAddress } from '@softty/xlsx-gateway/domain/cell-address'
+import { offsetFormulaRefs } from '@softty/xlsx-gateway/domain/formula-shift'
+import { assertZipInflatesWithinLimits, assertZipWithinLimits } from '@softty/docx-engine'
 import { resolveTarget } from './opc'
 import { XMLParser } from 'fast-xml-parser'
 import {
@@ -10,7 +10,7 @@ import {
   formatSerial,
   type DateFormatParts,
 } from './xlsx-dates'
-import { decodeXlsxEscapes } from '@genoffice/xlsx-gateway/gateway/xlsx-escapes'
+import { decodeXlsxEscapes } from '@softty/xlsx-gateway/gateway/xlsx-escapes'
 
 function stripNamespacePrefix(name: string): string {
   const separator = name.indexOf(':')

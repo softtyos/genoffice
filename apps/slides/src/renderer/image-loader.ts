@@ -4,7 +4,7 @@
  * until the last one settled). Loaded/in-flight urls are tracked across calls
  * so re-collecting urls after an edit never reloads or discards progress.
  */
-import { metafileToDataUrl } from '@genoffice/docx-engine/metafile'
+import { metafileToDataUrl } from '@softty/docx-engine/metafile'
 
 /** Slide media is cross-origin: without CORS a canvas that draws it is tainted (cutout, export). */
 export function setImageSource(img: HTMLImageElement, url: string): void {

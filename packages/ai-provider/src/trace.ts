@@ -7,7 +7,7 @@
  */
 import { appendFileSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
-import type { AgentMessage, AgentToolCall, AgentToolDef } from '@genoffice/agent-core'
+import type { AgentMessage, AgentToolCall, AgentToolDef } from '@softty/agent-core'
 import type { AiTokenUsage } from './types'
 
 export interface AiTraceRequest {

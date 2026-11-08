@@ -1,5 +1,5 @@
 import { basename, dirname } from 'node:path'
-import { DEFAULT_COMPARE_AUTHOR } from '@genoffice/docx-engine'
+import { DEFAULT_COMPARE_AUTHOR } from '@softty/docx-engine'
 import { flagBool, flagString } from '../args'
 import {
   PREVIEW_CHARS,

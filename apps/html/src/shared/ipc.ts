@@ -1,12 +1,12 @@
-import type { AiPanelPrefs } from '@genoffice/ui'
-import type { HeadlessExportTarget } from '@genoffice/electron-utils/headless-export'
-import type { Lang } from '@genoffice/i18n'
+import type { AiPanelPrefs } from '@softty/ui'
+import type { HeadlessExportTarget } from '@softty/electron-utils/headless-export'
+import type { Lang } from '@softty/i18n'
 import type {
   AiSettings,
   AiStreamChunk,
   AiStreamRequest,
   GenSparkAccountStatus,
-} from '@genoffice/ai-provider'
+} from '@softty/ai-provider'
 
 export const HTML_CHANNELS = {
   consumePending: 'html:consume-pending',

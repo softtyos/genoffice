@@ -5,7 +5,7 @@ import type {
   SectionInfo,
   TextFlowDirection,
   TextOutline,
-} from '@genoffice/docx-engine'
+} from '@softty/docx-engine'
 
 /** one placeable line of a block; `lead` marks ink-less space a float pushed the
  *  sole line past: the page bottom swallows it without a fit check */

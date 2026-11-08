@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import * as aiSearch from '@genoffice/ai-search'
+import * as aiSearch from '@softty/ai-search'
 import { run, tempDir } from './helpers'
 
 // hasGskAuth reads process.env, not the command context: isolate the login state per test

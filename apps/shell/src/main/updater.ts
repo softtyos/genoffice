@@ -5,7 +5,7 @@ import type { BrowserWindow } from 'electron'
 import { autoUpdater, CancellationToken } from 'electron-updater'
 import { installResumeDownload } from './update-resume'
 import type { UpdateInfo } from 'electron-updater'
-import { createI18n, getUiLang, htmlLang } from '@genoffice/i18n'
+import { createI18n, getUiLang, htmlLang } from '@softty/i18n'
 import type {
   UpdateChannel,
   UpdatePhase,

@@ -18,7 +18,7 @@ describe('genoffice mcp list', () => {
     const m = fakeMachine(['.cursor', '.gemini'])
     writeFileSync(
       join(m.home, '.gemini', 'settings.json'),
-      JSON.stringify({ mcpServers: { genoffice: { command: LAUNCHER, args: ['mcp'] } } }),
+      JSON.stringify({ mcpServers: { 'softty-office-mcp': { command: LAUNCHER, args: ['mcp'] } } }),
     )
     const r = await run(['mcp', 'list', '--json'], { env: m.env })
     expect(r.code).toBe(0)
@@ -66,7 +66,7 @@ describe('genoffice mcp install', () => {
     expect(JSON.parse(text)).toEqual({
       mcpServers: {
         other: { url: 'https://x.test/mcp' },
-        genoffice: { type: 'stdio', command: LAUNCHER, args: ['mcp'] },
+        'softty-office-mcp': { type: 'stdio', command: LAUNCHER, args: ['mcp'] },
       },
       theme: 'dark',
     })
@@ -82,7 +82,7 @@ describe('genoffice mcp install', () => {
     const r = await run(['mcp', 'install', 'windsurf', '--json'], { env: m.env })
     expect(r.code).toBe(0)
     expect(readJson(join(m.home, '.codeium', 'windsurf', 'mcp_config.json'))).toEqual({
-      mcpServers: { genoffice: { command: LAUNCHER, args: ['mcp'] } },
+      mcpServers: { 'softty-office-mcp': { command: LAUNCHER, args: ['mcp'] } },
     })
   })
 
@@ -98,7 +98,7 @@ describe('genoffice mcp install', () => {
     expect(first.json().detail.agents[0].status).toBe('installed')
     expect(readFileSync(file, 'utf-8')).toBe(
       'model = "gpt-5"\n\n[mcp_servers.other]\ncommand = "npx"\nargs = ["-y", "x"]\n\n' +
-        `[mcp_servers.genoffice]\ncommand = ${JSON.stringify(LAUNCHER)}\nargs = ["mcp"]\n`,
+        `[mcp_servers.softty-office-mcp]\ncommand = ${JSON.stringify(LAUNCHER)}\nargs = ["mcp"]\n`,
     )
     expect(
       (await run(['mcp', 'install', 'codex', '--json'], { env: m.env })).json().detail.agents[0]
@@ -107,8 +107,8 @@ describe('genoffice mcp install', () => {
 
     writeFileSync(
       file,
-      '[mcp_servers.genoffice]\ncommand = "/old/GenOffice.app/Contents/Resources/cli/genoffice"\nargs = ["mcp"]\n\n' +
-        '[mcp_servers.genoffice.env]\nFOO = "1"\n\n[mcp_servers.other]\ncommand = "npx"\n\n[projects."/tmp/x"]\ntrust_level = "trusted"\n',
+      '[mcp_servers.softty-office-mcp]\ncommand = "/old/GenOffice.app/Contents/Resources/cli/genoffice"\nargs = ["mcp"]\n\n' +
+        '[mcp_servers.softty-office-mcp.env]\nFOO = "1"\n\n[mcp_servers.other]\ncommand = "npx"\n\n[projects."/tmp/x"]\ntrust_level = "trusted"\n',
     )
     const listed = await run(['mcp', 'list', '--json'], { env: m.env })
     expect(listed.json().detail.agents.find((a: any) => a.agent === 'codex')).toMatchObject({
@@ -121,7 +121,7 @@ describe('genoffice mcp install', () => {
     expect(replaced.json().detail.agents[0].status).toBe('updated')
     expect(readFileSync(file, 'utf-8')).toBe(
       '[mcp_servers.other]\ncommand = "npx"\n\n[projects."/tmp/x"]\ntrust_level = "trusted"\n\n' +
-        `[mcp_servers.genoffice]\ncommand = ${JSON.stringify(LAUNCHER)}\nargs = ["mcp"]\n`,
+        `[mcp_servers.softty-office-mcp]\ncommand = ${JSON.stringify(LAUNCHER)}\nargs = ["mcp"]\n`,
     )
   })
 
@@ -129,12 +129,12 @@ describe('genoffice mcp install', () => {
     const m = fakeMachine(['.cursor', '.codex'])
     const file = join(m.home, '.cursor', 'mcp.json')
     const before = JSON.stringify({
-      mcpServers: { genoffice: { command: 'npx', args: ['other'] } },
+      mcpServers: { 'softty-office-mcp': { command: 'npx', args: ['other'] } },
     })
     writeFileSync(file, before)
     writeFileSync(
       join(m.home, '.codex', 'config.toml'),
-      '[mcp_servers.genoffice]\nurl = "https://x.test"\n',
+      '[mcp_servers.softty-office-mcp]\nurl = "https://x.test"\n',
     )
 
     const r = await run(['mcp', 'install', 'cursor', '--json'], { env: m.env })
@@ -160,7 +160,7 @@ describe('genoffice mcp install', () => {
     const forced = await run(['mcp', 'install', 'cursor', '--force', '--json'], { env: m.env })
     expect(forced.code).toBe(0)
     expect(forced.json().detail.agents[0].status).toBe('updated')
-    expect(readJson(file).mcpServers.genoffice.command).toBe(LAUNCHER)
+    expect(readJson(file).mcpServers['softty-office-mcp'].command).toBe(LAUNCHER)
   })
 
   it('install all writes only detected agents; an undetected agent needs --force', async () => {
@@ -175,13 +175,13 @@ describe('genoffice mcp install', () => {
         .sort(),
     ).toEqual(['copilot', 'gemini', 'opencode'])
     expect(rows.filter((a: any) => a.status === 'not_detected').length).toBe(5)
-    expect(readJson(join(m.home, '.copilot', 'mcp-config.json')).mcpServers.genoffice).toEqual({
+    expect(readJson(join(m.home, '.copilot', 'mcp-config.json')).mcpServers['softty-office-mcp']).toEqual({
       type: 'local',
       command: LAUNCHER,
       args: ['mcp'],
       tools: ['*'],
     })
-    expect(readJson(join(m.home, '.config', 'opencode', 'opencode.json')).mcp.genoffice).toEqual({
+    expect(readJson(join(m.home, '.config', 'opencode', 'opencode.json')).mcp['softty-office-mcp']).toEqual({
       type: 'local',
       command: [LAUNCHER, 'mcp'],
       enabled: true,
@@ -223,7 +223,7 @@ describe('genoffice mcp install', () => {
     expect(readJson(file)).toEqual({
       numStartups: 3,
       projects: { '/p': { mcpServers: {} } },
-      mcpServers: { genoffice: { type: 'stdio', command: LAUNCHER, args: ['mcp'] } },
+      mcpServers: { 'softty-office-mcp': { type: 'stdio', command: LAUNCHER, args: ['mcp'] } },
     })
 
     const custom = join(m.home, 'cc-config')
@@ -231,7 +231,7 @@ describe('genoffice mcp install', () => {
     const env = { ...m.env, CLAUDE_CONFIG_DIR: custom }
     const r2 = await run(['mcp', 'install', 'claude-code', '--json'], { env })
     expect(r2.code).toBe(0)
-    expect(readJson(join(custom, '.claude.json')).mcpServers.genoffice.command).toBe(LAUNCHER)
+    expect(readJson(join(custom, '.claude.json')).mcpServers['softty-office-mcp'].command).toBe(LAUNCHER)
   })
 
   it('--dir points one agent at a custom config folder, resolved against the working directory', async () => {
@@ -246,7 +246,7 @@ describe('genoffice mcp install', () => {
       status: 'installed',
       config: join(m.home, 'cfg', 'settings.json'),
     })
-    expect(readJson(join(m.home, 'cfg', 'settings.json')).mcpServers.genoffice.args).toEqual([
+    expect(readJson(join(m.home, 'cfg', 'settings.json')).mcpServers['softty-office-mcp'].args).toEqual([
       'mcp',
     ])
     const all = await run(['mcp', 'install', 'all', '--dir', 'cfg', '--json'], { env: m.env })
@@ -260,7 +260,7 @@ describe('genoffice mcp install', () => {
     const r = await run(['mcp', 'install', 'cursor', '--json'], { env: m.env })
     expect(r.code).toBe(2)
     expect(r.json().detail.status).toBe('manual')
-    expect(JSON.parse(r.json().detail.snippet).mcpServers.genoffice.command).toBe(LAUNCHER)
+    expect(JSON.parse(r.json().detail.snippet).mcpServers['softty-office-mcp'].command).toBe(LAUNCHER)
     expect(readFileSync(join(m.home, '.cursor', 'mcp.json'), 'utf-8')).toBe(
       '{ "mcpServers": { broken ',
     )
@@ -279,7 +279,7 @@ describe('genoffice mcp install summaries', () => {
     const m = fakeMachine(['.cursor', '.gemini'])
     writeFileSync(
       join(m.home, '.cursor', 'mcp.json'),
-      JSON.stringify({ mcpServers: { genoffice: { command: 'npx' } } }),
+      JSON.stringify({ mcpServers: { 'softty-office-mcp': { command: 'npx' } } }),
     )
     writeFileSync(join(m.home, '.gemini', 'settings.json'), '{ not json')
     const r = await run(['mcp', 'install', 'all', '--json'], { env: m.env })
@@ -307,7 +307,7 @@ describe('genoffice mcp install summaries', () => {
     const r = await run(['mcp', 'install', 'cursor', '--json'], { env: m.env })
     expect(r.code).toBe(0)
     expect(r.json().detail.agents[0].status).toBe('installed')
-    expect(readJson(file).mcpServers.genoffice.command).toBe(LAUNCHER)
+    expect(readJson(file).mcpServers['softty-office-mcp'].command).toBe(LAUNCHER)
   })
 })
 
@@ -328,10 +328,10 @@ describe('genoffice mcp with a symlinked config', () => {
     expect(lstatSync(link).isSymbolicLink()).toBe(true)
     expect(readJson(target).mcpServers).toEqual({
       other: { command: 'x' },
-      genoffice: { type: 'stdio', command: LAUNCHER, args: ['mcp'] },
+      'softty-office-mcp': { type: 'stdio', command: LAUNCHER, args: ['mcp'] },
     })
     expect(lstatSync(join(m.home, '.claude.json')).isSymbolicLink()).toBe(true)
-    expect(readJson(claudeTarget).mcpServers.genoffice.command).toBe(LAUNCHER)
+    expect(readJson(claudeTarget).mcpServers['softty-office-mcp'].command).toBe(LAUNCHER)
 
     const u = await run(['mcp', 'uninstall', 'cursor', '--json'], { env: m.env })
     expect(u.json().detail.agents[0].status).toBe('removed')
@@ -354,7 +354,7 @@ describe('genoffice mcp with a symlinked config directory', () => {
     const r = await run(['mcp', 'install', 'cursor', '--json'], { env: m.env })
     expect(r.code).toBe(0)
     expect(r.json().detail.agents[0].status).toBe('installed')
-    expect(readJson(target).mcpServers.genoffice.command).toBe(LAUNCHER)
+    expect(readJson(target).mcpServers['softty-office-mcp'].command).toBe(LAUNCHER)
     expect(lstatSync(join(m.home, '.cursor')).isSymbolicLink()).toBe(true)
     expect(lstatSync(join(dotfiles, 'cursor', 'mcp.json')).isSymbolicLink()).toBe(true)
     expect(existsSync(join(m.home, 'store'))).toBe(false)
@@ -366,7 +366,7 @@ describe('genoffice mcp uninstall', () => {
     const m = fakeMachine(['.gemini', '.cursor'])
     writeFileSync(
       join(m.home, '.gemini', 'settings.json'),
-      JSON.stringify({ mcpServers: { genoffice: { command: 'npx' } } }),
+      JSON.stringify({ mcpServers: { 'softty-office-mcp': { command: 'npx' } } }),
     )
     writeFileSync(join(m.home, '.cursor', 'mcp.json'), '{ broken')
     const absent = await run(['mcp', 'uninstall', 'codex', '--json'], { env: m.env })
@@ -397,7 +397,7 @@ describe('genoffice mcp uninstall', () => {
       JSON.stringify({
         mcpServers: {
           other: { url: 'https://x.test/mcp' },
-          genoffice: { command: LAUNCHER, args: ['mcp'] },
+          'softty-office-mcp': { command: LAUNCHER, args: ['mcp'] },
         },
         theme: 'dark',
       }),
@@ -405,7 +405,7 @@ describe('genoffice mcp uninstall', () => {
     const toml = join(m.home, '.codex', 'config.toml')
     writeFileSync(
       toml,
-      `model = "gpt-5"\n\n[mcp_servers.genoffice]\ncommand = ${JSON.stringify(LAUNCHER)}\nargs = ["mcp"]\n\n[mcp_servers.other]\ncommand = "npx"\n`,
+      `model = "gpt-5"\n\n[mcp_servers.softty-office-mcp]\ncommand = ${JSON.stringify(LAUNCHER)}\nargs = ["mcp"]\n\n[mcp_servers.other]\ncommand = "npx"\n`,
     )
     const r = await run(['mcp', 'uninstall', 'all', '--json'], { env: m.env })
     expect(r.code).toBe(0)
@@ -431,11 +431,11 @@ describe('genoffice mcp uninstall', () => {
   it('does not remove an entry that starts another program unless --force', async () => {
     const m = fakeMachine(['.gemini'])
     const file = join(m.home, '.gemini', 'settings.json')
-    writeFileSync(file, JSON.stringify({ mcpServers: { genoffice: { command: 'npx' } } }))
+    writeFileSync(file, JSON.stringify({ mcpServers: { 'softty-office-mcp': { command: 'npx' } } }))
     const r = await run(['mcp', 'uninstall', 'gemini', '--json'], { env: m.env })
     expect(r.code).toBe(2)
     expect(r.json().detail.status).toBe('occupied')
-    expect(readJson(file).mcpServers.genoffice.command).toBe('npx')
+    expect(readJson(file).mcpServers['softty-office-mcp'].command).toBe('npx')
     const forced = await run(['mcp', 'uninstall', 'gemini', '--force', '--json'], { env: m.env })
     expect(forced.code).toBe(0)
     expect(readJson(file)).toEqual({ mcpServers: {} })

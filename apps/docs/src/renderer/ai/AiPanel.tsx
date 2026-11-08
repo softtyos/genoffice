@@ -12,11 +12,11 @@ import {
   addTokenUsage,
   type AiTokenUsageView,
   useChatRunQueue,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { aiRevisionAuthor } from './revision-author'
 import type { Editor } from '@tiptap/core'
-import type { Block } from '@genoffice/docx-engine'
+import type { Block } from '@softty/docx-engine'
 import {
   AgentLoop,
   composeSkills,
@@ -26,9 +26,9 @@ import {
   type AgentImage,
   type KbFileInfo,
   type MindMapTreeNode,
-} from '@genoffice/agent-core'
+} from '@softty/agent-core'
 import { redactTextBetween, type RedactableNode } from './redact-view'
-import { imageGenerationAvailable, mediaAnalysisAvailable } from '@genoffice/ai-provider/browser'
+import { imageGenerationAvailable, mediaAnalysisAvailable } from '@softty/ai-provider/browser'
 import type { AiSettings, AttachmentAddResult, AttachmentMeta } from '../../shared/ipc'
 import { ATTACHMENT_IMAGE_EXTS } from '../../shared/ipc'
 import {
@@ -41,7 +41,7 @@ import {
   saveAiPanelWidth,
   SentAttachments,
   truncateCardName,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import type { PmNode } from '../editor/convert'
 import { TABLE_TRAILING_SKIP } from '../editor/extensions'
 import { countWords, findNumId, type NumIds } from './protocol'
@@ -87,8 +87,8 @@ import { createSkillsSkill } from './skills-skill'
 import { boundChatHistory } from './chat-retention'
 import { createElectronTransport } from './transport'
 import { useI18n, t as tModule, aiLangDirective, type StringKey } from '../i18n/locale'
-import { createFileNav, Markdown } from '@genoffice/ui'
-import { AiComposer, AiScopeQuote, AiTypingIndicator, type AiScopeQuoteData } from '@genoffice/ui'
+import { createFileNav, Markdown } from '@softty/ui'
+import { AiComposer, AiScopeQuote, AiTypingIndicator, type AiScopeQuoteData } from '@softty/ui'
 import { GensparkMark } from '../components/icons'
 import sendEnterOn from '../assets/send-enter-on.png'
 import sendEnterOff from '../assets/send-enter-off.png'

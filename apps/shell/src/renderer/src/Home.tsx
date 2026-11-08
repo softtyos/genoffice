@@ -24,7 +24,7 @@ import type {
 } from '../../shared/home-api'
 import type { IntegrationsApi } from '../../shared/integrations-api'
 import { markText } from '../../shared/text-marks'
-import { useDismissablePopover, useEscapeToClose } from '@genoffice/ui'
+import { useDismissablePopover, useEscapeToClose } from '@softty/ui'
 import { fileCountLabel, visiblePageCount } from './counts'
 import { useI18n } from './locale'
 import type { I18n, StringKey } from './locale'
@@ -33,7 +33,7 @@ import type { SettingsTarget } from './SettingsModal'
 import { skillUpdateDue } from './IntegrationsPane'
 import { onFilesChanged } from './file-events'
 
-import type { ProjectApi } from '@genoffice/project-store'
+import type { ProjectApi } from '@softty/project-store'
 
 declare global {
   interface Window {
@@ -1004,7 +1004,7 @@ function AccountEntry({
             ? email || t('loggedInGenspark')
             : waiting
               ? t('waitingLogin')
-              : (errorText ?? t('loginGenspark'))
+              : (errorText ?? t('settings'))
         }
         aria-label={t('settings')}
       >
@@ -1046,7 +1046,7 @@ function AccountEntry({
                 : t('loggedIn')
               : waiting
                 ? t('waitingShort')
-                : t('login')}
+                : t('settings')}
           </span>
           {!loggedIn && !waiting && errorText && (
             <span className="account-sub error">{errorText}</span>
@@ -3443,7 +3443,7 @@ export function Home() {
         style={sidebarWidth === null ? undefined : { width: sidebarWidth }}
       >
         <div className="sidebar-logo">
-          <img className="logo-lockup" src={logoLockup} alt="GenOffice" />
+          <img className="logo-lockup" src={logoLockup} alt="Softty Office" />
         </div>
         <nav className="sidebar-nav">
           <button

@@ -5,11 +5,11 @@ import {
   AI_PROVIDERS,
   AI_SEARCH_PROVIDERS,
   getProviderAdapter,
-} from '@genoffice/ai-provider/browser'
-import type { AiSettings, CodexModelCatalog } from '@genoffice/ai-provider/browser'
-import { installDropOpenBridge } from '@genoffice/electron-utils/drop-open'
+} from '@softty/ai-provider/browser'
+import type { AiSettings, CodexModelCatalog } from '@softty/ai-provider/browser'
+import { installDropOpenBridge } from '@softty/electron-utils/drop-open'
 import type { UpdateUiState } from '../shared/update-api'
-import { normalizeAiPanelPrefs } from '@genoffice/ui/ai-panel-prefs'
+import { normalizeAiPanelPrefs } from '@softty/ui/ai-panel-prefs'
 import type {
   AccountLoginEvent,
   AccountStatus,
@@ -28,7 +28,7 @@ import type {
   FileSearchRerank,
   FileSearchSettings,
 } from '../shared/home-api'
-import type { ProjectApi } from '@genoffice/project-store'
+import type { ProjectApi } from '@softty/project-store'
 import { HOME_CHANNELS } from '../shared/home-api'
 import { INTEGRATIONS_CHANNELS } from '../shared/integrations-api'
 import type {
@@ -629,10 +629,10 @@ const homeApi: HomeApi = {
     await ipcRenderer.invoke('ai:set-settings', settings)
   },
   getAiProviders() {
-    return AI_PROVIDERS.map((meta) => {
+    const mapped = AI_PROVIDERS.filter((meta) => meta.id !== 'genspark').map((meta) => {
       let defaultBaseUrl = ''
-      // genspark routes by model and custom has no default — both stay ''
-      if (meta.id !== 'genspark' && !meta.needsBaseUrl && !meta.needsCliPath) {
+      // custom has no default — stays ''
+      if (!meta.needsBaseUrl && !meta.needsCliPath) {
         defaultBaseUrl = getProviderAdapter(meta.id).resolveEndpoint({
           apiKey: '',
           model: meta.defaultModel,
@@ -640,6 +640,12 @@ const homeApi: HomeApi = {
       }
       return { ...meta, defaultBaseUrl }
     })
+    const customIdx = mapped.findIndex((m) => m.id === 'custom')
+    if (customIdx > 0) {
+      const [customMeta] = mapped.splice(customIdx, 1)
+      mapped.unshift(customMeta!)
+    }
+    return mapped
   },
   async getCodexModels(cliPath) {
     return (await ipcRenderer.invoke('ai:codex-models', cliPath)) as CodexModelCatalog
@@ -705,7 +711,7 @@ contextBridge.exposeInMainWorld('aiOffice', homeApi)
  * Model file naming.
  *
  * The same channel the editor apps expose under this name, so the shared
- * client (`@genoffice/ui`) finds one bridge wherever it runs.
+ * client (`@softty/ui`) finds one bridge wherever it runs.
  *
  * A global of its own rather than part of `aiOffice`: `aiOffice` is the
  * shell's home API, and an editor window that reused the name would shadow it

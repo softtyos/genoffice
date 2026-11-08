@@ -78,11 +78,11 @@ import {
   configuredAuthorName,
   readLegacyImportSkip,
   writeLegacyImportSkip,
-} from '@genoffice/electron-utils'
-import { createMainProcessProxyDispatcher } from '@genoffice/electron-utils/main-proxy'
-import { fetchRemoteTable } from '@genoffice/electron-utils/remote-table'
-import { createI18n, getUiLang, type Lang, normalizeLang, setUiLang } from '@genoffice/i18n'
-import { ProjectStore } from '@genoffice/project-store'
+} from '@softty/electron-utils'
+import { createMainProcessProxyDispatcher } from '@softty/electron-utils/main-proxy'
+import { fetchRemoteTable } from '@softty/electron-utils/remote-table'
+import { createI18n, getUiLang, type Lang, normalizeLang, setUiLang } from '@softty/i18n'
+import { ProjectStore } from '@softty/project-store'
 
 import {
   AiCreditsError,
@@ -104,13 +104,13 @@ import {
   type AiStreamChunk,
   type GenSparkAccountStatus,
   type LegacyAiSettings,
-} from '@genoffice/ai-provider'
-import { shutdownCodexAppServers } from '@genoffice/ai-provider/codex-app-server'
-import { decodeCsvBuffer } from '@genoffice/xlsx-gateway/gateway/csv-import'
+} from '@softty/ai-provider'
+import { shutdownCodexAppServers } from '@softty/ai-provider/codex-app-server'
+import { decodeCsvBuffer } from '@softty/xlsx-gateway/gateway/csv-import'
 import {
   csvToXlsxBufferForOpen,
   sheetCsvToXlsxBuffer,
-} from '@genoffice/xlsx-gateway/gateway/csv-import-xlsx'
+} from '@softty/xlsx-gateway/gateway/csv-import-xlsx'
 import {
   ensureGenofficeLogin,
   noteGskCallFailure,
@@ -123,24 +123,24 @@ import {
   imageSearchTool,
   generateImageTool,
   localMediaRoots,
-} from '@genoffice/ai-search'
-import { parseFileToText } from '@genoffice/file-parse'
-import type { CellEdit, SheetStructuralOps } from '@genoffice/xlsx-gateway/gateway/xlsx-gateway'
+} from '@softty/ai-search'
+import { parseFileToText } from '@softty/file-parse'
+import type { CellEdit, SheetStructuralOps } from '@softty/xlsx-gateway/gateway/xlsx-gateway'
 import {
   readArchiveEntriesText,
   readArchiveEntryText,
   saveWorkbookViaSidecar,
   type ArchiveClient,
-} from '@genoffice/xlsx-gateway/gateway/xlsx-package-io'
+} from '@softty/xlsx-gateway/gateway/xlsx-package-io'
 import {
   connectionSourceOf,
   refreshableQueriesOf,
-} from '@genoffice/xlsx-gateway/gateway/xlsx-connection-refresh'
-import type { PartReader } from '@genoffice/xlsx-gateway/gateway/xlsx-connections'
-import { parsePivotDefinition } from '@genoffice/xlsx-gateway/gateway/xlsx-pivot'
-import { parseSlicerState } from '@genoffice/xlsx-gateway/gateway/xlsx-slicer'
-import { listWorkbookQueries } from '@genoffice/xlsx-gateway/gateway/xlsx-connections'
-import type { SheetEditPlan } from '@genoffice/xlsx-gateway/gateway/xlsx-sheets'
+} from '@softty/xlsx-gateway/gateway/xlsx-connection-refresh'
+import type { PartReader } from '@softty/xlsx-gateway/gateway/xlsx-connections'
+import { parsePivotDefinition } from '@softty/xlsx-gateway/gateway/xlsx-pivot'
+import { parseSlicerState } from '@softty/xlsx-gateway/gateway/xlsx-slicer'
+import { listWorkbookQueries } from '@softty/xlsx-gateway/gateway/xlsx-connections'
+import type { SheetEditPlan } from '@softty/xlsx-gateway/gateway/xlsx-sheets'
 import { manifestNamesSchema, readWorkbookRedactionPart } from './workbook-redactions'
 import type {
   AttachmentAddResult,
@@ -209,7 +209,7 @@ import { allowsAutomaticWorkbookRecovery } from './recovery-policy'
 import {
   setSystemShortDate,
   shortDatePatternForSystemLocale,
-} from '@genoffice/xlsx-gateway/shared/short-date'
+} from '@softty/xlsx-gateway/shared/short-date'
 import {
   cleanupExpiredPastedFiles,
   cleanupImportTempDirectory,
@@ -2547,7 +2547,7 @@ export async function createSheetsWindow(
     minWidth: 720,
     minHeight: 550,
     show: false,
-    title: 'GenOffice Sheets',
+    title: 'Softty Sheets',
     // Traffic lights sit inside the toolbar row.
     ...(process.platform === 'darwin' ? { titleBarStyle: 'hiddenInset' as const } : {}),
     webPreferences: {
@@ -2735,7 +2735,7 @@ const ATTACHMENT_TEXT_EXTS = new Set([
   'sql',
   'css',
 ])
-/** office/pdf formats extract text via @genoffice/file-parse; images skip text
+/** office/pdf formats extract text via @softty/file-parse; images skip text
  * extraction and go multimodal (sheets:files-read-image) */
 const ATTACHMENT_EXTS = new Set([
   ...ATTACHMENT_TEXT_EXTS,
@@ -2816,7 +2816,7 @@ function savePastedImage(data: unknown, ext: unknown): string | null {
   return filePath
 }
 
-/** Attachment text extraction via @genoffice/file-parse (docx/pdf/pptx/xlsx/plain text) */
+/** Attachment text extraction via @softty/file-parse (docx/pdf/pptx/xlsx/plain text) */
 async function extractAttachmentText(filePath: string): Promise<string> {
   const stat = statSync(filePath)
   const stamp = `${stat.mtimeMs}:${stat.size}`

@@ -14,7 +14,7 @@ import type {
   RenderTextLayout,
   ShapeRenderNode,
   TableRenderNode,
-} from '@genoffice/pptx-render'
+} from '@softty/pptx-render'
 
 export interface FindMatch {
   slideIndex: number

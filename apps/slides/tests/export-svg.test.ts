@@ -8,7 +8,7 @@ import type {
   RenderTextLayout,
   ShapeRenderNode,
   TableRenderNode,
-} from '@genoffice/pptx-render'
+} from '@softty/pptx-render'
 
 import { arcPath, polylinePath, renderSlideToSvg, rotatedBounds } from '../src/renderer/export-svg'
 

@@ -7,7 +7,7 @@ import {
   savePptx,
   type OpenedPptx,
   type TextElement,
-} from '@genoffice/pptx-engine'
+} from '@softty/pptx-engine'
 import { runTxn } from '../src/ops/executor'
 import '../src/ops/index'
 

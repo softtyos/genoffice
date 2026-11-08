@@ -11,8 +11,8 @@ import {
   resolve,
   sep,
 } from 'node:path'
-import { parseArgs, type ParsedArgs } from '@genoffice/cli/args'
-import type { CliRunRequest, CliRunResult, CliStagedFile } from '@genoffice/agent-core'
+import { parseArgs, type ParsedArgs } from '@softty/cli/args'
+import type { CliRunRequest, CliRunResult, CliStagedFile } from '@softty/agent-core'
 import type { CliRunner } from './mcp/cli-runner'
 
 /**

@@ -15,7 +15,7 @@
  * `packages/pptx-ops/src/op-docs.ts` imports its op guides with Vite's `?raw`
  * suffix, which is not a Node loader feature, so the run dies on
  * `ERR_UNKNOWN_FILE_EXTENSION ".md"`. The supported build is the esbuild bundle
- * (`npm run build -w @genoffice/cli`), which resolves `?raw` and is what the
+ * (`npm run build -w @softty/cli`), which resolves `?raw` and is what the
  * packaged app actually ships. So the figure shows what the shipped command
  * prints, not what a source run would.
  *
@@ -89,13 +89,13 @@ function capture(args: string[], env: NodeJS.ProcessEnv = {}): string {
 function ensureCliBundle(): void {
   if (existsSync(CLI_BUNDLE)) return
   process.stdout.write('building the CLI bundle...\n')
-  const build = spawnSync('npm', ['run', 'build', '-w', '@genoffice/cli'], {
+  const build = spawnSync('npm', ['run', 'build', '-w', '@softty/cli'], {
     cwd: REPO,
     encoding: 'utf8',
     stdio: 'inherit',
   })
   if (build.status !== 0 || !existsSync(CLI_BUNDLE)) {
-    throw new Error('could not build packages/cli; run npm run build -w @genoffice/cli by hand')
+    throw new Error('could not build packages/cli; run npm run build -w @softty/cli by hand')
   }
 }
 

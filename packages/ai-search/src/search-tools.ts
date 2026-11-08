@@ -12,7 +12,7 @@ import {
   cloudToolsEnabled,
   type AiSearchProviderId,
   type AiSettings,
-} from '@genoffice/ai-provider'
+} from '@softty/ai-provider'
 import { imageSearch, webSearch, type SearchOptions } from './index'
 import { readAiSettingsFile } from './media-tools'
 

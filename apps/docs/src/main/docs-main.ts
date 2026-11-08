@@ -73,10 +73,10 @@ import {
   recoveryCopyDiskNewer,
   readLegacyImportSkip,
   writeLegacyImportSkip,
-} from '@genoffice/electron-utils'
-import { configureMetricsCache, familyVerticalMetrics } from '@genoffice/font-metrics'
-import { createI18n, getUiLang, normalizeLang, setUiLang } from '@genoffice/i18n'
-import { ProjectStore } from '@genoffice/project-store'
+} from '@softty/electron-utils'
+import { configureMetricsCache, familyVerticalMetrics } from '@softty/font-metrics'
+import { createI18n, getUiLang, normalizeLang, setUiLang } from '@softty/i18n'
+import { ProjectStore } from '@softty/project-store'
 import type {
   IpcMainInvokeEvent,
   MenuItemConstructorOptions,
@@ -84,7 +84,7 @@ import type {
   SaveDialogOptions,
   WebContents,
 } from 'electron'
-import { parseFileToText } from '@genoffice/file-parse'
+import { parseFileToText } from '@softty/file-parse'
 import { convertLegacyDocToDocx } from '../../../../packages/doc2docx/src'
 import { convertHtmlToDocx } from '../../../../packages/html2docx/src'
 import { ElectronBrowserDriver } from '../../../../packages/html2docx/src/drivers/electron'
@@ -117,10 +117,10 @@ import {
   type AiStreamRequest,
   type GenSparkAccountStatus,
   type LegacyAiSettings,
-} from '@genoffice/ai-provider'
-import { listCodexModels, shutdownCodexAppServers } from '@genoffice/ai-provider/codex-app-server'
-import { startAiTrace } from '@genoffice/ai-provider/trace'
-import { listCustomModelsForIpc } from '@genoffice/ai-provider/custom-models'
+} from '@softty/ai-provider'
+import { listCodexModels, shutdownCodexAppServers } from '@softty/ai-provider/codex-app-server'
+import { startAiTrace } from '@softty/ai-provider/trace'
+import { listCustomModelsForIpc } from '@softty/ai-provider/custom-models'
 import {
   ensureGenofficeLogin,
   noteGskCallFailure,
@@ -134,7 +134,7 @@ import {
   imageSearchTool,
   analyzeMediaTool,
   documentMediaRoots,
-} from '@genoffice/ai-search'
+} from '@softty/ai-search'
 import type {
   AiDocContent,
   AttachmentAddResult,
@@ -199,8 +199,8 @@ import {
   validPrintGeometry,
   validPrintPaper,
 } from './print-args'
-import { printPdfViaCups } from '@genoffice/electron-utils/print-cups'
-import { printOutcome } from '@genoffice/electron-utils/print-job'
+import { printPdfViaCups } from '@softty/electron-utils/print-cups'
+import { printOutcome } from '@softty/electron-utils/print-job'
 import { addPdfInternalLinks } from './pdf-links'
 import {
   assignStarredGroup,
@@ -4303,7 +4303,7 @@ const TEXT_EXTS = new Set([
   'sql',
   'css',
 ])
-/** office/pdf formats get text extracted via @genoffice/file-parse; images skip extraction and go multimodal (files:read-image) */
+/** office/pdf formats get text extracted via @softty/file-parse; images skip extraction and go multimodal (files:read-image) */
 const ATTACHMENT_EXTS = new Set([
   ...TEXT_EXTS,
   'doc',
@@ -4403,7 +4403,7 @@ function savePastedImage(data: unknown, ext: unknown): string | null {
   return filePath
 }
 
-/** parse an attachment to text via @genoffice/file-parse (docx/pdf/pptx/xlsx/plain text) */
+/** parse an attachment to text via @softty/file-parse (docx/pdf/pptx/xlsx/plain text) */
 async function extractAttachmentText(filePath: string): Promise<string> {
   const stat = statSync(filePath)
   const stamp = `${stat.mtimeMs}:${stat.size}`
@@ -4429,7 +4429,7 @@ const TWIPS_PER_INCH = 1440
 
 // ---- AI settings + chat proxy (main process avoids renderer CORS) ----
 // provider metadata, settings defaults/migration, and per-provider streaming/chat
-// implementations live in @genoffice/ai-provider, shared with apps/sheets.
+// implementations live in @softty/ai-provider, shared with apps/sheets.
 
 const SETTINGS_PATH = () => userDataPath('ai-settings.json')
 
@@ -6712,7 +6712,7 @@ export function createDocsWindow(openPath?: string): BrowserWindow {
     height: 900,
     minWidth: 720,
     minHeight: 550,
-    title: 'GenOffice Docs',
+    title: 'Softty Docs',
     // Word-like custom title bar (document name centered, quick-access buttons)
     ...(process.platform === 'darwin'
       ? { titleBarStyle: 'hiddenInset' as const }

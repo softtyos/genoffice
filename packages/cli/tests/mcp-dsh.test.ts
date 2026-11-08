@@ -173,6 +173,6 @@ describe('the dsh Cordis patch shape', () => {
 
 describe('MCP_SERVER_NAME consistency', () => {
   it('the server name is genoffice across the shapes', () => {
-    expect(MCP_SERVER_NAME).toBe('genoffice')
+    expect(MCP_SERVER_NAME).toBe('softty-office-mcp')
   })
 })

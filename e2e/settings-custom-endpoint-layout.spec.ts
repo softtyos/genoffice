@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { defaultAiSettings, resolveCustomEndpoints } from '@genoffice/ai-provider'
+import { defaultAiSettings, resolveCustomEndpoints } from '@softty/ai-provider'
 import { closeAndSaveVideo, launchShell, screenshotPath } from './helpers'
 
 const locales = [

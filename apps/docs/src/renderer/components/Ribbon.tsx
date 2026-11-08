@@ -1,6 +1,6 @@
 import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import type { Lang } from '@genoffice/i18n'
+import type { Lang } from '@softty/i18n'
 
 export type ConvertFormat = 'pdf' | 'html' | 'md' | 'images'
 import type {
@@ -43,14 +43,14 @@ import type {
   PictureWatermarkSpec,
   Watermark,
   WatermarkSpec,
-} from '@genoffice/docx-engine'
+} from '@softty/docx-engine'
 import {
   Dropdown,
   isSymbolFontFamily,
   useDismissablePopover,
   useRibbonCollapse,
   useScrollWindow,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import { HIGHLIGHT_CSS } from '../editor/extensions'
 import { applyCase, type CaseMode } from '../editor/case-transform'
 import { isRtlUiLang, setParagraphDirection, setSelectionAlign } from '../editor/direction'

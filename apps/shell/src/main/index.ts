@@ -54,7 +54,7 @@ import menuHtmlIcon1x from './assets/menu-html.png?asset'
 import menuHtmlIcon2x from './assets/menu-html@2x.png?asset'
 import menuHomeIcon1x from './assets/menu-home.png?asset'
 import menuHomeIcon2x from './assets/menu-home@2x.png?asset'
-import { createI18n, isLang, normalizeLang, setUiLang, type Lang } from '@genoffice/i18n'
+import { createI18n, isLang, normalizeLang, setUiLang, type Lang } from '@softty/i18n'
 import {
   DEFAULT_SAVE_DIR_KEY,
   DROP_OPEN_CHANNEL,
@@ -87,8 +87,8 @@ import {
   systemAuthorName,
   readLegacyImportPrompt,
   writeLegacyImportPrompt,
-} from '@genoffice/electron-utils'
-import { createMainProcessProxyDispatcher } from '@genoffice/electron-utils/main-proxy'
+} from '@softty/electron-utils'
+import { createMainProcessProxyDispatcher } from '@softty/electron-utils/main-proxy'
 import {
   readAppSettings,
   writeAppSetting,
@@ -144,7 +144,7 @@ import {
   setGskProxyUrl,
   startGenofficeLogin,
   watchGskApiKey,
-} from '@genoffice/ai-search'
+} from '@softty/ai-search'
 
 import {
   buildDocsMenu,
@@ -179,7 +179,7 @@ import {
   uniquePathIn,
   authorizeMcpDocWrite,
 } from '../../../docs/src/main/docs-main'
-import { blankXlsxBuffer } from '@genoffice/xlsx-gateway/gateway/csv-import-xlsx'
+import { blankXlsxBuffer } from '@softty/xlsx-gateway/gateway/csv-import-xlsx'
 import { blankPdfBuffer } from '../../../pdf/src/main/blank-pdf'
 import {
   applyMcpSettings,
@@ -310,7 +310,7 @@ import {
   normalizeAiPanelPrefs,
   sameAiPanelPrefs,
   type AiPanelPrefs,
-} from '@genoffice/ui/ai-panel-prefs'
+} from '@softty/ui/ai-panel-prefs'
 import type { TabKind } from '../shared/tabs-api'
 import { TABS_CHANNELS } from '../shared/tabs-api'
 import { showErrorDialog } from './error-dialog'
@@ -4099,7 +4099,7 @@ function createShellWindow(): void {
     ...(restored ? { x: restored.x, y: restored.y } : {}),
     minWidth: SHELL_WINDOW_MIN_WIDTH,
     minHeight: SHELL_WINDOW_MIN_HEIGHT,
-    title: 'GenOffice',
+    title: 'Softty Office',
     // Paint the theme's surface before the renderer's first frame so the window
     // does not flash white in dark mode. nativeTheme.themeSource is already set
     // from the saved theme in app.whenReady, before this window is created.

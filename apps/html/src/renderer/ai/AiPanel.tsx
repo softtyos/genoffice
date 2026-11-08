@@ -5,20 +5,20 @@ import {
   type AiModelPickerBridge,
   AiSkillChips,
   AiSkillsMenu,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import {
   AI_PANEL_WIDTH_DEFAULT,
   clampAiPanelWidth,
   formatAttachmentSize,
   loadAiPanelWidth,
   saveAiPanelWidth,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import { useEffect, useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent, ReactElement, ReactNode } from 'react'
-import { AgentLoop, composeSkills, withAttachedSkills } from '@genoffice/agent-core'
-import type { AgentImage } from '@genoffice/agent-core'
-import type { AiSettings } from '@genoffice/ai-provider'
-import { imageGenerationAvailable } from '@genoffice/ai-provider/browser'
+import { AgentLoop, composeSkills, withAttachedSkills } from '@softty/agent-core'
+import type { AgentImage } from '@softty/agent-core'
+import type { AiSettings } from '@softty/ai-provider'
+import { imageGenerationAvailable } from '@softty/ai-provider/browser'
 import { ATTACHMENT_IMAGE_EXTS } from '../../shared/ipc'
 import type { AttachmentAddResult, AttachmentMeta } from '../../shared/ipc'
 import {
@@ -34,7 +34,7 @@ import {
   useChatRunQueue,
   type AiScopeQuoteData,
   type AiTokenUsageView,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import { aiLangDirective, t as tGlobal, useI18n } from '../i18n/locale'
 import sendEnterOn from '../assets/send-enter-on.png'
 import sendEnterOff from '../assets/send-enter-off.png'

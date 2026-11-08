@@ -8,7 +8,7 @@ import {
   RibbonExpandButton,
   useDismissablePopover,
   useRibbonCollapse,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import { useI18n } from '../i18n/locale'
 import { MARKDOWN_THEME_IDS, type MarkdownTheme } from '../../shared/markdown-theme'
 import type { StringKey } from '../i18n/locale'

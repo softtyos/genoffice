@@ -45,7 +45,7 @@ import {
   setActiveSlidesWebContents,
   slidesIsDirty,
 } from '../../../slides/src/main/slides-main'
-import { rendererUrl, safeExternalUrl } from '@genoffice/electron-utils'
+import { rendererUrl, safeExternalUrl } from '@softty/electron-utils'
 import type { DocumentTabKind, OpenDocumentTab, TabKind, TabSummary } from '../shared/tabs-api'
 import { isSettledRect, tabStripHeight } from '../shared/tab-drag-geometry'
 import {

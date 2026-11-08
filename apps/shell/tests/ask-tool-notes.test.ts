@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import type { AgentToolCall } from '@genoffice/agent-core'
+import type { AgentToolCall } from '@softty/agent-core'
 
 import { appendToolNote, toolNoteDetail, type ToolNote } from '../src/renderer/src/ask-tool-notes'
 

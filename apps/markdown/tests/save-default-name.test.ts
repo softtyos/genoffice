@@ -79,7 +79,7 @@ vi.mock('electron', () => ({
   },
 }))
 
-vi.mock('@genoffice/electron-utils', () => ({
+vi.mock('@softty/electron-utils', () => ({
   configuredDefaultSaveDir: vi.fn(() => tmpdir()),
   contextMenuLabels: vi.fn(() => ({})),
   installContextMenu: vi.fn(),

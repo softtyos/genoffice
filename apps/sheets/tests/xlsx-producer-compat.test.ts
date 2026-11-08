@@ -7,8 +7,8 @@ import { describe, expect, it } from 'vitest'
 import {
   applyCellEditsToXlsx,
   readBasicWorkbook,
-} from '@genoffice/xlsx-gateway/gateway/xlsx-gateway'
-import { parseSheetElements } from '@genoffice/xlsx-gateway/gateway/xlsx-sheets'
+} from '@softty/xlsx-gateway/gateway/xlsx-gateway'
+import { parseSheetElements } from '@softty/xlsx-gateway/gateway/xlsx-sheets'
 
 const CONTENT_TYPES =
   '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +

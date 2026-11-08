@@ -12,7 +12,7 @@ import {
   type CommentImage,
   type CommentInfo,
   type NoteInfo,
-} from '@genoffice/docx-engine'
+} from '@softty/docx-engine'
 import type { Dispatch, SetStateAction } from 'react'
 import { authorName } from './author-name'
 import { fetchDocBytes } from './doc-bytes'

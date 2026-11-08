@@ -15,7 +15,7 @@ import {
   type CliContext,
   type CreateDocumentFormat,
   type KbFileInfo,
-} from '@genoffice/agent-core'
+} from '@softty/agent-core'
 import {
   AiComposer,
   AiModelPicker,
@@ -28,10 +28,10 @@ import {
   createFileNav,
   Markdown,
   type AiTokenUsageView,
-} from '@genoffice/ui'
-import type { AiSettings } from '@genoffice/ai-provider'
-import { activeProvider } from '@genoffice/ai-provider/browser'
-import type { ChatMessage, ChatMeta, ProjectApi } from '@genoffice/project-store'
+} from '@softty/ui'
+import type { AiSettings } from '@softty/ai-provider'
+import { activeProvider } from '@softty/ai-provider/browser'
+import type { ChatMessage, ChatMeta, ProjectApi } from '@softty/project-store'
 import { useI18n } from './locale'
 import type { AttachmentAddResult } from '../../shared/home-api'
 import { AskAttachments } from './AskAttachments'

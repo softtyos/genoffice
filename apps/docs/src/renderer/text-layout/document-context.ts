@@ -10,12 +10,12 @@
  * `BodyFaces` record so the differences are visible in one place; the
  * snapshot tool records all five, and a Word probe retires each difference.
  */
-import type { DocDefaults, ParsedDocFull, StyleDisplay } from '@genoffice/docx-engine'
+import type { DocDefaults, ParsedDocFull, StyleDisplay } from '@softty/docx-engine'
 import {
   EMPTY_EA_THEME_FONT,
   isEastAsianLangTag,
   themeLangEaSlotFont,
-} from '@genoffice/docx-engine'
+} from '@softty/docx-engine'
 import { isEaLayoutFace, isKoreanLayoutFace } from '../line-metrics'
 import { isEastAsianFaceName, isJapaneseFaceName, isKoreanFaceName } from './face-info'
 

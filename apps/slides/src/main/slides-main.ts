@@ -29,11 +29,11 @@ import { cleanupExpiredGeneratedPages } from './generated-page-temp'
 import { buildExportImagePaths } from './export-images'
 import { exportSlidesPdf } from './pdf-export'
 import { printSlidesHtml } from './print-window'
-import { loadPrintHtml } from '@genoffice/electron-utils/print-window'
-import { printOutcome, printJobOptions } from '@genoffice/electron-utils/print-job'
-import { printPdfViaCups, printToPdfOptionsFor } from '@genoffice/electron-utils/print-cups'
-import { queryPrinterOptions, DRIVER_OPTION_NAMES } from '@genoffice/electron-utils/printer-options'
-import { setGskProxyUrl } from '@genoffice/ai-search'
+import { loadPrintHtml } from '@softty/electron-utils/print-window'
+import { printOutcome, printJobOptions } from '@softty/electron-utils/print-job'
+import { printPdfViaCups, printToPdfOptionsFor } from '@softty/electron-utils/print-cups'
+import { queryPrinterOptions, DRIVER_OPTION_NAMES } from '@softty/electron-utils/printer-options'
+import { setGskProxyUrl } from '@softty/ai-search'
 import {
   appMenuLabels,
   appMenuTemplate,
@@ -59,8 +59,8 @@ import {
   configuredAuthorName,
   readLegacyImportSkip,
   writeLegacyImportSkip,
-} from '@genoffice/electron-utils'
-import { createMainProcessProxyDispatcher } from '@genoffice/electron-utils/main-proxy'
+} from '@softty/electron-utils'
+import { createMainProcessProxyDispatcher } from '@softty/electron-utils/main-proxy'
 import {
   resolveGroupChildId,
   runTxn,
@@ -69,9 +69,9 @@ import {
   type TxnRequest,
   type TxnResult,
   mapScriptOps,
-} from '@genoffice/pptx-ops'
-import { matchesElementRef } from '@genoffice/pptx-engine/identity'
-import { buildPagePptx, parsePageSpec } from '@genoffice/pipelines/slides'
+} from '@softty/pptx-ops'
+import { matchesElementRef } from '@softty/pptx-engine/identity'
+import { buildPagePptx, parsePageSpec } from '@softty/pipelines/slides'
 import { convertOdpToPptx } from '../../../../packages/odf2ooxml/src'
 import { convertPptToPptx } from '../../../../packages/ppt2pptx/src'
 import { sniffImageMime } from './media-mime'
@@ -89,8 +89,8 @@ import {
   isElementClipboardToken,
   writeElementClipboardImage,
 } from './element-clipboard'
-import { getUiLang, normalizeLang, setUiLang } from '@genoffice/i18n'
-import { ProjectStore } from '@genoffice/project-store'
+import { getUiLang, normalizeLang, setUiLang } from '@softty/i18n'
+import { ProjectStore } from '@softty/project-store'
 import {
   copyElementData,
   findGroupChild,
@@ -142,7 +142,7 @@ import {
   type Paragraph,
   type Slide,
   type TextElement,
-} from '@genoffice/pptx-engine'
+} from '@softty/pptx-engine'
 import {
   buildRenderSlide,
   layoutText,
@@ -151,10 +151,10 @@ import {
   imageDpiFromBytes,
   type RenderSlide,
   type RenderTextLayout,
-} from '@genoffice/pptx-render'
+} from '@softty/pptx-render'
 // From its own electron-utils subpath rather than the package barrel: the
 // barrel drags Electron-only modules into headless bundles.
-import { atomicWriteFile, atomicWriteVia } from '@genoffice/electron-utils/atomic-write'
+import { atomicWriteFile, atomicWriteVia } from '@softty/electron-utils/atomic-write'
 import { DEFAULT_PICTURE_DPI, pictureFrame } from './picture-frame'
 import { refineComplexWidths, shapedMetricsReady } from './shaped-metrics'
 import { cfbKind, isCfbHeader } from './cfb-sniff'
@@ -2251,7 +2251,7 @@ export function registerSlidesIpc(): void {
     return rebuilt ? { slide: rebuilt, sourceId: r.records![0]!.created![0]! } : null
   })
 
-  // Shim over the canonical op (see @genoffice/pptx-ops): the op owns validation/mutation/journal;
+  // Shim over the canonical op (see @softty/pptx-ops): the op owns validation/mutation/journal;
   // the shim keeps session lookup, undo bookkeeping, and RenderSlide rebuilding.
   ipcMain.handle('slides:delete-element', (e, op: DeleteElementOp) => {
     const session = sessions.get(e.sender.id)
@@ -5117,7 +5117,7 @@ export function createSlidesWindow(openPath?: string | null): BrowserWindow {
   const win = new BrowserWindow({
     width: 1280,
     height: 840,
-    title: 'GenOffice Slides',
+    title: 'Softty Slides',
     ...(process.platform === 'darwin'
       ? { titleBarStyle: 'hiddenInset' as const }
       : {

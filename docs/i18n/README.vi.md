@@ -667,7 +667,7 @@ npm run dist:linux   # package Linux AppImage + deb + rpm
 ```
 
 Ứng dụng sheets cần thêm một toolchain Rust cho xlsx sidecar của nó
-(`cargo` trên PATH); `npm run build -w @genoffice/sheets` tự biên dịch nó.
+(`cargo` trên PATH); `npm run build -w @softty/sheets` tự biên dịch nó.
 Xem [CONTRIBUTING.md](../../CONTRIBUTING.md) để biết các kiểm tra mọi thay
 đổi phải qua và cách pull request được hợp nhất.
 

@@ -4,9 +4,9 @@ import {
   decodeCsvBuffer,
   isNumericCell,
   parseCsv,
-} from '@genoffice/xlsx-gateway/gateway/csv-import'
-import { blankXlsxBuffer } from '@genoffice/xlsx-gateway/gateway/csv-import-xlsx'
-import { columnLabel, parseAddress } from '@genoffice/xlsx-gateway/domain/cell-address'
+} from '@softty/xlsx-gateway/gateway/csv-import'
+import { blankXlsxBuffer } from '@softty/xlsx-gateway/gateway/csv-import-xlsx'
+import { columnLabel, parseAddress } from '@softty/xlsx-gateway/domain/cell-address'
 import {
   assembleWithJsZip,
   createBufferEntrySource,
@@ -17,15 +17,15 @@ import {
   type SheetFormulaValues,
   type SheetStructuralOps,
   type XlsxMutation,
-} from '@genoffice/xlsx-gateway/gateway/xlsx-gateway'
+} from '@softty/xlsx-gateway/gateway/xlsx-gateway'
 import {
   nextFreeRelationshipId,
   parseRelationships,
   parseSheetElements,
   type SheetEditPlan,
-} from '@genoffice/xlsx-gateway/gateway/xlsx-sheets'
+} from '@softty/xlsx-gateway/gateway/xlsx-sheets'
 import { EMPTY_PAYLOADS, type GatewayPayloads } from './xlsx-gateway-ops'
-import type { WorkbookStyleEdit } from '@genoffice/xlsx-gateway/shared/edit-schemas'
+import type { WorkbookStyleEdit } from '@softty/xlsx-gateway/shared/edit-schemas'
 import {
   echoStyleColor,
   fillDisplayColor,
@@ -34,16 +34,16 @@ import {
   resolveStyleColor,
   type StyleColor,
   type StyleColorEcho,
-} from '@genoffice/xlsx-gateway/domain/style-color'
+} from '@softty/xlsx-gateway/domain/style-color'
 import {
   parseStylesheetFormats,
   type StylesheetFormats,
-} from '@genoffice/xlsx-gateway/gateway/xlsx-style-read'
+} from '@softty/xlsx-gateway/gateway/xlsx-style-read'
 import { access, readFile } from 'node:fs/promises'
 import { z } from 'zod'
 import { atomicWriteFile } from '../../../../apps/sheets/src/main/atomic-write'
 import { XlsxSidecarClient } from '../../../../apps/sheets/src/main/xlsx-sidecar-client'
-import { planExternalLinkBreak } from '@genoffice/xlsx-gateway/gateway/xlsx-external-links'
+import { planExternalLinkBreak } from '@softty/xlsx-gateway/gateway/xlsx-external-links'
 import { CliError, EXIT } from '../result'
 import { sheetNotFoundHints } from '../suggest'
 import { xlsxSidecarPath } from '../resources'

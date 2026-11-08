@@ -1,4 +1,4 @@
-import type { AiPanelPrefs } from '@genoffice/ui'
+import type { AiPanelPrefs } from '@softty/ui'
 import { contextBridge, ipcRenderer, webFrame, webUtils } from 'electron'
 
 import type {
@@ -6,8 +6,8 @@ import type {
   AiSettings,
   AiStreamChunk,
   GenSparkAccountStatus,
-} from '@genoffice/ai-provider'
-import type { ProjectApi } from '@genoffice/project-store'
+} from '@softty/ai-provider'
+import type { ProjectApi } from '@softty/project-store'
 import type {
   AttachmentAddResult,
   AttachmentImageResult,
@@ -78,7 +78,7 @@ import {
   MAX_SAVE_EDITS_TOTAL,
   SAVE_EDITS_CHUNK_JSON_MAX,
 } from '../shared/ipc-channels'
-import { installDropOpenBridge } from '@genoffice/electron-utils/drop-open'
+import { installDropOpenBridge } from '@softty/electron-utils/drop-open'
 
 const desktopApi: DesktopApi = {
   getLanguage: () => ipcRenderer.invoke('app:get-language'),

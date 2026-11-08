@@ -35,16 +35,16 @@ import {
   type AiStreamRequest,
   type GenSparkAccountStatus,
   type LegacyAiSettings,
-} from '@genoffice/ai-provider'
-import { shutdownCodexAppServers } from '@genoffice/ai-provider/codex-app-server'
-import { startAiTrace } from '@genoffice/ai-provider/trace'
+} from '@softty/ai-provider'
+import { shutdownCodexAppServers } from '@softty/ai-provider/codex-app-server'
+import { startAiTrace } from '@softty/ai-provider/trace'
 import {
   abortOnDestroyed,
   MAX_REMOTE_IMAGE_BYTES,
   fetchRemoteImage,
   readBodyCapped,
   writeJsonAtomic,
-} from '@genoffice/electron-utils'
+} from '@softty/electron-utils'
 import {
   webSearchTool,
   imageSearchTool,
@@ -57,17 +57,17 @@ import {
   documentMediaRoots,
   gskLoginInfo,
   hasGskAuth,
-} from '@genoffice/ai-search'
-import { addPicture, editPictureSrcRect, replacePictureBytes } from '@genoffice/pptx-engine'
+} from '@softty/ai-search'
+import { addPicture, editPictureSrcRect, replacePictureBytes } from '@softty/pptx-engine'
 import { rasterImageExt } from './media-mime'
-import { matchesElementRef } from '@genoffice/pptx-engine/identity'
-import { coverCropFractions } from '@genoffice/pipelines/slides'
+import { matchesElementRef } from '@softty/pptx-engine/identity'
+import { coverCropFractions } from '@softty/pipelines/slides'
 import type { AiRunFailure } from '../shared/ipc'
-import { EMU_PER_PX_96 } from '@genoffice/pptx-render'
+import { EMU_PER_PX_96 } from '@softty/pptx-render'
 import { tm } from './i18n-main'
 import { pushHistory, rebuildSlide, scheduleHistoryNotify, sessions } from './session-state'
 
-// ---- AI settings + streaming proxy (the main process does the networking to avoid renderer CORS; implementation shared via @genoffice/ai-provider) ----
+// ---- AI settings + streaming proxy (the main process does the networking to avoid renderer CORS; implementation shared via @softty/ai-provider) ----
 
 const AI_SETTINGS_PATH = () => join(app.getPath('userData'), 'ai-settings.json')
 

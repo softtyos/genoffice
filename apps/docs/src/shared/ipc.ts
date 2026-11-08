@@ -81,7 +81,7 @@ export interface MergeOutputResponse {
   error?: string
 }
 
-// ---- AI provider settings/config/streaming: canonical types live in @genoffice/ai-provider ----
+// ---- AI provider settings/config/streaming: canonical types live in @softty/ai-provider ----
 
 import type {
   AiChatRequest,
@@ -90,10 +90,10 @@ import type {
   AiStreamChunk,
   AiStreamRequest,
   GenSparkAccountStatus,
-} from '@genoffice/ai-provider'
-import type { HeadlessExportTarget } from '@genoffice/electron-utils/headless-export'
-import type { FaceVerticalMetrics } from '@genoffice/font-metrics'
-import type { AiPanelPrefs } from '@genoffice/ui'
+} from '@softty/ai-provider'
+import type { HeadlessExportTarget } from '@softty/electron-utils/headless-export'
+import type { FaceVerticalMetrics } from '@softty/font-metrics'
+import type { AiPanelPrefs } from '@softty/ui'
 
 export type { FaceVerticalMetrics }
 
@@ -107,17 +107,17 @@ export type {
   AiStreamChunk,
   AiStreamRequest,
   GenSparkAccountStatus,
-} from '@genoffice/ai-provider'
-export { AI_PROVIDERS } from '@genoffice/ai-provider/browser'
+} from '@softty/ai-provider'
+export { AI_PROVIDERS } from '@softty/ai-provider/browser'
 
-// ---- agent protocol: canonical types live in @genoffice/agent-core ----
+// ---- agent protocol: canonical types live in @softty/agent-core ----
 
 export type {
   AgentMessage,
   AgentToolCall,
   AgentToolDef,
   AgentToolResult,
-} from '@genoffice/agent-core'
+} from '@softty/agent-core'
 
 // ---- PDF export ----
 
@@ -764,5 +764,5 @@ export interface UserCliRun {
   allowedRoots?: string[]
 }
 
-/** mirrors VIEW_IMAGE_CHANNEL in @genoffice/electron-utils (kept literal so the preload stays free of main-only deps) */
+/** mirrors VIEW_IMAGE_CHANNEL in @softty/electron-utils (kept literal so the preload stays free of main-only deps) */
 export const VIEW_IMAGE_CHANNEL = 'genoffice:view-image'

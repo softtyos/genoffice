@@ -7,7 +7,7 @@ import {
   PdfLoadError,
   type OcrEngine,
   type PdfiumModule,
-} from '@genoffice/pdf2docx'
+} from '@softty/pdf2docx'
 import { createVisionOcrEngine, createWindowsOcrEngine } from '../../../pdf2docx/src/ocr-vision'
 import { clipText } from '../preview'
 import { ocrHelperPath, pdfiumWasmPath } from '../resources'

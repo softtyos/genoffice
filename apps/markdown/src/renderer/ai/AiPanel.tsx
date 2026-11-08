@@ -5,13 +5,13 @@ import {
   type AiModelPickerBridge,
   AiSkillChips,
   AiSkillsMenu,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import {
   AI_PANEL_WIDTH_DEFAULT,
   clampAiPanelWidth,
   loadAiPanelWidth,
   saveAiPanelWidth,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import { useEffect, useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent, ReactElement, ReactNode } from 'react'
 import {
@@ -20,8 +20,8 @@ import {
   streamText,
   withAttachedSkills,
   type MindMapTreeNode,
-} from '@genoffice/agent-core'
-import { imageGenerationAvailable, type AiSettings } from '@genoffice/ai-provider/browser'
+} from '@softty/agent-core'
+import { imageGenerationAvailable, type AiSettings } from '@softty/ai-provider/browser'
 import {
   AiComposer,
   AiQueueStrip,
@@ -35,7 +35,7 @@ import {
   useChatRunQueue,
   type AiScopeQuoteData,
   type AiTokenUsageView,
-} from '@genoffice/ui'
+} from '@softty/ui'
 import type { Editor } from '@tiptap/core'
 import { aiLangDirective, t as tGlobal, useI18n } from '../i18n/locale'
 import sendEnterOn from '../assets/send-enter-on.png'
@@ -46,7 +46,7 @@ import { setInactiveSelectionShown } from '../editor/inactiveSelection'
 import { uiOp } from '../editor/ops'
 import { createMarkdownSkill, MARKDOWN_RULES } from './markdown-skill'
 import { MindMapCard } from './MindMapCard'
-import { mindMapToMermaid } from '@genoffice/agent-core/mind-map'
+import { mindMapToMermaid } from '@softty/agent-core/mind-map'
 import {
   buildDocWriterRequest,
   countMarkdownBlocks,

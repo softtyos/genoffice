@@ -11,7 +11,7 @@ import type { McpLaunch } from './mcp-launch'
  * never replaced unless forced. Paths and shapes follow each agent's docs.
  */
 
-export const MCP_SERVER_NAME = 'genoffice'
+export const MCP_SERVER_NAME = 'softty-office-mcp'
 
 export type McpEntryStatus =
   /** no genoffice entry in the file */
@@ -337,7 +337,7 @@ function cordisBlockInfo(block: string[]): { id: string | null; serverName: stri
 
 function isGenofficeCordisBlock(block: string[]): boolean {
   const { id, serverName } = cordisBlockInfo(block)
-  return id === 'mcp-genoffice' || serverName === MCP_SERVER_NAME
+  return id === 'mcp-softty-office' || id === 'mcp-genoffice' || serverName === MCP_SERVER_NAME || serverName === 'genoffice'
 }
 
 /** The line range of the block this app owns, or null when there is none. */
@@ -499,7 +499,7 @@ function isRecord(v: unknown): v is Record<string, unknown> {
 }
 
 const TOML_HEADER =
-  /^\s*\[\s*mcp_servers\s*\.\s*(?:"genoffice"|'genoffice'|genoffice)\s*(\.[^\]]*)?\]/
+  /^\s*\[\s*mcp_servers\s*\.\s*(?:"softty-office-mcp"|'softty-office-mcp'|softty-office-mcp|"genoffice"|'genoffice'|genoffice)\s*(\.[^\]]*)?\]/
 
 /** `env` becomes the `[mcp_servers.genoffice.env]` sub-table Codex reads its `env` map from. */
 function tomlTable(launch: McpLaunch): string {

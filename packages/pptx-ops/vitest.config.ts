@@ -9,18 +9,18 @@ export default defineConfig({
     alias: {
       // Resolve sibling sources by path (not via node_modules) so a worktree
       // whose node_modules is linked to another checkout still tests local edits.
-      '@genoffice/pptx-engine/table-grid': resolve(here, '../pptx-engine/src/table-grid.ts'),
-      '@genoffice/pptx-engine/identity': resolve(here, '../pptx-engine/src/identity.ts'),
-      '@genoffice/pptx-engine/background-promote': resolve(
+      '@softty/pptx-engine/table-grid': resolve(here, '../pptx-engine/src/table-grid.ts'),
+      '@softty/pptx-engine/identity': resolve(here, '../pptx-engine/src/identity.ts'),
+      '@softty/pptx-engine/background-promote': resolve(
         here,
         '../pptx-engine/src/background-promote.ts',
       ),
-      '@genoffice/pptx-engine/chart-workbook': resolve(
+      '@softty/pptx-engine/chart-workbook': resolve(
         here,
         '../pptx-engine/src/chart-workbook.ts',
       ),
-      '@genoffice/pptx-engine': resolve(here, '../pptx-engine/src/index.ts'),
-      '@genoffice/docx-engine/math': resolve(here, '../docx-engine/src/math.ts'),
+      '@softty/pptx-engine': resolve(here, '../pptx-engine/src/index.ts'),
+      '@softty/docx-engine/math': resolve(here, '../docx-engine/src/math.ts'),
     },
   },
   test: {

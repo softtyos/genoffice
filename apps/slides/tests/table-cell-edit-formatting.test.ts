@@ -14,8 +14,8 @@ import {
   savePptx,
   type OpenedPptx,
   type TableElement,
-} from '@genoffice/pptx-engine'
-import { runTxn } from '@genoffice/pptx-ops'
+} from '@softty/pptx-engine'
+import { runTxn } from '@softty/pptx-ops'
 
 let opened: OpenedPptx
 let tableId: string

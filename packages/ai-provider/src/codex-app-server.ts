@@ -4,7 +4,7 @@ import { access, mkdtemp, readdir, rm, stat, writeFile } from 'node:fs/promises'
 import { delimiter, dirname, isAbsolute, join, resolve, sep } from 'node:path'
 import { tmpdir } from 'node:os'
 import { StringDecoder } from 'node:string_decoder'
-import type { AgentImage, AgentMessage, AgentToolCall, AgentToolDef } from '@genoffice/agent-core'
+import type { AgentImage, AgentMessage, AgentToolCall, AgentToolDef } from '@softty/agent-core'
 import type { AiChatResponse, AiProviderConfig, CodexModelCatalog } from './types'
 import {
   parseToolInput,

@@ -12,9 +12,9 @@ import {
   mindMapToMermaid,
   parseMindMapTree,
   wrapLabel,
-} from '@genoffice/agent-core/mind-map'
+} from '@softty/agent-core/mind-map'
 import { AGENT_SYSTEM_PROMPT } from '../src/renderer/ai/protocol'
-import type { MindMapTreeNode } from '@genoffice/agent-core'
+import type { MindMapTreeNode } from '@softty/agent-core'
 
 const NUM_IDS = { bullet: null, ordered: null }
 
