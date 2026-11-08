@@ -14,8 +14,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@softty/docx-engine": "*",
-    "@softty/xlsx-gateway": "*",
+    "@softty/docx-engine": "workspace:*",
+    "@softty/xlsx-gateway": "workspace:*",
     "cfb": "^1.2.2",
     "fast-xml-parser": "^5.3.4",
     "jszip": "^3.10.1",

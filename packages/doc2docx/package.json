@@ -15,8 +15,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@softty/compound-file": "*",
-    "@softty/docx-engine": "*",
+    "@softty/compound-file": "workspace:*",
+    "@softty/docx-engine": "workspace:*",
     "cfb": "^1.2.2",
     "jszip": "^3.10.1"
   },

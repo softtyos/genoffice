@@ -15,7 +15,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@softty/docx-engine": "*",
+    "@softty/docx-engine": "workspace:*",
     "@rhwp/core": "0.8.7",
     "fast-xml-parser": "^5.3.4",
     "jszip": "^3.10.1"

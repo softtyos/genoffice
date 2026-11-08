@@ -14,8 +14,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@softty/docx-engine": "*",
-    "@softty/pptx-engine": "*",
+    "@softty/docx-engine": "workspace:*",
+    "@softty/pptx-engine": "workspace:*",
     "fast-xml-parser": "^5.3.4",
     "jszip": "^3.10.1"
   },

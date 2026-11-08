@@ -3961,7 +3961,8 @@ button {
   white-space: nowrap;
 }
 
-/* Genspark brand logo (shared by the collapsed entry and the AI panel title) */
+/* Softty brand logo (shared by the collapsed entry and the AI panel title) */
+.softty-badge,
 .genspark-badge {
   display: block;
   width: 22px;
@@ -3969,6 +3970,7 @@ button {
   border-radius: 50%;
 }
 
+.ai-panel-title .softty-badge,
 .ai-panel-title .genspark-badge {
   width: 18px;
   height: 18px;

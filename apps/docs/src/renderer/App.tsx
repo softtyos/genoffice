@@ -2962,7 +2962,7 @@ export function App() {
       window.desktop.onZoteroRequest(async (request) => {
         try {
           const activeEditor = editorRef.current
-          if (!activeEditor) throw new Error('No active GenOffice document')
+          if (!activeEditor) throw new Error('No active Softty Office document')
           const controller =
             zoteroControllerRef.current ??
             new ZoteroDocumentController(activeEditor, {
@@ -8231,7 +8231,10 @@ export function App() {
           on the page immediately instead of only in the saved file */}
       {doc && (
         <style data-doc-css="">
-          {docThemeCss(themeFonts, themeColors, !!docBodyFont(doc.parsed))}
+          {docThemeCss(themeFonts, themeColors, !!docBodyFont(doc.parsed), {
+            fonts: themeFontsDirty,
+            colors: themeColorsDirty,
+          })}
         </style>
       )}
       {colFlow && viewMode === 'print' && (

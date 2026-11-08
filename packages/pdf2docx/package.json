@@ -15,9 +15,9 @@
   },
   "dependencies": {
     "@embedpdf/pdfium": "^2.15.0",
-    "@softty/docx-engine": "*",
-    "@softty/font-metrics": "*",
-    "@softty/pptx-engine": "*",
+    "@softty/docx-engine": "workspace:*",
+    "@softty/font-metrics": "workspace:*",
+    "@softty/pptx-engine": "workspace:*",
     "bidi-js": "^1.0.3",
     "jszip": "^3.10.1"
   },

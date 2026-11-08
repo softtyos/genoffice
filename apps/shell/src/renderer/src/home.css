@@ -21,7 +21,22 @@
   /* lift for the kb-ask composer box */
 }
 
-/* ── Dark mode overrides ─────────────────────────────────── */
+/* ── Theme mode overrides ─────────────────────────────────── */
+
+/* Explicit light: [data-theme="light"] on <html> */
+[data-theme='light'] {
+  --accent: #0f7fff;
+  --accent-hover: #0e72e5;
+  --accent-soft: #eaf0fd;
+  --avatar-bg: #e8ebef;
+  --badge-bg: #eaf0fd;
+  --checkbox-bg: #ececec;
+  --timeline-user-bg: #eef1f5;
+  --timeline-user-text: #5a6170;
+  --shadow-pill: 0 1px 2px rgb(0 0 0 / 8%);
+  --shadow-composer: 0 6px 30px rgb(0 0 0 / 8%);
+  --logo-invert: 0;
+}
 
 /* Explicit dark: [data-theme="dark"] on <html> */
 [data-theme='dark'] {
@@ -127,7 +142,7 @@ body.vib .home {
 .sidebar-logo {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   padding: 0 8px;
   margin-bottom: 20px;
 }
@@ -135,8 +150,20 @@ body.vib .home {
 .logo-lockup {
   display: block;
   height: 28px;
-  width: auto;
-  filter: invert(var(--logo-invert));
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.sidebar-brand-title {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.sidebar-brand-accent {
+  color: var(--accent);
 }
 
 .sidebar-nav {

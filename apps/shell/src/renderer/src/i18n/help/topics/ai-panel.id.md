@@ -19,7 +19,7 @@ Setiap editor bisa memunculkan panel AI: pilih sesuatu, beri instruksi, dan liha
 - **Slides**: pembuatan seluruh dek, penyesuaian tata letak, penulisan ulang naskah.
 - **PDF**: tanya jawab dan ringkasan berdasarkan teks atau halaman yang dipilih.
 - **Markdown / HTML**: menulis ulang, mengembangkan, menerjemahkan.
-- **Beranda ▸ Ask AI** menjawab dari berkas berbintang Anda dan mengutipnya — panel basis pengetahuan punya bagiannya sendiri di bab Beranda, dan panel AI Docs membawa keterampilan yang sama.
+- **Beranda ▸ Ask AI** menjawab dari berkas berbintang Anda dan mengutipnya — panel basis pengetahuan punya bagiannya sendiri di bab Beranda, dan panel Softty Docs membawa keterampilan yang sama.
 
 ## Pengembalian dan keamanan
 

@@ -16,7 +16,7 @@ Softty Office حزمة مكتبية تعمل بالكامل على جهازك: �
 
 أيّ من الطرق التالية:
 
-- انقر بطاقة إنشاء سريع في قسم [بدء سريع](help://getting-started) في **الصفحة الرئيسية** (AI Docs، AI Sheets، AI Slides، ...).
+- انقر بطاقة إنشاء سريع في قسم [بدء سريع](help://getting-started) في **الصفحة الرئيسية** (Softty Docs، Softty Sheets، Softty Slides، ...).
 - قائمة **ملف ▸ جديد**: Docs (⌘N/ctrl+N)، أو Sheets، أو Slides، أو Markdown، أو HTML، أو PDF.
 - اسحب ملفًا إلى النافذة، أو انقر عليه نقرًا مزدوجًا في مدير الملفات (إذا كان Softty Office هو التطبيق الافتراضي).
 

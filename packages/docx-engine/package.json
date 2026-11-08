@@ -19,12 +19,12 @@
     "fixtures": "tsx scripts/generate-fixtures.ts"
   },
   "dependencies": {
-    "@softty/pptx-engine": "*",
-    "@softty/zip-gate": "*",
+    "@softty/pptx-engine": "workspace:*",
+    "@softty/zip-gate": "workspace:*",
     "fast-xml-parser": "^5.3.4",
     "jszip": "^3.10.1",
     "utif2": "^4.1.0",
-    "@softty/agent-core": "*"
+    "@softty/agent-core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

@@ -23,7 +23,9 @@ import {
 import type { HeaderFooterResult } from './HeaderFooterDialog'
 import { t } from './i18n/locale'
 import { effectivePageBreaks } from './page-break-preview'
+import { TABLE_PALETTE_KEYS, builtinTablePalette, isBuiltinTableStyle } from './table-styles'
 import { COLOR_SCHEMES, FONT_SCHEMES, rethemeStyles, THEME_PRESETS } from './themes'
+import { applySessionTableTheme } from './workbook-ops'
 import { settleFormulas } from './formula-settle'
 import { startFullLoad } from './full-load'
 import { fitsFullLoad, workbookCellCounts } from './load-budget'
@@ -260,9 +262,34 @@ export function handlePageLayoutCommand(ctx: PageLayoutContext, rest: string): v
         state.file.themeColors,
         state.file.themeFonts ?? null,
       )
+      if (colors !== undefined) {
+        for (const sheet of state.file.sheets) {
+          sheet.tables = sheet.tables.map((table) => {
+            if (!table.styleName || !isBuiltinTableStyle(table.styleName)) return table
+            const cleared: Record<string, undefined> = {}
+            for (const k of TABLE_PALETTE_KEYS) cleared[k] = undefined
+            return {
+              ...table,
+              ...cleared,
+              ...builtinTablePalette(table.styleName, state.file.themeColors),
+            }
+          })
+        }
+        const wb = runtime.univerAPI.getActiveWorkbook() as unknown as {
+          getTableInfoByName?: (tableName: string) => { id: string } | undefined
+          getSheetBySheetId?: (id: string) => FWorksheet | null
+        } | null
+        for (const add of state.editJournal.tableAdds) {
+          const id = wb?.getTableInfoByName?.(add.name)?.id
+          const ws = wb?.getSheetBySheetId?.(add.sheetId)
+          if (id && ws) applySessionTableTheme(ws, id, add, state.file.themeColors)
+        }
+      }
       for (const loadedSheetId of [...state.loadedRanges.keys()]) {
         state.loadedRanges.delete(loadedSheetId)
         state.appliedRowKeys.delete(loadedSheetId)
+        state.frozenStripKeys.delete(loadedSheetId)
+        state.frozenRowStripKeys.delete(loadedSheetId)
       }
       ctx.setPendingEdits(journalSize(state.editJournal))
       const active = runtime.univerAPI.getActiveWorkbook()?.getActiveSheet()

@@ -247,6 +247,48 @@ html[data-doc-theme='light'] .doc-page {
   background: var(--md-paper-light);
 }
 
+html[data-doc-theme='dark'] .doc-page {
+  --accent: #4a9eff;
+  --accent-dark: #3a8eef;
+  --accent-soft: #1e3a5f;
+  --surface: #1e1e1e;
+  --border: #3a3a3a;
+  --border-strong: #555;
+  --text: #e4e4e4;
+  --text-secondary: #a0a0a0;
+  --text-muted: #949494;
+  --text-primary: #e4e4e4;
+  --text-tertiary: #a0a0a0;
+  --text-dim: #a0a0a0;
+  --surface-subtle: #2a2a2a;
+  --bg-content: #1a1a1a;
+  --border-subtle: #3a3a3a;
+  --hover: #333;
+  --pressed: #3c3c3c;
+  --active-bg: #454545;
+  --icon-muted: #666;
+  --danger: #d13438;
+  --danger-bg: #3a2020;
+  --md-link: #4a9eff;
+  --md-code-bg: #23272e;
+  --md-code-inline-bg: rgb(129 139 152 / 22%);
+  --md-table-header-bg: #282c32;
+  --md-ai-changed: rgb(255 213 79 / 28%);
+  --md-ai-anchor-bg: rgb(96 148 240 / 22%);
+  --md-ai-anchor-line: #6a9aec;
+  --md-selection: color-mix(in srgb, var(--accent) 20%, transparent);
+  --md-text-selection: color-mix(in srgb, var(--accent) 40%, transparent);
+  --md-node-outline: color-mix(in srgb, var(--accent) 70%, transparent);
+  --md-focus-ring: rgb(228 228 228 / 25%);
+  --md-focus-ring-blue: rgb(74 158 255 / 40%);
+  --md-error: #f28b82;
+  --md-error-border: rgb(242 139 130 / 45%);
+  --md-error-bg: rgb(242 139 130 / 12%);
+  color-scheme: dark;
+  color: var(--text);
+  background: var(--surface);
+}
+
 .status-bar {
   flex: 0 0 auto;
   display: flex;
@@ -1251,7 +1293,8 @@ html.markdown-graph-open .ribbon-tabs {
   white-space: nowrap;
 }
 
-/* Genspark brand logo (shared by the collapsed entry and the AI panel title) */
+/* Softty brand logo (shared by the collapsed entry and the AI panel title) */
+.softty-badge,
 .genspark-badge {
   display: block;
   width: 22px;
@@ -1259,6 +1302,7 @@ html.markdown-graph-open .ribbon-tabs {
   border-radius: 50%;
 }
 
+.ai-panel-title .softty-badge,
 .ai-panel-title .genspark-badge {
   width: 18px;
   height: 18px;

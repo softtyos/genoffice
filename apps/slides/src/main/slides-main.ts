@@ -5314,9 +5314,8 @@ export function installSlidesMenu(): void {
 }
 
 /**
- * Attach a proxy to the main process's global fetch. Environment variables take priority;
- * otherwise, after app ready, read the system proxy via session.resolveProxy() (the critical
- * path for packaged builds launched by double-click).
+ * Attach an HTTP proxy to the main process's global fetch if environment
+ * variables (HTTPS_PROXY / HTTP_PROXY) are configured.
  */
 async function applyMainProcessProxy(): Promise<void> {
   const setDispatcher = async (proxyUrl: string) => {
@@ -5343,23 +5342,6 @@ async function applyMainProcessProxy(): Promise<void> {
     process.env.all_proxy
   if (envProxy) {
     await setDispatcher(envProxy)
-    return
-  }
-  // No environment variables: read the system proxy (requires app ready)
-  try {
-    await app.whenReady()
-    // PAC/rule proxies answer per-host: probe the host the login flow, the
-    // Genspark LLM proxy and the gsk CLI actually target
-    const resolved = await electronSession.defaultSession.resolveProxy('https://www.genspark.ai/')
-    // resolveProxy returns strings like "PROXY 127.0.0.1:1087" or "DIRECT"
-    const m = /PROXY\s+([^;]+)/i.exec(resolved || '')
-    if (m) {
-      await setDispatcher(`http://${m[1].trim()}`)
-    } else {
-      console.log('[proxy] system proxy = DIRECT, no dispatcher set')
-    }
-  } catch (e) {
-    console.warn('[proxy] resolveProxy failed:', e)
   }
 }
 

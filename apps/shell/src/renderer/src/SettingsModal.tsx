@@ -175,7 +175,6 @@ export type SectionId =
   'account' | 'aiModel' | 'aiMedia' | 'general' | 'integrations' | 'skills' | 'about'
 
 const SECTIONS: readonly { id: SectionId; labelKey: StringKey }[] = [
-  { id: 'account', labelKey: 'setSecAccount' },
   { id: 'aiModel', labelKey: 'setSecAiModel' },
   { id: 'aiMedia', labelKey: 'setSecAiMedia' },
   { id: 'general', labelKey: 'setSecGeneral' },
@@ -363,17 +362,12 @@ function AiModelPane({ t }: { t: TFunc }) {
         setTesting(false)
         setTestResult(null)
         setSaved(false)
-        // The switch is disabled with genspark, so never present it stranded
-        // off. Display-only: s.provider may be the activeProvider fallback for
-        // a half-configured BYOK selection, so writing anything back here would
-        // clobber the stored choice — the main process heals a genuine legacy
-        // genspark+off file itself, judged on the raw stored provider.
-        if (s.provider === 'genspark' && s.gskToolsEnabled === false) {
-          s = { ...s, gskToolsEnabled: true }
+        if (s.provider === 'genspark') {
+          s = { ...s, provider: 'openai' }
         }
         setSettings(s)
         const codex = s.providers.codex
-        if (codex) {
+        if (codex && s.provider === 'codex') {
           void refreshCodexModels(codex.cliPath ?? '', codex.model).catch(() => undefined)
         }
       })
@@ -462,15 +456,15 @@ function AiModelPane({ t }: { t: TFunc }) {
   }, [endpointProvider, endpointBaseUrl, endpointApiKey, endpointApi])
 
   if (!settings) return null
-  const provider = settings.provider
-  const meta = catalog.find((c) => c.id === provider)
+  const provider = settings.provider === 'genspark' ? 'openai' : settings.provider
+  const meta = catalog.find((c) => c.id === provider) ?? catalog[0]
   const config = settings.providers[provider] ?? {
     apiKey: '',
     model: meta?.defaultModel ?? '',
     baseUrl: undefined,
     cliPath: undefined,
   }
-  const isGenspark = provider === 'genspark'
+  const isGenspark = false
   const isCodex = provider === 'codex'
 
   const touch = () => {
@@ -840,7 +834,7 @@ function AiModelPane({ t }: { t: TFunc }) {
                 </label>
                 {meta?.needsBaseUrl ? (
                   <div className="set-field-desc">
-                    Softty Proxy / OpenAI-Compatible Endpoint (e.g., https://api.softty.net/v1 or https://office.softty.net/api/v1)
+                    Universal OpenAI-Compatible API URL (e.g., https://api.openai.com/v1, https://api.softty.net/v1, https://openrouter.ai/api/v1, or http://localhost:11434/v1)
                   </div>
                 ) : (
                   <div className="set-field-desc">{t('setAiBaseUrlHint')}</div>
@@ -852,7 +846,7 @@ function AiModelPane({ t }: { t: TFunc }) {
               className="set-input"
               type="text"
               value={config.baseUrl ?? ''}
-              placeholder={meta?.needsBaseUrl ? 'https://api.softty.net/v1' : meta?.defaultBaseUrl}
+              placeholder={meta?.needsBaseUrl ? 'https://api.openai.com/v1' : meta?.defaultBaseUrl}
               spellCheck={false}
               onChange={(e) => updateConfig({ baseUrl: e.target.value.trim() })}
             />
@@ -1084,26 +1078,6 @@ function AiModelPane({ t }: { t: TFunc }) {
           onBlur={commitMaxTokens}
         />
       </div>
-      <div className="set-field">
-        <div className="set-field-text">
-          <div className="set-field-stack">
-            <div className="set-field-label">{t('setAiGskTools')}</div>
-            <div className="set-field-desc">{t('setAiGskToolsDesc')}</div>
-          </div>
-        </div>
-        {/* locked on with the genspark provider — chat runs through gsk anyway */}
-        <button
-          className="set-switch"
-          role="switch"
-          aria-checked={settings.gskToolsEnabled !== false}
-          aria-label={t('setAiGskTools')}
-          disabled={isGenspark}
-          onClick={() => {
-            setSettings({ ...settings, gskToolsEnabled: settings.gskToolsEnabled === false })
-            touch()
-          }}
-        />
-      </div>
     </>
   )
 }
@@ -1184,6 +1158,31 @@ function AiMediaPane({
         setTesting(false)
         setTestResults(null)
         setSaved(false)
+        if (s.media) {
+          s = {
+            ...s,
+            media: {
+              ...s.media,
+              imageProvider:
+                s.media.imageProvider === 'genspark' ? 'openai' : s.media.imageProvider,
+              analysisProvider:
+                s.media.analysisProvider === 'genspark' ? 'openai' : s.media.analysisProvider,
+              videoAnalysisProvider:
+                s.media.videoAnalysisProvider === 'genspark'
+                  ? 'gemini'
+                  : s.media.videoAnalysisProvider,
+            },
+          }
+        }
+        if (s.search && s.search.provider === 'genspark') {
+          s = {
+            ...s,
+            search: {
+              ...s.search,
+              provider: 'serper',
+            },
+          }
+        }
         setSettings(s)
       })
     }
@@ -1576,9 +1575,11 @@ function AiMediaPane({
     )
   }
 
-  const searchMeta = searchCatalog.find((m) => m.id === search.provider)
-  const searchKey =
-    search.provider === 'genspark' ? '' : (search.providers[search.provider]?.apiKey ?? '')
+  const activeSearchProvider =
+    search.provider === 'genspark' ? (searchCatalog[0]?.id ?? 'serper') : search.provider
+  const searchMeta =
+    searchCatalog.find((m) => m.id === activeSearchProvider) ?? searchCatalog[0]
+  const searchKey = search.providers[activeSearchProvider]?.apiKey ?? ''
 
   return (
     <>
@@ -1597,31 +1598,29 @@ function AiMediaPane({
       <div className="set-field-desc set-ai-note">{t('setAiSharedKeyHint')}</div>
       <section>
         {subhead('search', t('setAiCapSearch'))}
-        {providerRow(t('setAiCapSearch'), search.provider, searchCatalog, (v) =>
+        {providerRow(t('setAiCapSearch'), activeSearchProvider, searchCatalog, (v) =>
           setSearch({ ...search, provider: v as AiSearchSettings['provider'] }),
         )}
         <div className="set-field-desc set-ai-note">
-          {search.provider === 'genspark'
-            ? t('setAiSearchGensparkHint')
-            : search.provider === 'parallel'
-              ? t('setAiSearchParallelHint')
-              : search.provider === 'keenable'
-                ? t('setAiSearchKeenableHint')
-                : search.provider === 'serply'
-                  ? t('setAiSearchSerplyHint')
-                  : search.provider === 'searchapi'
-                    ? t('setAiSearchSearchApiHint')
-                    : searchMeta?.imageSearch
-                      ? t('setAiSearchSerperHint')
-                      : t('setAiSearchTavilyHint')}
+          {activeSearchProvider === 'parallel'
+            ? t('setAiSearchParallelHint')
+            : activeSearchProvider === 'keenable'
+              ? t('setAiSearchKeenableHint')
+              : activeSearchProvider === 'serply'
+                ? t('setAiSearchSerplyHint')
+                : activeSearchProvider === 'searchapi'
+                  ? t('setAiSearchSearchApiHint')
+                  : searchMeta?.imageSearch
+                    ? t('setAiSearchSerperHint')
+                    : t('setAiSearchTavilyHint')}
         </div>
-        {search.provider !== 'genspark' &&
-          keyRow('set-ai-search-key', searchKey, searchMeta?.keyPlaceholder ?? 'API Key', (v) =>
-            setSearch({
-              ...search,
-              providers: { ...search.providers, [search.provider]: { apiKey: v } },
-            }),
-          )}
+        {keyRow('set-ai-search-key', searchKey, searchMeta?.keyPlaceholder ?? 'API Key', (v) =>
+          setSearch({
+            ...search,
+            provider: activeSearchProvider,
+            providers: { ...search.providers, [activeSearchProvider]: { apiKey: v } },
+          }),
+        )}
       </section>
       {fileSearch && (
         <section>
@@ -1806,7 +1805,7 @@ export function SettingsModal({
   target,
 }: SettingsModalProps) {
   const { lang, setLang, t } = useI18n()
-  const [section, setSection] = useState<SectionId>(target?.section ?? 'account')
+  const [section, setSection] = useState<SectionId>(target?.section ?? 'aiModel')
   useEffect(() => {
     if (target) setSection(target.section)
   }, [target])

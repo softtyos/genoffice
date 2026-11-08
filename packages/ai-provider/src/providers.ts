@@ -50,37 +50,42 @@ export const DEEPSEEK_V41_FLASH = 'deep-seek-v4.1-flash'
 
 export const AI_PROVIDERS: AiProviderMeta[] = [
   {
-    id: 'genspark',
-    label: 'Genspark',
-    // must stay within the proxy's served set (GET /api/llm_proxy/v1/models);
-    // bare gpt-5.6 and the gemini family dropped off it (verified 2026-08-31).
-    // DeepSeek goes by the proxy's hyphenated pool id; V4.1 Flash takes images
-    // (live-verified 2026-09-15). gpt-6-astra: chat, tool call and image
-    // input all live-verified through the proxy 2026-09-17; claude-opus-5-5,
-    // gpt-6-sol and gpt-6-luna the same way 2026-09-24. Opus 4.7/4.8 dropped
-    // 2026-10-09: 5.5 is cheaper and supersedes both.
+    id: 'custom',
+    label: 'OpenAI-Compatible (Universal API)',
+    models: [],
+    defaultModel: '',
+    keyPlaceholder: 'sk-...',
+    needsBaseUrl: true,
+  },
+  {
+    id: 'openai',
+    label: 'OpenAI',
+    // Tier names: astra/sol = flagship, terra = balanced cost/intelligence,
+    // luna = high-volume. GPT-5.4+ and GPT-6 run on the Responses API (see
+    // modelUsesResponsesApi), which is the only route where they call tools
+    // with reasoning on (live-verified 2026-10-27). Standard Chat Completions
+    // models (gpt-4.1, gpt-4o, o3-mini) are also listed for universal compatibility.
     models: [
-      'claude-opus-5-5',
-      'claude-sonnet-4-6',
+      'gpt-4.1',
+      'gpt-4.1-mini',
+      'gpt-4o',
+      'gpt-4o-mini',
+      'o3-mini',
+      'o1',
+      'gpt-6.1-terra',
+      'gpt-6.1-sol',
       'gpt-6-astra',
       'gpt-6-sol',
       'gpt-6-luna',
+      'gpt-5.6-sol',
       'gpt-5.6-terra',
       'gpt-5.6-luna',
-      DEEPSEEK_V41_FLASH,
+      'gpt-5.5',
+      'gpt-5.4',
+      'gpt-5.4-mini',
     ],
-    defaultModel: 'claude-opus-5-5',
-    keyPlaceholder: 'Not required - sign in to Genspark',
-  },
-  {
-    id: 'codex',
-    label: 'Codex CLI',
-    // Populated at runtime from codex app-server model/list. Empty also lets
-    // the CLI select the account's current default without a stale hardcode.
-    models: [],
-    defaultModel: '',
-    keyPlaceholder: '',
-    needsCliPath: true,
+    defaultModel: 'gpt-6.1-terra',
+    keyPlaceholder: 'sk-...',
   },
   {
     id: 'anthropic',
@@ -137,29 +142,14 @@ export const AI_PROVIDERS: AiProviderMeta[] = [
     keyPlaceholder: 'sk-...',
   },
   {
-    id: 'openai',
-    label: 'OpenAI',
-    // Tier names: astra/sol = flagship, terra = balanced cost/intelligence,
-    // luna = high-volume. GPT-5.4+ and GPT-6 run on the Responses API (see
-    // modelUsesResponsesApi), which is the only route where they call tools
-    // with reasoning on (live-verified 2026-10-27). 6.1 Terra (2026-10-26,
-    // $1/$5) is the default: cheaper than 5.6 Terra, and the 5.6 tiers have
-    // left OpenAI's models page.
-    models: [
-      'gpt-6.1-terra',
-      'gpt-6.1-sol',
-      'gpt-6-astra',
-      'gpt-6-sol',
-      'gpt-6-luna',
-      'gpt-5.6-sol',
-      'gpt-5.6-terra',
-      'gpt-5.6-luna',
-      'gpt-5.5',
-      'gpt-5.4',
-      'gpt-5.4-mini',
-    ],
-    defaultModel: 'gpt-6.1-terra',
-    keyPlaceholder: 'sk-...',
+    id: 'codex',
+    label: 'Codex CLI',
+    // Populated at runtime from codex app-server model/list. Empty also lets
+    // the CLI select the account's current default without a stale hardcode.
+    models: [],
+    defaultModel: '',
+    keyPlaceholder: '',
+    needsCliPath: true,
   },
   {
     id: 'kimi',
@@ -551,12 +541,20 @@ export const AI_PROVIDERS: AiProviderMeta[] = [
     keyPlaceholder: 'CMD API key',
   },
   {
-    id: 'custom',
-    label: 'Custom (OpenAI-Compatible API)',
-    models: [],
-    defaultModel: '',
-    keyPlaceholder: 'API Key',
-    needsBaseUrl: true,
+    id: 'genspark',
+    label: 'Softty Cloud Proxy',
+    models: [
+      'claude-opus-5-5',
+      'claude-sonnet-4-6',
+      'gpt-6-astra',
+      'gpt-6-sol',
+      'gpt-6-luna',
+      'gpt-5.6-terra',
+      'gpt-5.6-luna',
+      DEEPSEEK_V41_FLASH,
+    ],
+    defaultModel: 'claude-opus-5-5',
+    keyPlaceholder: 'Managed by Softty account',
   },
 ]
 
@@ -602,21 +600,21 @@ export function cloudToolsEnabled(settings: Pick<AiSettings, 'gskToolsEnabled'>)
  */
 export function activeProvider(settings: AiSettings): AiProviderId {
   const provider = settings.provider
-  if (provider === 'genspark') return 'genspark'
+  if (provider === 'genspark') return 'custom'
   const meta = AI_PROVIDERS.find((m) => m.id === provider)
   const config = settings.providers?.[provider]
-  if (!meta || !config) return 'genspark'
+  if (!meta || !config) return 'custom'
   if (meta.needsCliPath) return provider
   // Trim-aware: in-memory settings bypass the trimConfigs applied to
   // persisted files, and a whitespace-only key/URL/model is a 401, not a config.
-  if (!config.model?.trim()) return 'genspark'
+  if (!config.model?.trim()) return 'custom'
   if (meta.needsBaseUrl) {
     // Custom OpenAI-compatible endpoints (Ollama, LM Studio, vLLM) accept
     // anonymous requests: base URL + model suffice, the key stays optional.
-    if (!config.baseUrl?.trim()) return 'genspark'
+    if (!config.baseUrl?.trim()) return 'custom'
     return provider
   }
-  if (!config.apiKey?.trim()) return 'genspark'
+  if (!config.apiKey?.trim()) return 'custom'
   return provider
 }
 

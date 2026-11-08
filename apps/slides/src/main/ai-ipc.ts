@@ -124,13 +124,27 @@ export function registerAiIpc(): void {
   app.once('before-quit', shutdownCodexAppServers)
   // Node fetch (undici) direct connections get reset under VPN/tun setups; retry over Chromium's stack
   setRescueFetch((url, init) => net.fetch(url, init))
-  setAiUserAgent(`GenOffice/${app.getVersion()}`)
+  setAiUserAgent(`Softty Office/${app.getVersion()}`)
 
   ipcMain.handle('ai:get-settings', (): AiSettings => {
     const stored = readJson<Partial<AiSettings> & LegacyAiSettings>(AI_SETTINGS_PATH(), {})
     const settings = resolveAiSettings(stored, defaultAiSettings())
-    // a stored BYOK provider is honored when usable; half-filled configs fall back to genspark
-    settings.provider = activeProvider(settings)
+    const active = activeProvider(settings)
+    settings.provider =
+      active !== 'genspark'
+        ? active
+        : stored.provider && stored.provider !== 'genspark'
+          ? stored.provider
+          : 'openai'
+    if (settings.media) {
+      if (settings.media.imageProvider === 'genspark') settings.media.imageProvider = 'openai'
+      if (settings.media.analysisProvider === 'genspark') settings.media.analysisProvider = 'openai'
+      if (settings.media.videoAnalysisProvider === 'genspark')
+        settings.media.videoAnalysisProvider = 'gemini'
+    }
+    if (settings.search && settings.search.provider === 'genspark') {
+      settings.search.provider = 'serper'
+    }
     return settings
   })
 

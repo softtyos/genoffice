@@ -62,7 +62,7 @@ beforeEach(async () => {
 
 afterEach(() => rmSync(state.root, { recursive: true, force: true }))
 
-const blocker = () => join(state.root, 'documents', 'GenOffice')
+const blocker = () => join(state.root, 'documents', 'Softty Office')
 const selected = () => join(state.root, 'picked', 'saved.docx')
 const documentBytes = () => buildDocx({ bodyXml: '<w:p><w:r><w:t>Save fixture</w:t></w:r></w:p>' })
 

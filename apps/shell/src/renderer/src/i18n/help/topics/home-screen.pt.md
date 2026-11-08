@@ -46,12 +46,12 @@ O arquivo novo vai parar à pasta atualmente selecionada na barra lateral; se n�
 
 O que faz cada cartão:
 
-- **AI Docs** (.docx): um documento de texto em branco no editor Docs. O arquivo só é gravado no disco no **primeiro salvamento**; e os documentos novos abrem com o painel de IA expandido (desligue em Configurações → "Abrir o painel de IA em novos documentos").
-- **AI Sheets** (.xlsx): uma planilha em branco no editor Sheets. Até você salvar, não existe arquivo no disco — o nome fica reservado para o primeiro salvamento; após a primeira geração pela IA, o arquivo também pode ser renomeado automaticamente a partir do seu conteúdo.
-- **AI Slides** (.pptx): uma apresentação em branco no editor Slides.
-- **AI Markdown** (.md): um documento Markdown em branco no editor Markdown.
-- **AI HTML** (.html): uma página web em branco no editor HTML.
-- **AI PDF** (.pdf): diferente dos demais — cria **imediatamente** um PDF em branco verdadeiro de uma página na pasta de destino e abre-o como um arquivo normal (o editor de PDF trabalha sobre arquivos reais). Bom para anotar, ocultar partes do documento ou acrescentar texto; o arquivo pode ser renomeado automaticamente a partir do conteúdo no primeiro salvamento.
+- **Softty Docs** (.docx): um documento de texto em branco no editor Docs. O arquivo só é gravado no disco no **primeiro salvamento**; e os documentos novos abrem com o painel de IA expandido (desligue em Configurações → "Abrir o painel de IA em novos documentos").
+- **Softty Sheets** (.xlsx): uma planilha em branco no editor Sheets. Até você salvar, não existe arquivo no disco — o nome fica reservado para o primeiro salvamento; após a primeira geração pela IA, o arquivo também pode ser renomeado automaticamente a partir do seu conteúdo.
+- **Softty Slides** (.pptx): uma apresentação em branco no editor Slides.
+- **Softty Markdown** (.md): um documento Markdown em branco no editor Markdown.
+- **Softty HTML** (.html): uma página web em branco no editor HTML.
+- **Softty PDF** (.pdf): diferente dos demais — cria **imediatamente** um PDF em branco verdadeiro de uma página na pasta de destino e abre-o como um arquivo normal (o editor de PDF trabalha sobre arquivos reais). Bom para anotar, ocultar partes do documento ou acrescentar texto; o arquivo pode ser renomeado automaticamente a partir do conteúdo no primeiro salvamento.
 - **Abrir arquivo local**: um seletor de arquivos do sistema para Word (.docx/.doc), Excel (.xlsx/.xlsm/.xls/.csv/.tsv), PowerPoint (.pptx/.ppt), PDF, Markdown (.md/.markdown) e páginas web (.html/.htm). É possível selecionar vários; cada arquivo recebe a sua própria guia. Arquivos de texto (.txt, .json) também abrem aqui — entram na visão de código do editor Markdown.
 
 > Dica: Arquivo ▸ Novo na barra de menus cria os mesmos tipos de documento (⌘N/Ctrl+N usa por padrão um documento de texto); arrastar um arquivo para a janela abre-o.

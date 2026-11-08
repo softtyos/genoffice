@@ -669,10 +669,10 @@ const homeApi: HomeApi = {
       : { ok: false, error: typeof raw.error === 'string' ? raw.error : 'Connection failed' }
   },
   getAiMediaProviders() {
-    return AI_MEDIA_PROVIDERS
+    return AI_MEDIA_PROVIDERS.filter((meta) => meta.id !== 'genspark')
   },
   getAiSearchProviders() {
-    return AI_SEARCH_PROVIDERS
+    return AI_SEARCH_PROVIDERS.filter((meta) => meta.id !== 'genspark')
   },
   async testAiSearchSettings(input) {
     const raw = ((await ipcRenderer.invoke('ai:search-test', input)) ?? {}) as {

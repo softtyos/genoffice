@@ -16,7 +16,7 @@ Softty Office เป็นชุดโปรแกรมสำนักงาน
 
 เลือกวิธีใดวิธีหนึ่ง:
 
-- คลิกการ์ดสร้างด่วนในส่วน [เริ่มต้นอย่างรวดเร็ว](help://getting-started) ของ **หน้าแรก** (AI Docs, AI Sheets, AI Slides ฯลฯ)
+- คลิกการ์ดสร้างด่วนในส่วน [เริ่มต้นอย่างรวดเร็ว](help://getting-started) ของ **หน้าแรก** (Softty Docs, Softty Sheets, Softty Slides ฯลฯ)
 - เมนู **ไฟล์ ▸ สร้างใหม่**: Docs (⌘N/ctrl+N), Sheets, Slides, Markdown, HTML หรือ PDF
 - ลากไฟล์มาวางในหน้าต่าง หรือดับเบิลคลิกไฟล์ในโปรแกรมจัดการไฟล์ของคุณ (ถ้า Softty Office เป็นแอปเริ่มต้น)
 

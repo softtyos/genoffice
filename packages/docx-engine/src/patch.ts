@@ -1432,14 +1432,39 @@ export async function saveDocx(
   // ---- styles: surgical upsert of word/styles.xml (create/modify styles) ----
   const stylesPath = 'word/styles.xml'
   let stylesXmlOut: string | null = null
-  if (styleUpserts.length > 0 || options.defaultFonts !== undefined) {
-    const file = zip.file(stylesPath)
-    let xml = file
-      ? await file.async('string')
+  const stylesFile = zip.file(stylesPath)
+  if (
+    styleUpserts.length > 0 ||
+    options.defaultFonts !== undefined ||
+    (stylesFile && (options.themeFonts !== undefined || options.themeColors !== undefined))
+  ) {
+    let xml = stylesFile
+      ? await stylesFile.async('string')
       : '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n' +
         '<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"></w:styles>'
+    if (options.themeFonts || options.themeColors) {
+      const explicitIds = new Set(styleUpserts.map((u) => u.styleId))
+      const headingIds = ['Heading1', 'Heading2', 'Heading3', 'Heading4', 'Heading5', 'Heading6']
+      for (const id of [...headingIds, 'Title']) {
+        if (explicitIds.has(id)) continue
+        if (!new RegExp(`<w:style\\b[^>]*\\bw:styleId=(["'])${id}\\1`).test(xml)) continue
+        const rPr: NonNullable<StyleUpsert['rPr']> = {}
+        if (options.themeFonts?.major) rPr.font = options.themeFonts.major
+        if (options.themeFonts?.eastAsia) rPr.eastAsiaFont = options.themeFonts.eastAsia
+        if (id !== 'Title' && options.themeColors?.accent1) rPr.color = options.themeColors.accent1
+        if (Object.keys(rPr).length > 0) xml = upsertStyleXml(xml, { styleId: id, rPr })
+      }
+    }
     for (const up of styleUpserts) xml = upsertStyleXml(xml, up)
-    stylesXmlOut = options.defaultFonts ? mergeDefaultFontsXml(xml, options.defaultFonts) : xml
+    const effectiveDefaultFonts =
+      options.defaultFonts ??
+      (options.themeFonts && (options.themeFonts.minor || options.themeFonts.eastAsia)
+        ? {
+            ...(options.themeFonts.minor ? { font: options.themeFonts.minor } : {}),
+            ...(options.themeFonts.eastAsia ? { eastAsiaFont: options.themeFonts.eastAsia } : {}),
+          }
+        : undefined)
+    stylesXmlOut = effectiveDefaultFonts ? mergeDefaultFontsXml(xml, effectiveDefaultFonts) : xml
   }
 
   // ---- comments: regenerate word/comments.xml from the full desired list ----

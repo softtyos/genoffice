@@ -934,7 +934,15 @@ export function KbAskPanel({
         </p>
       )}
       {gskEmail === null && provider === 'genspark' && (
-        <p className="kb-ask-login">{t('askNeedsLogin')}</p>
+        <p className="kb-ask-login">
+          <button
+            type="button"
+            className="kb-ask-action"
+            onClick={() => onOpenModelSettings?.()}
+          >
+            {t('askNeedsLogin')}
+          </button>
+        </p>
       )}
       {attachNotice && (
         <p className="kb-ask-notice" role="status">

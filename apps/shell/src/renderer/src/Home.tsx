@@ -4,7 +4,7 @@ import type {
   PointerEvent as ReactPointerEvent,
   ReactElement,
 } from 'react'
-import logoLockup from './assets/genoffice-logo.svg'
+import logoLockup from './assets/softty-mark.svg'
 import { KbAskPanel } from './KbAskPanel'
 import { FileBadge } from './file-badge'
 import { placeFolderMenu } from './folder-menu-position'
@@ -863,7 +863,7 @@ function AccountEntry({
 
   const loggedIn = status?.loggedIn ?? false
   const email = status?.email ?? ''
-  const initial = email ? email[0].toUpperCase() : loggedIn ? 'G' : '?'
+  const initial = email ? email[0].toUpperCase() : 'S'
   const errorText = loginError
     ? {
         timeout: t('loginTimeout'),
@@ -3444,6 +3444,9 @@ export function Home() {
       >
         <div className="sidebar-logo">
           <img className="logo-lockup" src={logoLockup} alt="Softty Office" />
+          <span className="sidebar-brand-title" aria-hidden="true">
+            Softty <span className="sidebar-brand-accent">Office</span>
+          </span>
         </div>
         <nav className="sidebar-nav">
           <button

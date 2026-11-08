@@ -633,7 +633,8 @@ button {
   box-shadow: var(--slides-shadow-badge-soft);
 }
 
-/* Genspark brand logo (Ribbon AI button / AI panel title / collapsed entry) */
+/* Softty brand logo (Ribbon AI button / AI panel title / collapsed entry) */
+.softty-badge,
 .genspark-badge {
   display: block;
   width: 22px;
@@ -641,6 +642,7 @@ button {
   border-radius: 50%;
 }
 
+.ai-panel-title .softty-badge,
 .ai-panel-title .genspark-badge {
   width: 18px;
   height: 18px;
@@ -5902,6 +5904,7 @@ body.vib .slide-list {
 }
 
 /* the brand mark uses currentColor and keeps the button's ink, not the blue */
+.stage-ai-btn svg.softty-mark,
 .stage-ai-btn svg.genspark-mark {
   color: var(--slides-stagebar-ink);
 }

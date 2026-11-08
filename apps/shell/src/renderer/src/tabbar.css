@@ -338,7 +338,32 @@ body.overlay-title-bar .tab-bar-drag-spacer {
   padding-top: 40px;
 }
 
-/* ── Dark mode tab bar overrides ─────────────────────────── */
+/* ── Theme mode tab bar overrides ─────────────────────────── */
+
+[data-theme='light'] .tab-bar {
+  --tabstrip-bg: #ebebeb;
+  --tabstrip-text: #454746;
+  --tabstrip-text-active: #1f1f1f;
+  --tab-separator: rgba(0, 0, 0, 0.22);
+}
+
+[data-theme='light'] .tab-item.active .tab-plate {
+  background: var(--surface);
+}
+
+[data-theme='light'] .tab-item:not(.active):hover .tab-plate {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='light'] .tab-close:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='light'] .tab-new-btn:hover,
+[data-theme='light'] .tab-overflow-btn:hover,
+[data-theme='light'] .tab-app-menu-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
 
 [data-theme='dark'] .tab-bar {
   --tabstrip-bg: #2a2a2a;

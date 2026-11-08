@@ -19,7 +19,7 @@ Setiap editor boleh memanggil panel AI. Pilih sesuatu, berikan arahan, dan lihat
 - **Slides**: menjana keseluruhan persembahan, menyelaras susun atur, dan menulis semula teks.
 - **PDF**: menjawab soalan dan meringkas berdasarkan teks atau halaman yang dipilih.
 - **Markdown dan HTML**: menulis semula, melanjutkan, dan menterjemah.
-- **Laman Utama ▸ Ask AI** menjawab daripada fail anda yang berbintang dan memetiknya — panel pangkalan pengetahuan ada bahagiannya sendiri dalam bab Laman Utama, dan panel AI Docs membawa kemahiran yang sama.
+- **Laman Utama ▸ Ask AI** menjawab daripada fail anda yang berbintang dan memetiknya — panel pangkalan pengetahuan ada bahagiannya sendiri dalam bab Laman Utama, dan panel Softty Docs membawa kemahiran yang sama.
 
 ## Berundur dan keselamatan
 

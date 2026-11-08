@@ -16,8 +16,16 @@
         --boot-bg: #ffffff;
         color-scheme: light dark;
       }
+      [data-theme='light'] {
+        --boot-bg: #ffffff;
+        color-scheme: light;
+      }
+      [data-theme='dark'] {
+        --boot-bg: #1e1e1e;
+        color-scheme: dark;
+      }
       @media (prefers-color-scheme: dark) {
-        :root {
+        :root:not([data-theme='light']) {
           --boot-bg: #1e1e1e;
         }
       }

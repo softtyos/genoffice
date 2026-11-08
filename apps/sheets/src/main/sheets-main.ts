@@ -233,7 +233,7 @@ const tMain = createI18n({
     filterXlsm: 'Excel 启用宏的工作簿',
     odsImportMsg: '转换 .{ext} 工作簿？',
     odsImportDetail:
-      'GenOffice 只编辑 .xlsx，不编辑 ODF。数值、公式和日期会被转换过来（公式改写为 Excel 语法，无法安全改写的只保留它的当前结果）；图片、合并单元格和列宽行高会一并带过来；边框等样式和图表不会保留。原文件不会被修改，转换出的副本首次保存时另存为 .xlsx。', // public-hygiene: allow
+      'Softty Office 只编辑 .xlsx，不编辑 ODF。数值、公式和日期会被转换过来（公式改写为 Excel 语法，无法安全改写的只保留它的当前结果）；图片、合并单元格和列宽行高会一并带过来；边框等样式和图表不会保留。原文件不会被修改，转换出的副本首次保存时另存为 .xlsx。', // public-hygiene: allow
     odsImportConvertBtn: '转换并打开',
     importSkipConfirm: '下次直接转换，不再提示',
     dlgAddAttachment: '添加附件',
@@ -248,7 +248,7 @@ const tMain = createI18n({
     errParseFailed: '文件解析失败',
     errImageNoText: '图片附件不提供文本,已作为图像随用户消息发送,直接看图即可',
     errNotImage: '不是支持的图片类型',
-    errGskNotLoggedIn: '未登录 Genspark:请点击下方「登录 Genspark」完成登录后重试',
+    errGskNotLoggedIn: '未登录 Softty AI:请点击下方「登录 Softty AI」完成登录后重试',
     errNoApiKey: '未配置 {provider} 的 API Key',
     errAiRegion: '该模型的厂商不向当前地区提供服务，请换一个模型或切换网络',
     errAiBusy: 'AI 服务当前繁忙，请稍后重试',
@@ -297,7 +297,7 @@ const tMain = createI18n({
     filterXlsm: 'Excel Macro-Enabled Workbooks',
     odsImportMsg: 'Convert this .{ext} workbook?',
     odsImportDetail:
-      'GenOffice edits .xlsx, not ODF. Values, formulas and dates carry over (formulas are rewritten into Excel syntax, and any that cannot be rewritten safely keeps its current result). Pictures, merged cells, column widths and row heights come along too; other styling such as borders, and charts, are not carried over. The original file is never changed; the converted copy saves as .xlsx the first time you save.',
+      'Softty Office edits .xlsx, not ODF. Values, formulas and dates carry over (formulas are rewritten into Excel syntax, and any that cannot be rewritten safely keeps its current result). Pictures, merged cells, column widths and row heights come along too; other styling such as borders, and charts, are not carried over. The original file is never changed; the converted copy saves as .xlsx the first time you save.',
     odsImportConvertBtn: 'Convert and open',
     importSkipConfirm: 'Convert without asking next time',
     dlgAddAttachment: 'Add Attachments',
@@ -313,7 +313,7 @@ const tMain = createI18n({
     errImageNoText: 'Image attachments have no text; the image is sent along with the user message',
     errNotImage: 'not a supported image type',
     errGskNotLoggedIn:
-      'Not signed in to Genspark: click “Sign in to Genspark” below, sign in, then retry',
+      'Not signed in to Softty AI: click “Sign in to Softty AI” below, sign in, then retry',
     errNoApiKey: 'No API key configured for {provider}',
     errAiRegion:
       "This model's provider does not serve your current region — pick another model or change your network",
@@ -366,7 +366,7 @@ const tMain = createI18n({
     filterXlsm: 'Sổ làm việc Excel hỗ trợ Macro',
     odsImportMsg: 'Chuyển đổi sổ làm việc .{ext} này?',
     odsImportDetail:
-      'GenOffice chỉnh sửa .xlsx chứ không chỉnh sửa ODF. Giá trị, công thức và ngày tháng sẽ được chuyển đổi (công thức viết lại theo cú pháp Excel, công thức không viết lại an toàn được sẽ giữ kết quả hiện tại). Hình ảnh, ô đã gộp, độ rộng cột và chiều cao hàng cũng được chuyển sang; các định dạng khác như đường viền, và biểu đồ, thì không. Tệp gốc không bao giờ bị sửa; bản sau chuyển đổi sẽ lưu thành .xlsx khi lưu lần đầu.',
+      'Softty Office chỉnh sửa .xlsx chứ không chỉnh sửa ODF. Giá trị, công thức và ngày tháng sẽ được chuyển đổi (công thức viết lại theo cú pháp Excel, công thức không viết lại an toàn được sẽ giữ kết quả hiện tại). Hình ảnh, ô đã gộp, độ rộng cột và chiều cao hàng cũng được chuyển sang; các định dạng khác như đường viền, và biểu đồ, thì không. Tệp gốc không bao giờ bị sửa; bản sau chuyển đổi sẽ lưu thành .xlsx khi lưu lần đầu.',
     odsImportConvertBtn: 'Chuyển đổi và mở',
     importSkipConfirm: 'Lần sau chuyển đổi ngay, không hỏi lại',
     dlgAddAttachment: 'Thêm tệp đính kèm',
@@ -383,7 +383,7 @@ const tMain = createI18n({
       'Tệp đính kèm hình ảnh không có văn bản; hình ảnh được gửi cùng với tin nhắn của người dùng',
     errNotImage: 'loại hình ảnh không được hỗ trợ',
     errGskNotLoggedIn:
-      'Chưa đăng nhập vào Genspark: nhấp vào “Đăng nhập vào Genspark” bên dưới, đăng nhập, sau đó thử lại',
+      'Chưa đăng nhập vào Softty AI: nhấp vào “Đăng nhập vào Softty AI” bên dưới, đăng nhập, sau đó thử lại',
     errNoApiKey: 'Chưa cấu hình khóa API cho {provider}',
     errAiRegion:
       'Nhà cung cấp của mô hình này không phục vụ khu vực hiện tại của bạn — hãy chọn mô hình khác hoặc đổi mạng',
@@ -437,7 +437,7 @@ const tMain = createI18n({
     filterXlsm: 'Excel Makro İçerebilen Çalışma Kitapları',
     odsImportMsg: 'Bu .{ext} çalışma kitabı dönüştürülsün mü?',
     odsImportDetail:
-      'GenOffice ODF değil, .xlsx düzenler. Değerler, formüller ve tarihler aktarılır (formüller Excel söz dizimine yeniden yazılır; güvenle yeniden yazılamayanlar mevcut sonucunu korur). Resimler, birleştirilmiş hücreler, sütun genişlikleri ve satır yükseklikleri de aktarılır; kenarlıklar gibi diğer biçimlendirmeler ve grafikler aktarılmaz. Özgün dosya asla değiştirilmez; dönüştürülen kopya ilk kaydettiğinizde .xlsx olarak kaydedilir.',
+      'Softty Office ODF değil, .xlsx düzenler. Değerler, formüller ve tarihler aktarılır (formüller Excel söz dizimine yeniden yazılır; güvenle yeniden yazılamayanlar mevcut sonucunu korur). Resimler, birleştirilmiş hücreler, sütun genişlikleri ve satır yükseklikleri de aktarılır; kenarlıklar gibi diğer biçimlendirmeler ve grafikler aktarılmaz. Özgün dosya asla değiştirilmez; dönüştürülen kopya ilk kaydettiğinizde .xlsx olarak kaydedilir.',
     odsImportConvertBtn: 'Dönüştür ve aç',
     importSkipConfirm: 'Bir dahaki sefere sormadan dönüştür',
     dlgAddAttachment: 'Ek Ekle',
@@ -453,7 +453,7 @@ const tMain = createI18n({
     errImageNoText: 'Görsel eklerin metni yoktur; görsel kullanıcı mesajıyla birlikte gönderilir',
     errNotImage: 'desteklenen bir görsel türü değil',
     errGskNotLoggedIn:
-      'Genspark oturumu açılmamış: aşağıdaki “Genspark’ta oturum aç” düğmesine tıklayın, oturum açın ve yeniden deneyin',
+      'Softty AI oturumu açılmamış: aşağıdaki “Softty AI’ta oturum aç” düğmesine tıklayın, oturum açın ve yeniden deneyin',
     errNoApiKey: '{provider} için API anahtarı yapılandırılmamış',
     errAiRegion:
       'Bu modelin sağlayıcısı bulunduğunuz bölgeye hizmet vermiyor — başka bir model seçin veya ağınızı değiştirin',
@@ -508,7 +508,7 @@ const tMain = createI18n({
     filterXlsm: 'Excel マクロ有効ブック',
     odsImportMsg: 'この .{ext} ワークブックを変換しますか？',
     odsImportDetail:
-      'GenOffice は ODF ではなく .xlsx を編集します。値・数式・日付は変換されます（数式は Excel の構文に書き換えられ、安全に書き換えられないものは現在の値だけが残ります）。画像、結合セル、列の幅と行の高さも引き継がれますが、罫線などその他の書式とグラフは引き継がれません。元のファイルは変更されず、変換後のコピーは最初に保存する際 .xlsx として保存されます。',
+      'Softty Office は ODF ではなく .xlsx を編集します。値・数式・日付は変換されます（数式は Excel の構文に書き換えられ、安全に書き換えられないものは現在の値だけが残ります）。画像、結合セル、列の幅と行の高さも引き継がれますが、罫線などその他の書式とグラフは引き継がれません。元のファイルは変更されず、変換後のコピーは最初に保存する際 .xlsx として保存されます。',
     odsImportConvertBtn: '変換して開く',
     importSkipConfirm: '次回から確認せずに変換する',
     dlgAddAttachment: '添付ファイルを追加',
@@ -525,7 +525,7 @@ const tMain = createI18n({
       '画像添付にはテキストがありません。画像はユーザー メッセージと一緒に送信されるため、そのまま画像をご確認ください',
     errNotImage: 'サポートされていない画像形式です',
     errGskNotLoggedIn:
-      'Genspark にサインインしていません。下の「Genspark にサインイン」からサインインして再試行してください',
+      'Softty AI にサインインしていません。下の「Softty AI にサインイン」からサインインして再試行してください',
     errNoApiKey: '{provider} の API キーが設定されていません',
     errAiRegion:
       'このモデルの提供元は現在の地域ではサービスを提供していません。別のモデルを選ぶか、ネットワークを切り替えてください',
@@ -580,7 +580,7 @@ const tMain = createI18n({
     filterXlsm: 'Excel 매크로 사용 통합 문서',
     odsImportMsg: '이 .{ext} 워크북을 변환할까요?',
     odsImportDetail:
-      'GenOffice은 ODF가 아니라 .xlsx를 편집합니다. 값, 수식, 날짜는 변환됩니다(수식은 Excel 구문으로 다시 쓰이며, 안전하게 다시 쓸 수 없는 수식은 현재 값만 남습니다). 그림, 병합된 셀, 열 너비와 행 높이도 함께 옮겨지지만 테두리 등 그 밖의 서식과 차트는 옮겨지지 않습니다. 원본 파일은 변경되지 않으며, 변환된 사본은 처음 저장할 때 .xlsx로 저장됩니다.',
+      'Softty Office은 ODF가 아니라 .xlsx를 편집합니다. 값, 수식, 날짜는 변환됩니다(수식은 Excel 구문으로 다시 쓰이며, 안전하게 다시 쓸 수 없는 수식은 현재 값만 남습니다). 그림, 병합된 셀, 열 너비와 행 높이도 함께 옮겨지지만 테두리 등 그 밖의 서식과 차트는 옮겨지지 않습니다. 원본 파일은 변경되지 않으며, 변환된 사본은 처음 저장할 때 .xlsx로 저장됩니다.',
     odsImportConvertBtn: '변환 후 열기',
     importSkipConfirm: '다음부터 묻지 않고 변환',
     dlgAddAttachment: '첨부 파일 추가',
@@ -597,7 +597,7 @@ const tMain = createI18n({
       '이미지 첨부에는 텍스트가 없습니다. 이미지는 사용자 메시지와 함께 전송되므로 이미지를 직접 확인하세요',
     errNotImage: '지원되는 이미지 형식이 아닙니다',
     errGskNotLoggedIn:
-      'Genspark에 로그인되어 있지 않습니다. 아래 "Genspark 로그인"을 눌러 로그인한 뒤 다시 시도하세요',
+      'Softty AI에 로그인되어 있지 않습니다. 아래 "Softty AI 로그인"을 눌러 로그인한 뒤 다시 시도하세요',
     errNoApiKey: '{provider}의 API 키가 설정되지 않았습니다',
     errAiRegion:
       '이 모델의 제공업체는 현재 지역에서 서비스를 제공하지 않습니다. 다른 모델을 선택하거나 네트워크를 변경하세요',
@@ -652,7 +652,7 @@ const tMain = createI18n({
     filterXlsm: 'Classeurs Excel prenant en charge les macros',
     odsImportMsg: 'Convertir ce classeur .{ext} ?',
     odsImportDetail:
-      'GenOffice modifie des .xlsx, pas de l’ODF. Les valeurs, les formules et les dates sont converties (les formules sont réécrites en syntaxe Excel ; celles qui ne peuvent pas l’être en sécurité gardent leur résultat actuel). Les images, les cellules fusionnées, les largeurs de colonne et les hauteurs de ligne sont également reprises ; les autres mises en forme, comme les bordures, et les graphiques ne le sont pas. Le fichier d’origine n’est jamais modifié ; la copie convertie s’enregistre en .xlsx lors du premier enregistrement.',
+      'Softty Office modifie des .xlsx, pas de l’ODF. Les valeurs, les formules et les dates sont converties (les formules sont réécrites en syntaxe Excel ; celles qui ne peuvent pas l’être en sécurité gardent leur résultat actuel). Les images, les cellules fusionnées, les largeurs de colonne et les hauteurs de ligne sont également reprises ; les autres mises en forme, comme les bordures, et les graphiques ne le sont pas. Le fichier d’origine n’est jamais modifié ; la copie convertie s’enregistre en .xlsx lors du premier enregistrement.',
     odsImportConvertBtn: 'Convertir et ouvrir',
     importSkipConfirm: 'La prochaine fois, convertir sans demander',
     dlgAddAttachment: 'Ajouter des pièces jointes',
@@ -669,7 +669,7 @@ const tMain = createI18n({
       "Les images jointes n'ont pas de texte ; l'image est envoyée avec le message de l'utilisateur",
     errNotImage: "type d'image non pris en charge",
     errGskNotLoggedIn:
-      'Non connecté à Genspark : cliquez sur « Se connecter à Genspark » ci-dessous, connectez-vous puis réessayez',
+      'Non connecté à Softty AI : cliquez sur « Se connecter à Softty AI » ci-dessous, connectez-vous puis réessayez',
     errNoApiKey: 'Aucune clé API configurée pour {provider}',
     errAiRegion:
       'Le fournisseur de ce modèle ne dessert pas votre région actuelle — choisissez un autre modèle ou changez de réseau',
@@ -725,7 +725,7 @@ const tMain = createI18n({
     filterXlsm: 'Excel-Arbeitsmappen mit Makros',
     odsImportMsg: 'Diese .{ext}-Arbeitsmappe konvertieren?',
     odsImportDetail:
-      'GenOffice bearbeitet .xlsx, nicht ODF. Werte, Formeln und Datumsangaben werden konvertiert (Formeln werden in Excel-Syntax umgeschrieben; was sich nicht sicher umschreiben lässt, behält seinen aktuellen Wert). Bilder, verbundene Zellen, Spaltenbreiten und Zeilenhöhen werden ebenfalls übernommen; andere Formatierungen wie Rahmen sowie Diagramme entfallen. Die Originaldatei bleibt unverändert; die konvertierte Kopie wird beim ersten Speichern als .xlsx angelegt.',
+      'Softty Office bearbeitet .xlsx, nicht ODF. Werte, Formeln und Datumsangaben werden konvertiert (Formeln werden in Excel-Syntax umgeschrieben; was sich nicht sicher umschreiben lässt, behält seinen aktuellen Wert). Bilder, verbundene Zellen, Spaltenbreiten und Zeilenhöhen werden ebenfalls übernommen; andere Formatierungen wie Rahmen sowie Diagramme entfallen. Die Originaldatei bleibt unverändert; die konvertierte Kopie wird beim ersten Speichern als .xlsx angelegt.',
     odsImportConvertBtn: 'Konvertieren und öffnen',
     importSkipConfirm: 'Nächstes Mal ohne Nachfrage konvertieren',
     dlgAddAttachment: 'Anlagen hinzufügen',
@@ -742,7 +742,7 @@ const tMain = createI18n({
       'Bildanlagen enthalten keinen Text; das Bild wird zusammen mit der Benutzernachricht gesendet',
     errNotImage: 'kein unterstützter Bildtyp',
     errGskNotLoggedIn:
-      'Nicht bei Genspark angemeldet: Klicken Sie unten auf „Bei Genspark anmelden“, melden Sie sich an und versuchen Sie es erneut',
+      'Nicht bei Softty AI angemeldet: Klicken Sie unten auf „Bei Softty AI anmelden“, melden Sie sich an und versuchen Sie es erneut',
     errNoApiKey: 'Kein API-Schlüssel für {provider} konfiguriert',
     errAiRegion:
       'Der Anbieter dieses Modells bedient Ihre aktuelle Region nicht — wählen Sie ein anderes Modell oder wechseln Sie das Netzwerk',
@@ -797,7 +797,7 @@ const tMain = createI18n({
     filterXlsm: 'Libros de Excel habilitados para macros',
     odsImportMsg: '¿Convertir este libro .{ext}?',
     odsImportDetail:
-      'GenOffice edita .xlsx, no ODF. Los valores, las fórmulas y las fechas se convierten (las fórmulas se reescriben con sintaxis de Excel; las que no se pueden reescribir con seguridad conservan su resultado actual). Las imágenes, las celdas combinadas, el ancho de columna y el alto de fila también se conservan; otros formatos, como los bordes, y los gráficos no. El archivo original nunca se modifica; la copia convertida se guarda como .xlsx la primera vez que se guarda.',
+      'Softty Office edita .xlsx, no ODF. Los valores, las fórmulas y las fechas se convierten (las fórmulas se reescriben con sintaxis de Excel; las que no se pueden reescribir con seguridad conservan su resultado actual). Las imágenes, las celdas combinadas, el ancho de columna y el alto de fila también se conservan; otros formatos, como los bordes, y los gráficos no. El archivo original nunca se modifica; la copia convertida se guarda como .xlsx la primera vez que se guarda.',
     odsImportConvertBtn: 'Convertir y abrir',
     importSkipConfirm: 'La próxima vez, convertir sin preguntar',
     dlgAddAttachment: 'Agregar datos adjuntos',
@@ -814,7 +814,7 @@ const tMain = createI18n({
       'Las imágenes adjuntas no tienen texto; la imagen se envía junto con el mensaje del usuario',
     errNotImage: 'no es un tipo de imagen compatible',
     errGskNotLoggedIn:
-      'No has iniciado sesión en Genspark: pulsa «Iniciar sesión en Genspark» abajo, inicia sesión y vuelve a intentarlo',
+      'No has iniciado sesión en Softty AI: pulsa «Iniciar sesión en Softty AI» abajo, inicia sesión y vuelve a intentarlo',
     errNoApiKey: 'No hay clave de API configurada para {provider}',
     errAiRegion:
       'El proveedor de este modelo no da servicio en tu región actual — elige otro modelo o cambia de red',
@@ -869,7 +869,7 @@ const tMain = createI18n({
     filterXlsm: 'เวิร์กบุ๊ก Excel ที่เปิดใช้งานแมโคร',
     odsImportMsg: 'แปลงเวิร์กบุ๊ก .{ext} นี้ไหม?',
     odsImportDetail:
-      'GenOffice แก้ไข .xlsx ไม่ใช่ ODF ค่า สูตร และวันที่จะถูกแปลง (สูตรเขียนใหม่เป็นไวยากรณ์ Excel และสูตรที่เขียนใหม่อย่างปลอดภัยไม่ได้จะคงค่าปัจจุบันไว้) รูปภาพ เซลล์ที่ผสาน ความกว้างคอลัมน์ และความสูงแถวจะถูกโอนมาด้วย ส่วนการจัดรูปแบบอื่น เช่น เส้นขอบ และแผนภูมิจะไม่ถูกโอนมา ไฟล์ต้นทางจะไม่ถูกแก้ไข และสำเนาที่แปลงแล้วจะบันทึกเป็น .xlsx ในการบันทึกครั้งแรก',
+      'Softty Office แก้ไข .xlsx ไม่ใช่ ODF ค่า สูตร และวันที่จะถูกแปลง (สูตรเขียนใหม่เป็นไวยากรณ์ Excel และสูตรที่เขียนใหม่อย่างปลอดภัยไม่ได้จะคงค่าปัจจุบันไว้) รูปภาพ เซลล์ที่ผสาน ความกว้างคอลัมน์ และความสูงแถวจะถูกโอนมาด้วย ส่วนการจัดรูปแบบอื่น เช่น เส้นขอบ และแผนภูมิจะไม่ถูกโอนมา ไฟล์ต้นทางจะไม่ถูกแก้ไข และสำเนาที่แปลงแล้วจะบันทึกเป็น .xlsx ในการบันทึกครั้งแรก',
     odsImportConvertBtn: 'แปลงแล้วเปิด',
     importSkipConfirm: 'ครั้งถัดไปแปลงทันทีโดยไม่ต้องถาม',
     dlgAddAttachment: 'เพิ่มสิ่งที่แนบ',
@@ -886,7 +886,7 @@ const tMain = createI18n({
       'รูปภาพแนบไม่มีข้อความ รูปภาพจะถูกส่งไปพร้อมข้อความของผู้ใช้ ให้ดูที่รูปภาพโดยตรง',
     errNotImage: 'ไม่ใช่ชนิดรูปภาพที่รองรับ',
     errGskNotLoggedIn:
-      'ยังไม่ได้ลงชื่อเข้าใช้ Genspark: แตะ “ลงชื่อเข้าใช้ Genspark” ด้านล่าง แล้วลองอีกครั้ง',
+      'ยังไม่ได้ลงชื่อเข้าใช้ Softty AI: แตะ “ลงชื่อเข้าใช้ Softty AI” ด้านล่าง แล้วลองอีกครั้ง',
     errNoApiKey: 'ยังไม่ได้ตั้งค่า API Key ของ {provider}',
     errAiRegion:
       'ผู้ให้บริการของโมเดลนี้ไม่ให้บริการในภูมิภาคปัจจุบันของคุณ — โปรดเลือกโมเดลอื่นหรือเปลี่ยนเครือข่าย',
@@ -940,7 +940,7 @@ const tMain = createI18n({
     filterXlsm: 'Buku kerja Excel dengan makro aktif',
     odsImportMsg: 'Konversi buku kerja .{ext} ini?',
     odsImportDetail:
-      'GenOffice mengedit .xlsx, bukan ODF. Nilai, rumus, dan tanggal ikut terkonversi (rumus ditulis ulang ke sintaks Excel; rumus yang tidak bisa ditulis ulang dengan aman mempertahankan hasilnya). Gambar, sel gabungan, lebar kolom, dan tinggi baris juga ikut dibawa; gaya lain seperti garis tepi, serta grafik, tidak. File asli tidak pernah diubah; hasil konversi disimpan sebagai .xlsx saat penyimpanan pertama.',
+      'Softty Office mengedit .xlsx, bukan ODF. Nilai, rumus, dan tanggal ikut terkonversi (rumus ditulis ulang ke sintaks Excel; rumus yang tidak bisa ditulis ulang dengan aman mempertahankan hasilnya). Gambar, sel gabungan, lebar kolom, dan tinggi baris juga ikut dibawa; gaya lain seperti garis tepi, serta grafik, tidak. File asli tidak pernah diubah; hasil konversi disimpan sebagai .xlsx saat penyimpanan pertama.',
     odsImportConvertBtn: 'Konversi dan buka',
     importSkipConfirm: 'Lain kali langsung konversi tanpa bertanya',
     dlgAddAttachment: 'Tambahkan lampiran',
@@ -955,7 +955,7 @@ const tMain = createI18n({
     errParseFailed: 'Gagal mengurai file',
     errImageNoText: 'Lampiran gambar tidak memiliki teks; gambar dikirim bersama pesan pengguna',
     errNotImage: 'bukan jenis gambar yang didukung',
-    errGskNotLoggedIn: 'Belum masuk ke Genspark: klik “Masuk ke Genspark” di bawah, lalu coba lagi',
+    errGskNotLoggedIn: 'Belum masuk ke Softty AI: klik “Masuk ke Softty AI” di bawah, lalu coba lagi',
     errNoApiKey: 'API Key untuk {provider} belum dikonfigurasi',
     errAiRegion:
       'Penyedia model ini tidak melayani wilayah Anda saat ini — pilih model lain atau ganti jaringan',
@@ -1009,7 +1009,7 @@ const tMain = createI18n({
     filterXlsm: 'Книги Excel с поддержкой макросов',
     odsImportMsg: 'Преобразовать эту книгу .{ext}?',
     odsImportDetail:
-      'GenOffice редактирует .xlsx, а не ODF. Значения, формулы и даты переносятся (формулы переписываются в синтаксис Excel; те, что нельзя переписать безопасно, сохраняют текущий результат). Изображения, объединённые ячейки, ширина столбцов и высота строк тоже переносятся; прочее оформление, например границы, и диаграммы — нет. Исходный файл никогда не изменяется; преобразованная копия при первом сохранении записывается как .xlsx.',
+      'Softty Office редактирует .xlsx, а не ODF. Значения, формулы и даты переносятся (формулы переписываются в синтаксис Excel; те, что нельзя переписать безопасно, сохраняют текущий результат). Изображения, объединённые ячейки, ширина столбцов и высота строк тоже переносятся; прочее оформление, например границы, и диаграммы — нет. Исходный файл никогда не изменяется; преобразованная копия при первом сохранении записывается как .xlsx.',
     odsImportConvertBtn: 'Преобразовать и открыть',
     importSkipConfirm: 'В следующий раз конвертировать без запроса',
     dlgAddAttachment: 'Добавить вложения',
@@ -1026,7 +1026,7 @@ const tMain = createI18n({
       'Вложенные изображения не содержат текста; изображение отправляется вместе с сообщением пользователя',
     errNotImage: 'неподдерживаемый тип изображения',
     errGskNotLoggedIn:
-      'Вы не вошли в Genspark: нажмите «Войти в Genspark» ниже, войдите и повторите попытку',
+      'Вы не вошли в Softty AI: нажмите «Войти в Softty AI» ниже, войдите и повторите попытку',
     errNoApiKey: 'API-ключ для {provider} не настроен',
     errAiRegion:
       'Поставщик этой модели не обслуживает ваш текущий регион — выберите другую модель или смените сеть',
@@ -1080,7 +1080,7 @@ const tMain = createI18n({
     filterXlsm: 'مصنفات Excel ممكّنة بوحدات الماكرو',
     odsImportMsg: 'تحويل دفتر عمل .{ext} هذا؟',
     odsImportDetail:
-      'يحرّر GenOffice ملفات ‎.xlsx ولا يحرّر ODF. تُحوَّل القيم والصيغ والتواريخ (تُعاد كتابة الصيغ بصيغة Excel، والصيغ التي لا يمكن إعادة كتابتها بأمان تحتفظ بنتيجتها الحالية). تُنقل أيضًا الصور والخلايا المدمجة وعرض الأعمدة وارتفاع الصفوف؛ أما التنسيقات الأخرى مثل الحدود، والرسوم البيانية، فلا تُنقل. لا يتغيّر الملف الأصلي أبدًا؛ والنسخة المحوّلة تُحفظ بصيغة ‎.xlsx عند أول حفظ.',
+      'يحرّر Softty Office ملفات ‎.xlsx ولا يحرّر ODF. تُحوَّل القيم والصيغ والتواريخ (تُعاد كتابة الصيغ بصيغة Excel، والصيغ التي لا يمكن إعادة كتابتها بأمان تحتفظ بنتيجتها الحالية). تُنقل أيضًا الصور والخلايا المدمجة وعرض الأعمدة وارتفاع الصفوف؛ أما التنسيقات الأخرى مثل الحدود، والرسوم البيانية، فلا تُنقل. لا يتغيّر الملف الأصلي أبدًا؛ والنسخة المحوّلة تُحفظ بصيغة ‎.xlsx عند أول حفظ.',
     odsImportConvertBtn: 'تحويل وفتح',
     importSkipConfirm: 'في المرة القادمة، حوّل دون سؤال',
     dlgAddAttachment: 'إضافة مرفقات',
@@ -1096,7 +1096,7 @@ const tMain = createI18n({
     errImageNoText: 'مرفقات الصور لا تحتوي على نص؛ تُرسل الصورة مع رسالة المستخدم',
     errNotImage: 'نوع صورة غير مدعوم',
     errGskNotLoggedIn:
-      'لم تسجّل الدخول إلى Genspark: انقر على «تسجيل الدخول إلى Genspark» أدناه ثم أعد المحاولة',
+      'لم تسجّل الدخول إلى Softty AI: انقر على «تسجيل الدخول إلى Softty AI» أدناه ثم أعد المحاولة',
     errNoApiKey: 'لم يتم تكوين مفتاح API لـ {provider}',
     errAiRegion:
       'مزوّد هذا النموذج لا يقدم الخدمة في منطقتك الحالية — اختر نموذجًا آخر أو غيّر الشبكة',
@@ -1148,7 +1148,7 @@ const tMain = createI18n({
     filterXlsm: 'Pastas de Trabalho Habilitadas para Macro do Excel',
     odsImportMsg: 'Converter este livro .{ext}?',
     odsImportDetail:
-      'O GenOffice edita .xlsx, não ODF. Valores, fórmulas e datas são convertidos (as fórmulas são reescritas na sintaxe do Excel; as que não podem ser reescritas com segurança mantêm o resultado atual). Imagens, células mescladas, largura de coluna e altura de linha também são mantidas; outras formatações, como bordas, e gráficos não são. O arquivo original nunca é alterado; a cópia convertida é salva como .xlsx no primeiro salvamento.',
+      'O Softty Office edita .xlsx, não ODF. Valores, fórmulas e datas são convertidos (as fórmulas são reescritas na sintaxe do Excel; as que não podem ser reescritas com segurança mantêm o resultado atual). Imagens, células mescladas, largura de coluna e altura de linha também são mantidas; outras formatações, como bordas, e gráficos não são. O arquivo original nunca é alterado; a cópia convertida é salva como .xlsx no primeiro salvamento.',
     odsImportConvertBtn: 'Converter e abrir',
     importSkipConfirm: 'Da próxima vez, converter sem perguntar',
     dlgAddAttachment: 'Adicionar Anexos',
@@ -1165,7 +1165,7 @@ const tMain = createI18n({
       'Anexos de imagem não têm texto; a imagem é enviada junto com a mensagem do usuário',
     errNotImage: 'não é um tipo de imagem suportado',
     errGskNotLoggedIn:
-      'Não conectado ao Genspark: clique em “Entrar no Genspark” abaixo, entre e tente novamente',
+      'Não conectado ao Softty AI: clique em “Entrar no Softty AI” abaixo, entre e tente novamente',
     errNoApiKey: 'Nenhuma chave de API configurada para {provider}',
     errAiRegion:
       'O fornecedor deste modelo não atende à sua região atual — escolha outro modelo ou mude de rede',
@@ -1219,7 +1219,7 @@ const tMain = createI18n({
     filterXlsm: 'Cartelle di lavoro di Excel con attivazione macro',
     odsImportMsg: 'Convertire questa cartella di lavoro .{ext}?',
     odsImportDetail:
-      'GenOffice modifica .xlsx, non ODF. Valori, formule e date vengono convertiti (le formule sono riscritte nella sintassi di Excel; quelle che non possono essere riscritte in sicurezza mantengono il risultato attuale). Immagini, celle unite, larghezza colonne e altezza righe vengono riportate; altre formattazioni, come i bordi, e i grafici no. Il file originale non viene mai modificato; la copia convertita si salva come .xlsx al primo salvataggio.',
+      'Softty Office modifica .xlsx, non ODF. Valori, formule e date vengono convertiti (le formule sono riscritte nella sintassi di Excel; quelle che non possono essere riscritte in sicurezza mantengono il risultato attuale). Immagini, celle unite, larghezza colonne e altezza righe vengono riportate; altre formattazioni, come i bordi, e i grafici no. Il file originale non viene mai modificato; la copia convertita si salva come .xlsx al primo salvataggio.',
     odsImportConvertBtn: 'Converti e apri',
     importSkipConfirm: 'La prossima volta converti senza chiedere',
     dlgAddAttachment: 'Aggiungi allegati',
@@ -1236,7 +1236,7 @@ const tMain = createI18n({
       "Gli allegati immagine non hanno testo; l'immagine viene inviata insieme al messaggio dell'utente",
     errNotImage: 'tipo di immagine non supportato',
     errGskNotLoggedIn:
-      'Accesso a Genspark non effettuato: fai clic su “Accedi a Genspark” qui sotto, accedi e riprova',
+      'Accesso a Softty AI non effettuato: fai clic su “Accedi a Softty AI” qui sotto, accedi e riprova',
     errNoApiKey: 'Nessuna chiave API configurata per {provider}',
     errAiRegion:
       'Il fornitore di questo modello non serve la tua regione attuale — scegli un altro modello o cambia rete',
@@ -1291,7 +1291,7 @@ const tMain = createI18n({
     filterXlsm: 'Skoroszyty programu Excel z obsługą makr',
     odsImportMsg: 'Skonwertować ten skoroszyt .{ext}?',
     odsImportDetail:
-      'GenOffice edytuje .xlsx, a nie ODF. Wartości, formuły i daty są konwertowane (formuły są przepisywane na składnię Excela; te, których nie można przepisać bezpiecznie, zachowują bieżący wynik). Obrazy, scalone komórki, szerokości kolumn i wysokości wierszy również są przenoszone; inne formatowanie, np. obramowania, oraz wykresy nie. Plik oryginalny nigdy nie jest zmieniany; skonwertowana kopia zapisuje się jako .xlsx przy pierwszym zapisaniu.',
+      'Softty Office edytuje .xlsx, a nie ODF. Wartości, formuły i daty są konwertowane (formuły są przepisywane na składnię Excela; te, których nie można przepisać bezpiecznie, zachowują bieżący wynik). Obrazy, scalone komórki, szerokości kolumn i wysokości wierszy również są przenoszone; inne formatowanie, np. obramowania, oraz wykresy nie. Plik oryginalny nigdy nie jest zmieniany; skonwertowana kopia zapisuje się jako .xlsx przy pierwszym zapisaniu.',
     odsImportConvertBtn: 'Konwertuj i otwórz',
     importSkipConfirm: 'Następnym razem konwertuj bez pytania',
     dlgAddAttachment: 'Dodaj załączniki',
@@ -1308,7 +1308,7 @@ const tMain = createI18n({
       'Załączniki graficzne nie zawierają tekstu; obraz jest wysyłany razem z wiadomością użytkownika',
     errNotImage: 'nieobsługiwany typ obrazu',
     errGskNotLoggedIn:
-      'Nie zalogowano do Genspark: kliknij „Zaloguj się do Genspark” poniżej, zaloguj się i spróbuj ponownie',
+      'Nie zalogowano do Softty AI: kliknij „Zaloguj się do Softty AI” poniżej, zaloguj się i spróbuj ponownie',
     errNoApiKey: 'Nie skonfigurowano klucza API dla {provider}',
     errAiRegion:
       'Dostawca tego modelu nie obsługuje Twojego obecnego regionu — wybierz inny model lub zmień sieć',
@@ -1362,7 +1362,7 @@ const tMain = createI18n({
     filterXlsm: 'Sešity Excelu s podporou maker',
     odsImportMsg: 'Převést tento sešit .{ext}?',
     odsImportDetail:
-      'GenOffice upravuje .xlsx, nikoli ODF. Hodnoty, vzorce a data se převedou (vzorce se přepíší do syntaxe Excelu; ty, které nelze přepsat bezpečně, ponechají si aktuální výsledek). Obrázky, sloučené buňky, šířky sloupců a výšky řádků se přenesou také; ostatní formátování, například ohraničení, a grafy se nepřenesou. Původní soubor se nikdy nemění; převedená kopie se při prvním uložení uloží jako .xlsx.',
+      'Softty Office upravuje .xlsx, nikoli ODF. Hodnoty, vzorce a data se převedou (vzorce se přepíší do syntaxe Excelu; ty, které nelze přepsat bezpečně, ponechají si aktuální výsledek). Obrázky, sloučené buňky, šířky sloupců a výšky řádků se přenesou také; ostatní formátování, například ohraničení, a grafy se nepřenesou. Původní soubor se nikdy nemění; převedená kopie se při prvním uložení uloží jako .xlsx.',
     odsImportConvertBtn: 'Převést a otevřít',
     importSkipConfirm: 'Příště převést bez ptaní',
     dlgAddAttachment: 'Přidat přílohy',
@@ -1379,7 +1379,7 @@ const tMain = createI18n({
       'Obrázkové přílohy neobsahují text; obrázek se odesílá spolu se zprávou uživatele',
     errNotImage: 'nepodporovaný typ obrázku',
     errGskNotLoggedIn:
-      'Nejste přihlášeni ke Genspark: klikněte níže na „Přihlásit se ke Genspark“, přihlaste se a zkuste to znovu',
+      'Nejste přihlášeni ke Softty AI: klikněte níže na „Přihlásit se ke Softty AI“, přihlaste se a zkuste to znovu',
     errNoApiKey: 'Pro {provider} není nakonfigurován žádný klíč API',
     errAiRegion:
       'Poskytovatel tohoto modelu neposkytuje služby ve vaší aktuální oblasti — vyberte jiný model nebo změňte síť',
@@ -1433,7 +1433,7 @@ const tMain = createI18n({
     filterXlsm: "Excel-werkmappen met macro's",
     odsImportMsg: 'Deze .{ext}-werkmap converteren?',
     odsImportDetail:
-      'GenOffice bewerkt .xlsx, niet ODF. Waarden, formules en datums worden geconverteerd (formules worden herschreven in Excel-syntaxis; formules die niet veilig herschreven kunnen worden houden hun huidige resultaat). Afbeeldingen, samengevoegde cellen, kolombreedtes en rijhoogten worden ook overgenomen; andere opmaak zoals randen, en diagrammen, niet. Het oorspronkelijke bestand wordt nooit gewijzigd; de geconverteerde kop slaat bij het eerste opslaan op als .xlsx.',
+      'Softty Office bewerkt .xlsx, niet ODF. Waarden, formules en datums worden geconverteerd (formules worden herschreven in Excel-syntaxis; formules die niet veilig herschreven kunnen worden houden hun huidige resultaat). Afbeeldingen, samengevoegde cellen, kolombreedtes en rijhoogten worden ook overgenomen; andere opmaak zoals randen, en diagrammen, niet. Het oorspronkelijke bestand wordt nooit gewijzigd; de geconverteerde kop slaat bij het eerste opslaan op als .xlsx.',
     odsImportConvertBtn: 'Converteren en openen',
     importSkipConfirm: 'Volgende keer converteren zonder te vragen',
     dlgAddAttachment: 'Bijlagen toevoegen',
@@ -1450,7 +1450,7 @@ const tMain = createI18n({
       'Afbeeldingsbijlagen bevatten geen tekst; de afbeelding wordt samen met het gebruikersbericht verzonden',
     errNotImage: 'geen ondersteund afbeeldingstype',
     errGskNotLoggedIn:
-      'Niet aangemeld bij Genspark: klik hieronder op “Aanmelden bij Genspark”, meld u aan en probeer het opnieuw',
+      'Niet aangemeld bij Softty AI: klik hieronder op “Aanmelden bij Softty AI”, meld u aan en probeer het opnieuw',
     errNoApiKey: 'Geen API-sleutel geconfigureerd voor {provider}',
     errAiRegion:
       'De aanbieder van dit model bedient uw huidige regio niet — kies een ander model of wissel van netwerk',
@@ -1505,7 +1505,7 @@ const tMain = createI18n({
     filterXlsm: 'Buku Kerja Excel Didayakan Makro',
     odsImportMsg: 'Tukar buku kerja .{ext} ini?',
     odsImportDetail:
-      'GenOffice menyunting .xlsx, bukan ODF. Nilai, formula dan tarikh ditukar (formula ditulis semula dalam sintaks Excel; yang tidak dapat ditulis semula dengan selamat mengekalkan hasil semasanya). Gambar, sel bercantum, lebar lajur dan tinggi baris turut dibawa; gaya lain seperti sempadan, serta carta, tidak. Fail asal tidak pernah diubah; salinan yang ditukar disimpan sebagai .xlsx pada simpanan pertama.',
+      'Softty Office menyunting .xlsx, bukan ODF. Nilai, formula dan tarikh ditukar (formula ditulis semula dalam sintaks Excel; yang tidak dapat ditulis semula dengan selamat mengekalkan hasil semasanya). Gambar, sel bercantum, lebar lajur dan tinggi baris turut dibawa; gaya lain seperti sempadan, serta carta, tidak. Fail asal tidak pernah diubah; salinan yang ditukar disimpan sebagai .xlsx pada simpanan pertama.',
     odsImportConvertBtn: 'Tukar dan buka',
     importSkipConfirm: 'Lain kali terus tukar tanpa bertanya',
     dlgAddAttachment: 'Tambah Lampiran',
@@ -1521,7 +1521,7 @@ const tMain = createI18n({
     errImageNoText: 'Lampiran imej tiada teks; imej dihantar bersama mesej pengguna',
     errNotImage: 'bukan jenis imej yang disokong',
     errGskNotLoggedIn:
-      'Belum log masuk ke Genspark: klik “Log masuk ke Genspark” di bawah, kemudian cuba lagi',
+      'Belum log masuk ke Softty AI: klik “Log masuk ke Softty AI” di bawah, kemudian cuba lagi',
     errNoApiKey: 'Kunci API untuk {provider} belum dikonfigurasikan',
     errAiRegion:
       'Penyedia model ini tidak memberi perkhidmatan di rantau semasa anda — pilih model lain atau tukar rangkaian',
@@ -1576,7 +1576,7 @@ const tMain = createI18n({
     filterXlsm: 'חוברות עבודה של Excel מותאמות מאקרו',
     odsImportMsg: 'להמיר חוברת עבודה .{ext} זו?',
     odsImportDetail:
-      'GenOffice עורך קבצי .xlsx ולא ODF. ערכים, נוסחאות ותאריכים מומרים (נוסחאות נכתבות מחדש בתחביר Excel; כאלה שאי אפשר לכתוב מחדש בבטחה שומרות על התוצאה הנוכחית). תמונות, תאים ממוזגים, רוחב עמודות וגובה שורות עוברים גם הם; עיצוב אחר כגון גבולות, ותרשימים, לא עוברים. קובץ המקור לעולם אינו משתנה; העותק שהומר נשמר כקובץ .xlsx בשמירה הראשונה.',
+      'Softty Office עורך קבצי .xlsx ולא ODF. ערכים, נוסחאות ותאריכים מומרים (נוסחאות נכתבות מחדש בתחביר Excel; כאלה שאי אפשר לכתוב מחדש בבטחה שומרות על התוצאה הנוכחית). תמונות, תאים ממוזגים, רוחב עמודות וגובה שורות עוברים גם הם; עיצוב אחר כגון גבולות, ותרשימים, לא עוברים. קובץ המקור לעולם אינו משתנה; העותק שהומר נשמר כקובץ .xlsx בשמירה הראשונה.',
     odsImportConvertBtn: 'המר ופתח',
     importSkipConfirm: 'בפעם הבאה להמיר בלי לשאול',
     dlgAddAttachment: 'הוספת קבצים מצורפים',
@@ -1591,7 +1591,7 @@ const tMain = createI18n({
     errParseFailed: 'ניתוח הקובץ נכשל',
     errImageNoText: 'קבצים מצורפים מסוג תמונה אינם מכילים טקסט; התמונה נשלחת יחד עם הודעת המשתמש',
     errNotImage: 'סוג תמונה שאינו נתמך',
-    errGskNotLoggedIn: 'לא מחובר ל-Genspark: לחץ על "התחבר ל-Genspark" למטה, התחבר ונסה שוב',
+    errGskNotLoggedIn: 'לא מחובר ל-Softty AI: לחץ על "התחבר ל-Softty AI" למטה, התחבר ונסה שוב',
     errNoApiKey: 'לא הוגדר מפתח API עבור {provider}',
     errAiRegion: 'ספק המודל הזה אינו פועל באזור הנוכחי שלך — בחרו מודל אחר או החליפו רשת',
     errAiBusy: 'שירות ה-AI עמוס כרגע — נסו שוב בעוד רגע',
@@ -1642,7 +1642,7 @@ const tMain = createI18n({
     filterXlsm: 'Excel मैक्रो-सक्षम कार्यपुस्तिकाएँ',
     odsImportMsg: 'इस .{ext} वर्कबुक को बदलें?',
     odsImportDetail:
-      'GenOffice .xlsx संपादित करता है, ODF नहीं। मान, सूत्र और तारीखें बदल दी जाती हैं (सूत्र Excel सिंटैक्स में फिर से लिखे जाते हैं; जिन्हें सुरक्षित रूप से नहीं लिखा जा सका वे अपना वर्तमान मान रखते हैं)। चित्र, मर्ज की गई सेल, कॉलम चौड़ाई और पंक्ति ऊँचाई भी साथ आती हैं; बॉर्डर जैसी अन्य स्टाइलिंग और चार्ट नहीं आते। मूल फ़ाइल कभी नहीं बदलती; बदली हुई प्रति पहली बार सहेजते समय .xlsx के रूप में सहेजी जाती है।',
+      'Softty Office .xlsx संपादित करता है, ODF नहीं। मान, सूत्र और तारीखें बदल दी जाती हैं (सूत्र Excel सिंटैक्स में फिर से लिखे जाते हैं; जिन्हें सुरक्षित रूप से नहीं लिखा जा सका वे अपना वर्तमान मान रखते हैं)। चित्र, मर्ज की गई सेल, कॉलम चौड़ाई और पंक्ति ऊँचाई भी साथ आती हैं; बॉर्डर जैसी अन्य स्टाइलिंग और चार्ट नहीं आते। मूल फ़ाइल कभी नहीं बदलती; बदली हुई प्रति पहली बार सहेजते समय .xlsx के रूप में सहेजी जाती है।',
     odsImportConvertBtn: 'बदलकर खोलें',
     importSkipConfirm: 'अगली बार बिना पूछे बदलें',
     dlgAddAttachment: 'अनुलग्नक जोड़ें',
@@ -1658,7 +1658,7 @@ const tMain = createI18n({
     errImageNoText: 'छवि अनुलग्नक में टेक्स्ट नहीं होता; छवि उपयोगकर्ता संदेश के साथ भेजी जाती है',
     errNotImage: 'समर्थित छवि प्रकार नहीं है',
     errGskNotLoggedIn:
-      'Genspark में साइन इन नहीं है: नीचे “Genspark में साइन इन करें” पर क्लिक करें, साइन इन करें और फिर से कोशिश करें',
+      'Softty AI में साइन इन नहीं है: नीचे “Softty AI में साइन इन करें” पर क्लिक करें, साइन इन करें और फिर से कोशिश करें',
     errNoApiKey: '{provider} के लिए कोई API कुंजी कॉन्फ़िगर नहीं है',
     errAiRegion:
       'इस मॉडल का प्रदाता आपके वर्तमान क्षेत्र में सेवा नहीं देता — कोई दूसरा मॉडल चुनें या नेटवर्क बदलें',
@@ -1713,7 +1713,7 @@ const tMain = createI18n({
     filterXlsm: 'Excel 啟用巨集的活頁簿',
     odsImportMsg: '轉換這個 .{ext} 工作簿？',
     odsImportDetail:
-      'GenOffice 只編輯 .xlsx，不編輯 ODF。數值、公式與日期會被轉換（公式改寫為 Excel 語法，無法安全改寫的僅保留其目前結果）；圖片、合併儲存格與欄寬列高會一併帶入；框線等其他樣式與圖表不會保留。原始檔案不會被修改，轉換後的複本第一次儲存時會另存為 .xlsx。', // public-hygiene: allow
+      'Softty Office 只編輯 .xlsx，不編輯 ODF。數值、公式與日期會被轉換（公式改寫為 Excel 語法，無法安全改寫的僅保留其目前結果）；圖片、合併儲存格與欄寬列高會一併帶入；框線等其他樣式與圖表不會保留。原始檔案不會被修改，轉換後的複本第一次儲存時會另存為 .xlsx。', // public-hygiene: allow
     odsImportConvertBtn: '轉換並開啟',
     importSkipConfirm: '下次直接轉換，不再提示',
     dlgAddAttachment: '新增附件',
@@ -1728,7 +1728,7 @@ const tMain = createI18n({
     errParseFailed: '檔案解析失敗',
     errImageNoText: '圖片附件不提供文字,已作為影像隨使用者訊息傳送,直接看圖即可',
     errNotImage: '不是支援的圖片類型',
-    errGskNotLoggedIn: '未登入 Genspark:請點擊下方「登入 Genspark」完成登入後重試',
+    errGskNotLoggedIn: '未登入 Softty AI:請點擊下方「登入 Softty AI」完成登入後重試',
     errNoApiKey: '未設定 {provider} 的 API Key',
     errAiRegion: '該模型的廠商不向目前地區提供服務，請換一個模型或切換網路',
     errAiBusy: 'AI 服務目前繁忙，請稍後重試',
@@ -1842,7 +1842,7 @@ interface SheetsRuntimeConfig {
   rendererFile: string
   /** absolute path to the Rust xlsx-sidecar binary */
   sidecarPath?: string | undefined
-  /** Shell router used to open exported/AI-generated files in a new GenOffice tab. */
+  /** Shell router used to open exported/AI-generated files in a new Softty Office tab. */
   openGeneratedPath?: (path: string) => boolean
   /** Host-owned cross-app document creator (the shell routes docx/pdf/md into Docs). */
   createDocument?: (request: SheetsAiHostDocumentRequest) => Promise<WorkbookCreateDocumentResult>
@@ -1902,7 +1902,7 @@ async function createStandaloneSheetsDocument(
   request: SheetsAiHostDocumentRequest,
 ): Promise<WorkbookCreateDocumentResult> {
   if (request.type === 'docx') {
-    return { ok: false, error: 'Creating DOCX files requires the GenOffice shell or Docs app.' }
+    return { ok: false, error: 'Creating DOCX files requires the Softty Office shell or Docs app.' }
   }
   const title = sanitizeGeneratedFileBase(request.title)
   try {
@@ -4304,18 +4304,32 @@ export function registerSheetsAiIpc(): void {
 
   // Node fetch (undici) direct connections get reset under VPN/tun setups; retry over Chromium's stack
   setRescueFetch((url, init) => net.fetch(url, init))
-  setAiUserAgent(`GenOffice/${app.getVersion()}`)
+  setAiUserAgent(`Softty Office/${app.getVersion()}`)
 
   ipcMain.handle(IPC_CHANNELS.aiGetSettings, (event): AiSettings => {
     sessionFor(event)
     const stored = readJson<Partial<AiSettings> & LegacyAiSettings>(SETTINGS_PATH(), {})
     const settings = resolveAiSettings(stored, defaultAiSettings())
-    // a stored BYOK provider is honored when usable; half-filled configs fall back to genspark
-    settings.provider = activeProvider(settings)
+    const active = activeProvider(settings)
+    settings.provider =
+      active !== 'genspark'
+        ? active
+        : stored.provider && stored.provider !== 'genspark'
+          ? stored.provider
+          : 'openai'
+    if (settings.media) {
+      if (settings.media.imageProvider === 'genspark') settings.media.imageProvider = 'openai'
+      if (settings.media.analysisProvider === 'genspark') settings.media.analysisProvider = 'openai'
+      if (settings.media.videoAnalysisProvider === 'genspark')
+        settings.media.videoAnalysisProvider = 'gemini'
+    }
+    if (settings.search && settings.search.provider === 'genspark') {
+      settings.search.provider = 'serper'
+    }
     return settings
   })
 
-  // Genspark account (gsk login state): the auth source for AI features; the
+  // Softty AI account (gsk login state): the auth source for AI features; the
   // frontend uses it to guide sign-in when logged out
   ipcMain.handle(
     IPC_CHANNELS.aiGskStatus,
@@ -4395,7 +4409,7 @@ export function registerSheetsAiIpc(): void {
     const maxTokens = request.maxTokens ?? maxOutputTokensOf(request.settings)
     const provider = request.settings.provider as AiProviderId
     let config = request.settings.providers[provider]
-    // Genspark's key never enters the settings file; it is read from the gsk
+    // Softty AI's key never enters the settings file; it is read from the gsk
     // login state per request
     // set only when the gsk key was injected: a 401 then means that key expired
     let gskKey = ''
@@ -5523,12 +5537,8 @@ export {
 }
 
 /**
- * Attaches a proxy to the main process's global fetch (same source as
- * slides-main.applyMainProcessProxy): main-process Node fetch (undici) ignores
- * the system proxy by default, so direct connections from mainland networks to
- * overseas LLM endpoints like api.anthropic.com time out or get rejected by
- * egress region (403 Request not allowed). Environment variables take priority;
- * otherwise the system proxy is read via session.resolveProxy() after app ready.
+ * Attaches an HTTP proxy to the main process's global fetch if environment
+ * variables (HTTPS_PROXY / HTTP_PROXY) are configured.
  */
 async function applyMainProcessProxy(): Promise<void> {
   const setDispatcher = async (proxyUrl: string) => {
@@ -5555,21 +5565,6 @@ async function applyMainProcessProxy(): Promise<void> {
     process.env.all_proxy
   if (envProxy) {
     await setDispatcher(envProxy)
-    return
-  }
-  try {
-    await app.whenReady()
-    // PAC/rule proxies answer per-host: probe the host the login flow, the
-    // Genspark LLM proxy and the gsk CLI actually target
-    const resolved = await electronSession.defaultSession.resolveProxy('https://www.genspark.ai/')
-    const m = /PROXY\s+([^;]+)/i.exec(resolved || '')
-    if (m?.[1]) {
-      await setDispatcher(`http://${m[1].trim()}`)
-    } else {
-      console.log('[proxy] system proxy = DIRECT, no dispatcher set')
-    }
-  } catch (e) {
-    console.warn('[proxy] resolveProxy failed:', e)
   }
 }
 

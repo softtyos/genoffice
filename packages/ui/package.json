@@ -38,9 +38,9 @@
     "vitest": "^4.1.12"
   },
   "dependencies": {
-    "@softty/i18n": "*",
-    "@softty/pptx-render": "*",
-    "@softty/agent-core": "*",
-    "@softty/ai-provider": "*"
+    "@softty/i18n": "workspace:*",
+    "@softty/pptx-render": "workspace:*",
+    "@softty/agent-core": "workspace:*",
+    "@softty/ai-provider": "workspace:*"
   }
 }

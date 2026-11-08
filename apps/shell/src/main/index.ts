@@ -447,8 +447,8 @@ if (!app.isPackaged) {
     // moves once — it sits on the same volume as appData, so the rename is
     // atomic, and a concurrent dev instance keeps its open file handles.
     const appData = app.getPath('appData')
-    const devDir = join(appData, 'GenOffice-Dev')
-    const oldDevDir = join(appData, 'GenOffice Dev')
+    const devDir = join(appData, 'Softty-Office-Dev')
+    const oldDevDir = join(appData, 'GenOffice-Dev')
     let userData = devDir
     if (existsSync(oldDevDir) && !existsSync(devDir)) {
       try {
@@ -481,6 +481,46 @@ if (app.isPackaged) {
   const newDir = app.getPath('userData')
   const newEmpty = !existsSync(newDir) || readdirSync(newDir).length === 0
   if (newEmpty && existsSync(oldDir)) cpSync(oldDir, newDir, { recursive: true })
+}
+
+// Migrate legacy <Documents>/GenOffice default folder and stored references to <Documents>/Softty Office
+try {
+  const docsRoot = app.getPath('documents')
+  const legacySaveDir = join(docsRoot, 'GenOffice')
+  const softtySaveDir = join(docsRoot, 'Softty Office')
+  if (existsSync(legacySaveDir)) {
+    if (!existsSync(softtySaveDir)) {
+      renameSync(legacySaveDir, softtySaveDir)
+    } else {
+      for (const entry of readdirSync(legacySaveDir)) {
+        const src = join(legacySaveDir, entry)
+        const dst = join(softtySaveDir, entry)
+        if (!existsSync(dst)) {
+          try {
+            renameSync(src, dst)
+          } catch {
+            // ignore locked file
+          }
+        }
+      }
+      if (readdirSync(legacySaveDir).length === 0) {
+        rmSync(legacySaveDir, { recursive: true, force: true })
+      }
+    }
+  }
+  const userDataDir = app.getPath('userData')
+  if (existsSync(userDataDir)) {
+    for (const jsonName of readdirSync(userDataDir)) {
+      if (!jsonName.endsWith('.json')) continue
+      const jsonPath = join(userDataDir, jsonName)
+      const raw = readFileSync(jsonPath, 'utf8')
+      if (raw.includes(legacySaveDir)) {
+        writeFileSync(jsonPath, raw.split(legacySaveDir).join(softtySaveDir), 'utf8')
+      }
+    }
+  }
+} catch {
+  // best-effort migration
 }
 
 // module build outputs: packaged builds carry them as extraResources
@@ -770,14 +810,11 @@ function initAnalytics(): void {
 }
 
 // ---- first-run onboarding ----
-// The GenTeam community page opened from the onboarding's second slide.
-// Stable short link served by the genoffice.ai site; it 302s to the tokened
-// invite link, which stays out of this repo and rotates server-side.
-const GENTEAM_URL = 'https://genoffice.ai/join'
+const GENTEAM_URL = 'https://office.softty.net'
 
-// Genspark credit-usage page opened from the account menu's credits row.
+// Portal / usage page opened from the account menu's row.
 // Kept main-side so the renderer never supplies the URL.
-const CREDIT_USAGE_URL = 'https://www.genspark.ai/credit-usage'
+const CREDIT_USAGE_URL = 'https://office.softty.net'
 
 // ---- "star us on GitHub" prompt (see star-prompt.ts for the rules) ----
 
@@ -814,7 +851,7 @@ let cachedGithubStars: number | null = null
 async function fetchGithubStars(): Promise<number | null> {
   if (cachedGithubStars !== null) return cachedGithubStars
   try {
-    const response = await fetch('https://api.github.com/repos/genspark-ai/genoffice', {
+    const response = await fetch('https://api.github.com/repos/softtyos/genoffice', {
       headers: { Accept: 'application/vnd.github+json' },
       signal: AbortSignal.timeout(5000),
     })
@@ -860,18 +897,18 @@ const tMain = createI18n({
     menuFile: '文件',
     menuSectionNew: '新建',
     menuOpenInNewWindow: '在新窗口中打开',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: '未命名表格',
     untitledDoc: '未命名文档',
     untitledDeck: '未命名演示文稿',
     untitledMarkdown: '未命名 Markdown',
     untitledHtml: '未命名 HTML',
     untitledPdf: '未命名 PDF',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: '导出为 PDF…',
     menuExportImages: '导出为图片…',
     menuExportHtml: '导出为单文件 HTML…',
@@ -985,18 +1022,18 @@ const tMain = createI18n({
     menuUiZoomOut: 'Interface Zoom Out',
     menuUiZoomReset: 'Reset Interface Zoom',
     menuOpenInNewWindow: 'Open in New Window',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Untitled Spreadsheet',
     untitledDoc: 'Untitled Document',
     untitledDeck: 'Untitled Presentation',
     untitledMarkdown: 'Untitled Markdown',
     untitledHtml: 'Untitled HTML',
     untitledPdf: 'Untitled PDF',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'Export as PDF…',
     menuExportImages: 'Export as Images…',
     menuExportHtml: 'Export as Single-File HTML…',
@@ -1112,18 +1149,18 @@ const tMain = createI18n({
     menuFile: 'Tệp',
     menuSectionNew: 'Mới',
     menuOpenInNewWindow: 'Mở trong cửa sổ mới',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Bảng tính chưa có tiêu đề',
     untitledDoc: 'Tài liệu chưa có tiêu đề',
     untitledDeck: 'Bản trình bày chưa có tiêu đề',
     untitledMarkdown: 'Markdown chưa có tiêu đề',
     untitledHtml: 'HTML chưa có tiêu đề',
     untitledPdf: 'PDF chưa có tiêu đề',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'Xuất dưới dạng PDF…',
     menuExportImages: 'Xuất dưới dạng hình ảnh…',
     menuExportHtml: 'Xuất dưới dạng HTML một tệp…',
@@ -1247,18 +1284,18 @@ const tMain = createI18n({
     menuUiZoomOut: 'Arayüzü Uzaklaştır',
     menuUiZoomReset: 'Arayüz Yakınlaştırmasını Sıfırla',
     menuOpenInNewWindow: 'Yeni Pencerede Aç',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Adsız Elektronik Tablo',
     untitledDoc: 'Adsız Belge',
     untitledDeck: 'Adsız Sunu',
     untitledMarkdown: 'Adsız Markdown',
     untitledHtml: 'Adsız HTML',
     untitledPdf: 'Adsız PDF',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'PDF Olarak Dışa Aktar…',
     menuExportImages: 'Görüntü Olarak Dışa Aktar…',
     menuExportHtml: 'Tek Dosyalı HTML Olarak Dışa Aktar…',
@@ -1373,18 +1410,18 @@ const tMain = createI18n({
     menuFile: 'ファイル',
     menuSectionNew: '新規作成',
     menuOpenInNewWindow: '新しいウィンドウで開く',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: '無題のスプレッドシート',
     untitledDoc: '無題のドキュメント',
     untitledDeck: '無題のプレゼンテーション',
     untitledMarkdown: '無題の Markdown',
     untitledHtml: '無題の HTML',
     untitledPdf: '無題の PDF',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'PDF として書き出す…',
     menuExportImages: '画像としてエクスポート…',
     menuExportHtml: '単一ファイル HTML として書き出す…',
@@ -1504,18 +1541,18 @@ const tMain = createI18n({
     menuFile: '파일',
     menuSectionNew: '새로 만들기',
     menuOpenInNewWindow: '새 창에서 열기',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: '제목 없는 스프레드시트',
     untitledDoc: '제목 없는 문서',
     untitledDeck: '제목 없는 프레젠테이션',
     untitledMarkdown: '제목 없는 Markdown',
     untitledHtml: '제목 없는 HTML',
     untitledPdf: '제목 없는 PDF',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'PDF로 내보내기…',
     menuExportImages: '이미지로 내보내기…',
     menuExportHtml: '단일 파일 HTML로 내보내기…',
@@ -1634,18 +1671,18 @@ const tMain = createI18n({
     menuFile: 'Fichier',
     menuSectionNew: 'Nouveau',
     menuOpenInNewWindow: 'Ouvrir dans une nouvelle fenêtre',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Feuille de calcul sans titre',
     untitledDoc: 'Document sans titre',
     untitledDeck: 'Présentation sans titre',
     untitledMarkdown: 'Markdown sans titre',
     untitledHtml: 'HTML sans titre',
     untitledPdf: 'PDF sans titre',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'Exporter en PDF…',
     menuExportImages: 'Exporter en images…',
     menuExportHtml: 'Exporter en HTML (fichier unique)…',
@@ -1766,18 +1803,18 @@ const tMain = createI18n({
     menuFile: 'Datei',
     menuSectionNew: 'Neu',
     menuOpenInNewWindow: 'In neuem Fenster öffnen',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Unbenannte Tabelle',
     untitledDoc: 'Unbenanntes Dokument',
     untitledDeck: 'Unbenannte Präsentation',
     untitledMarkdown: 'Unbenanntes Markdown',
     untitledHtml: 'Unbenanntes HTML',
     untitledPdf: 'Unbenanntes PDF',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'Als PDF exportieren…',
     menuExportImages: 'Als Bilder exportieren…',
     menuExportHtml: 'Als Einzeldatei-HTML exportieren…',
@@ -1899,18 +1936,18 @@ const tMain = createI18n({
     menuFile: 'Archivo',
     menuSectionNew: 'Nuevo',
     menuOpenInNewWindow: 'Abrir en una ventana nueva',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Hoja de cálculo sin título',
     untitledDoc: 'Documento sin título',
     untitledDeck: 'Presentación sin título',
     untitledMarkdown: 'Markdown sin título',
     untitledHtml: 'HTML sin título',
     untitledPdf: 'PDF sin título',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'Exportar como PDF…',
     menuExportImages: 'Exportar como imágenes…',
     menuExportHtml: 'Exportar como HTML de archivo único…',
@@ -2031,18 +2068,18 @@ const tMain = createI18n({
     menuFile: 'ไฟล์',
     menuSectionNew: 'สร้างใหม่',
     menuOpenInNewWindow: 'เปิดในหน้าต่างใหม่',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'สเปรดชีตไม่มีชื่อ',
     untitledDoc: 'เอกสารไม่มีชื่อ',
     untitledDeck: 'งานนำเสนอไม่มีชื่อ',
     untitledMarkdown: 'Markdown ไม่มีชื่อ',
     untitledHtml: 'HTML ไม่มีชื่อ',
     untitledPdf: 'PDF ไม่มีชื่อ',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'ส่งออกเป็น PDF…',
     menuExportImages: 'ส่งออกเป็นรูปภาพ…',
     menuExportHtml: 'ส่งออกเป็น HTML ไฟล์เดียว…',
@@ -2159,18 +2196,18 @@ const tMain = createI18n({
     menuFile: 'File',
     menuSectionNew: 'Baru',
     menuOpenInNewWindow: 'Buka di Jendela Baru',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Spreadsheet tanpa judul',
     untitledDoc: 'Dokumen tanpa judul',
     untitledDeck: 'Presentasi tanpa judul',
     untitledMarkdown: 'Markdown tanpa judul',
     untitledHtml: 'HTML tanpa judul',
     untitledPdf: 'PDF tanpa judul',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'Ekspor sebagai PDF…',
     menuExportImages: 'Ekspor sebagai gambar…',
     menuExportHtml: 'Ekspor sebagai HTML satu file…',
@@ -2291,18 +2328,18 @@ const tMain = createI18n({
     menuFile: 'Файл',
     menuSectionNew: 'Создать',
     menuOpenInNewWindow: 'Открыть в новом окне',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Таблица без названия',
     untitledDoc: 'Документ без названия',
     untitledDeck: 'Презентация без названия',
     untitledMarkdown: 'Markdown без названия',
     untitledHtml: 'HTML без названия',
     untitledPdf: 'PDF без названия',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'Экспортировать в PDF…',
     menuExportImages: 'Экспорт в изображения…',
     menuExportHtml: 'Экспортировать в один файл HTML…',
@@ -2423,18 +2460,18 @@ const tMain = createI18n({
     menuFile: 'ملف',
     menuSectionNew: 'جديد',
     menuOpenInNewWindow: 'فتح في نافذة جديدة',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'جدول بيانات بلا عنوان',
     untitledDoc: 'مستند بدون عنوان',
     untitledDeck: 'عرض تقديمي بدون عنوان',
     untitledMarkdown: 'Markdown بدون عنوان',
     untitledHtml: 'HTML بدون عنوان',
     untitledPdf: 'PDF بدون عنوان',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'تصدير بتنسيق PDF…',
     menuExportImages: 'تصدير كصور…',
     menuExportHtml: 'تصدير كملف HTML واحد…',
@@ -2551,18 +2588,18 @@ const tMain = createI18n({
     menuFile: 'Arquivo',
     menuSectionNew: 'Novo',
     menuOpenInNewWindow: 'Abrir em nova janela',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Planilha sem título',
     untitledDoc: 'Documento sem título',
     untitledDeck: 'Apresentação sem título',
     untitledMarkdown: 'Markdown sem título',
     untitledHtml: 'HTML sem título',
     untitledPdf: 'PDF sem título',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'Exportar como PDF…',
     menuExportImages: 'Exportar como imagens…',
     menuExportHtml: 'Exportar como HTML de arquivo único…',
@@ -2683,18 +2720,18 @@ const tMain = createI18n({
     menuFile: 'File',
     menuSectionNew: 'Nuovo',
     menuOpenInNewWindow: 'Apri in una nuova finestra',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Foglio di calcolo senza titolo',
     untitledDoc: 'Documento senza titolo',
     untitledDeck: 'Presentazione senza titolo',
     untitledMarkdown: 'Markdown senza titolo',
     untitledHtml: 'HTML senza titolo',
     untitledPdf: 'PDF senza titolo',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'Esporta come PDF…',
     menuExportImages: 'Esporta come immagini…',
     menuExportHtml: 'Esporta come HTML a file singolo…',
@@ -2815,18 +2852,18 @@ const tMain = createI18n({
     menuFile: 'Plik',
     menuSectionNew: 'Nowy',
     menuOpenInNewWindow: 'Otwórz w nowym oknie',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Arkusz bez tytułu',
     untitledDoc: 'Dokument bez tytułu',
     untitledDeck: 'Prezentacja bez tytułu',
     untitledMarkdown: 'Markdown bez tytułu',
     untitledHtml: 'HTML bez tytułu',
     untitledPdf: 'PDF bez tytułu',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'Eksportuj jako PDF…',
     menuExportImages: 'Eksportuj jako obrazy…',
     menuExportHtml: 'Eksportuj jako pojedynczy plik HTML…',
@@ -2947,18 +2984,18 @@ const tMain = createI18n({
     menuFile: 'Soubor',
     menuSectionNew: 'Nový',
     menuOpenInNewWindow: 'Otevřít v novém okně',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Sešit bez názvu',
     untitledDoc: 'Dokument bez názvu',
     untitledDeck: 'Prezentace bez názvu',
     untitledMarkdown: 'Markdown bez názvu',
     untitledHtml: 'HTML bez názvu',
     untitledPdf: 'PDF bez názvu',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'Exportovat jako PDF…',
     menuExportImages: 'Exportovat jako obrázky…',
     menuExportHtml: 'Exportovat jako samostatné HTML…',
@@ -3077,18 +3114,18 @@ const tMain = createI18n({
     menuFile: 'Bestand',
     menuSectionNew: 'Nieuw',
     menuOpenInNewWindow: 'Openen in nieuw venster',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Naamloze spreadsheet',
     untitledDoc: 'Naamloos document',
     untitledDeck: 'Naamloze presentatie',
     untitledMarkdown: 'Naamloos Markdown',
     untitledHtml: 'Naamloos HTML',
     untitledPdf: 'Naamloze PDF',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'Exporteren als PDF…',
     menuExportImages: 'Exporteren als afbeeldingen…',
     menuExportHtml: 'Exporteren als één HTML-bestand…',
@@ -3209,18 +3246,18 @@ const tMain = createI18n({
     menuFile: 'Fail',
     menuSectionNew: 'Baharu',
     menuOpenInNewWindow: 'Buka dalam Tetingkap Baharu',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'Hamparan tanpa tajuk',
     untitledDoc: 'Dokumen tanpa tajuk',
     untitledDeck: 'Persembahan tanpa tajuk',
     untitledMarkdown: 'Markdown tanpa tajuk',
     untitledHtml: 'HTML tanpa tajuk',
     untitledPdf: 'PDF tanpa tajuk',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'Eksport sebagai PDF…',
     menuExportImages: 'Eksport sebagai imej…',
     menuExportHtml: 'Eksport sebagai HTML fail tunggal…',
@@ -3340,18 +3377,18 @@ const tMain = createI18n({
     menuFile: 'קובץ',
     menuSectionNew: 'חדש',
     menuOpenInNewWindow: 'פתח בחלון חדש',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'גיליון אלקטרוני ללא שם',
     untitledDoc: 'מסמך ללא שם',
     untitledDeck: 'מצגת ללא שם',
     untitledMarkdown: 'Markdown ללא שם',
     untitledHtml: 'HTML ללא שם',
     untitledPdf: 'PDF ללא שם',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'ייצוא כ-PDF…',
     menuExportImages: 'ייצוא כתמונות…',
     menuExportHtml: 'ייצוא כ-HTML בקובץ יחיד…',
@@ -3468,18 +3505,18 @@ const tMain = createI18n({
     menuFile: 'फ़ाइल',
     menuSectionNew: 'नया',
     menuOpenInNewWindow: 'नई विंडो में खोलें',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: 'शीर्षकहीन स्प्रेडशीट',
     untitledDoc: 'बिना शीर्षक दस्तावेज़',
     untitledDeck: 'बिना शीर्षक प्रस्तुति',
     untitledMarkdown: 'अनाम Markdown',
     untitledHtml: 'अनाम HTML',
     untitledPdf: 'अनाम PDF',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: 'PDF के रूप में निर्यात…',
     menuExportImages: 'छवियों के रूप में निर्यात…',
     menuExportHtml: 'एकल-फ़ाइल HTML के रूप में निर्यात…',
@@ -3600,18 +3637,18 @@ const tMain = createI18n({
     menuFile: '檔案',
     menuSectionNew: '新增',
     menuOpenInNewWindow: '在新視窗中開啟',
-    menuNewDoc: 'AI Docs',
-    menuNewSheet: 'AI Sheets',
+    menuNewDoc: 'Softty Docs',
+    menuNewSheet: 'Softty Sheets',
     untitledSheet: '未命名試算表',
     untitledDoc: '未命名文件',
     untitledDeck: '未命名簡報',
     untitledMarkdown: '未命名 Markdown',
     untitledHtml: '未命名 HTML',
     untitledPdf: '未命名 PDF',
-    menuNewSlide: 'AI Slides',
-    menuNewMarkdown: 'AI Markdown',
-    menuNewHtml: 'AI HTML',
-    menuNewPdf: 'AI PDF',
+    menuNewSlide: 'Softty Slides',
+    menuNewMarkdown: 'Softty Markdown',
+    menuNewHtml: 'Softty HTML',
+    menuNewPdf: 'Softty PDF',
     menuExportPdf: '匯出為 PDF…',
     menuExportImages: '匯出為圖片…',
     menuExportHtml: '匯出為單檔 HTML…',
@@ -4612,7 +4649,7 @@ function newDocTab(): void {
 
 /** MCP: open a blank docs tab and return its webContents id, for the visible-editor bridge */
 function openBlankDocsTabForMcp(): number {
-  if (!tabManager) throw new Error('GenOffice is not ready')
+  if (!tabManager) throw new Error('Softty Office is not ready')
   const tabId = tabManager.openDocsTab(undefined, { newBlank: true })
   const view = tabManager.docsTabs().find((t) => t.id === tabId)
   if (!view) throw new Error('the new document tab could not be opened')
@@ -4629,7 +4666,7 @@ function openBlankDocsTabForMcp(): number {
  * marking is skipped, the file name is the agent's business.
  */
 async function openBlankSheetsTabForMcp(): Promise<number> {
-  if (!tabManager) throw new Error('GenOffice is not ready')
+  if (!tabManager) throw new Error('Softty Office is not ready')
   const filePath = uniquePathIn(defaultSaveDir(), `${tm('untitledSheet')}.xlsx`)
   await atomicWriteFile(filePath, await blankXlsxBuffer())
   const tabId = tabManager.openSheetsTab(filePath)
@@ -4700,7 +4737,7 @@ function abandonBlankTabForMcp(
 
 /** MCP: open a blank slides tab and return its webContents id, for the visible-deck bridge */
 function openBlankSlidesTabForMcp(): number {
-  if (!tabManager) throw new Error('GenOffice is not ready')
+  if (!tabManager) throw new Error('Softty Office is not ready')
   const tabId = tabManager.openSlidesTab()
   const view = tabManager.slidesTabs().find((t) => t.id === tabId)
   if (!view) throw new Error('the new presentation tab could not be opened')
@@ -6916,16 +6953,11 @@ function installDockMenu(): void {
   )
 }
 
-// On mainland-China networks the main process's Node fetch (undici) bypasses the system proxy,
-// so direct calls to overseas LLM/image-search APIs time out or get region-blocked (403).
-// Prefer proxy env vars (terminal launch); a packaged app launched from Finder inherits no shell
-// env vars, so fall back to the system HTTP proxy. The renderer uses Chromium's system proxy and
-// is unaffected. Same bootstrap as slides-main startSlidesStandalone.
-// awaited by login IPC so the first status probe / login click cannot race the proxy resolution
+// The main process's Node fetch (undici) honors proxy env vars (HTTPS_PROXY / HTTP_PROXY) if configured.
 let proxyBootstrap: Promise<void> = Promise.resolve()
 
 async function installMainProcessProxy(): Promise<void> {
-  let proxyUrl = [
+  const proxyUrl = [
     process.env.HTTPS_PROXY,
     process.env.https_proxy,
     process.env.HTTP_PROXY,
@@ -6933,17 +6965,6 @@ async function installMainProcessProxy(): Promise<void> {
     process.env.ALL_PROXY,
     process.env.all_proxy,
   ].find((v) => v && /^https?:\/\//.test(v))
-  if (!proxyUrl) {
-    try {
-      // PAC/rule proxies answer per-host: probe the host the login flow, the
-      // Genspark LLM proxy and the gsk CLI actually target
-      const resolved = await session.defaultSession.resolveProxy('https://www.genspark.ai/')
-      const m = /PROXY\s+([^;\s]+)/.exec(resolved)
-      if (m) proxyUrl = `http://${m[1]}`
-    } catch {
-      /* no system proxy */
-    }
-  }
   if (!proxyUrl) return
   // spawned gsk CLI children (login/search/…) do their own fetch and never see
   // the dispatcher below — forward the proxy to them via env

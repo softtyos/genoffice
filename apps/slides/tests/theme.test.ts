@@ -198,4 +198,18 @@ describe('apply-theme round trip (bake → surgical patch → save → reopen an
       }
     }
   })
+
+  it('buildColorMap with prevColors remaps dark-theme neutrals back to light-theme slots', () => {
+    const office = THEME_PRESETS.find((t) => t.id === 'office')!
+    const map = buildColorMap(
+      new Map([
+        ['1E1E1E', 5], // Graphite lt1 (dark bg) -> Office lt1 (FFFFFF)
+        ['F2F2F2', 3], // Graphite dk1 (light text) -> Office dk1 (000000)
+      ]),
+      { name: office.name, colors: office.colors },
+      graphite.colors,
+    )
+    expect(map.get('1E1E1E')).toBe('FFFFFF')
+    expect(map.get('F2F2F2')).toBe('000000')
+  })
 })

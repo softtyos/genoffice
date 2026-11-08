@@ -131,9 +131,29 @@ export function docThemeCss(
   fonts: ThemeFonts | null | undefined,
   colors: ThemeColors | null | undefined,
   bodyFontDeclared = false,
+  dirty?: { fonts?: boolean; colors?: boolean },
 ): string {
   const rules: string[] = []
-  if (fonts?.minor && !bodyFontDeclared) {
+  if (dirty?.fonts && (fonts?.minor || fonts?.eastAsia)) {
+    const bodyFf =
+      fonts.minor && fonts.eastAsia && fonts.eastAsia !== fonts.minor
+        ? cssDualFontFamily(fonts.minor, fonts.eastAsia)
+        : cssFontFamily(fonts.minor || fonts.eastAsia!)
+    rules.push(`.doc-page, .pv-page { font-family:${bodyFf} !important }`)
+    rules.push(
+      `.doc-page :is(p, [data-style="Normal"], [data-style="NoSpacing"], [data-style="ListParagraph"]) { font-family:${bodyFf} }`,
+    )
+    if (fonts.minor) {
+      rules.push(
+        `.page-wrap, .doc-page, .pv-page { --doc-latin-chain:${docLatinChainCss(fonts.minor)} }`,
+      )
+    }
+    if (fonts.eastAsia) {
+      rules.push(
+        `.doc-page, .pv-page { --doc-east-asian-font:${cssEaOnlyFontFamily(fonts.eastAsia)} }`,
+      )
+    }
+  } else if (fonts?.minor && !bodyFontDeclared) {
     // Body font from the theme's minor latin face — only when neither Normal nor
     // docDefaults names one (a declared body font supersedes the theme, and
     // docStyleCss already resolved theme references into it)
@@ -144,14 +164,46 @@ export function docThemeCss(
       `.page-wrap, .doc-page, .pv-page { --doc-latin-chain:${docLatinChainCss(fonts.minor)} }`,
     )
   }
-  // No blanket heading rule: Word gives a heading the theme major face only
-  // through an asciiTheme/hAnsiTheme reference in its style chain, which
-  // docStyleCss resolves per style; a heading style without rFonts inherits
-  // Normal/docDefaults like any paragraph (Word probe 2026-09-23)
+  if (dirty?.fonts && fonts?.major) {
+    const headFf =
+      fonts.eastAsia && fonts.eastAsia !== fonts.major
+        ? cssDualFontFamily(fonts.major, fonts.eastAsia)
+        : cssFontFamily(fonts.major)
+    rules.push(
+      `.doc-page :is(h1, h2, h3, h4, h5, h6, [data-style="Title"], [data-style^="Heading"]) { font-family:${headFf} !important }`,
+    )
+  }
   if (colors?.accent1) {
-    // Keep the live accent available to ribbon presets. Heading text itself must
-    // come from its DOCX style; a theme palette alone does not make headings blue.
     rules.push(`.doc-page { --theme-accent:#${colors.accent1} }`)
+    if (dirty?.colors) {
+      const c = `#${colors.accent1}`
+      const dk = darkPageColor(colors.accent1)
+      rules.push(
+        `.doc-page :is(h1, h2, h3, h4, h5, h6, [data-style^="Heading"], [data-style="IntenseEmphasis"], [data-style="IntenseQuote"], [data-style="IntenseReference"]) { color:${c} !important }`,
+      )
+      rules.push(
+        `.doc-page [data-style="IntenseQuote"] { border-top-color:${c} !important; border-bottom-color:${c} !important }`,
+      )
+      rules.push(
+        `.doc-page table[data-tbl-style]:not([data-tbl-nofirstrow]) tr:first-child :is(td, th) { background-color:${c} }`,
+      )
+      rules.push(
+        `@media screen { .doc-page.page-dark :is(h1, h2, h3, h4, h5, h6, [data-style^="Heading"], [data-style="IntenseEmphasis"], [data-style="IntenseQuote"], [data-style="IntenseReference"])${DARK_TWIN_SUBJECT} { color:${dk} !important } }`,
+      )
+      rules.push(
+        `@media screen { .doc-page.page-dark [data-style="IntenseQuote"]${DARK_TWIN_SUBJECT} { border-top-color:${dk} !important; border-bottom-color:${dk} !important } }`,
+      )
+    }
+  }
+  if (dirty?.colors && colors?.dk2) {
+    const c2 = `#${colors.dk2}`
+    const dk2 = darkPageColor(colors.dk2)
+    rules.push(
+      `.doc-page :is([data-style="Subtitle"], [data-style="Quote"], [data-style="SubtleEmphasis"], [data-style="SubtleReference"]) { color:${c2} !important }`,
+    )
+    rules.push(
+      `@media screen { .doc-page.page-dark :is([data-style="Subtitle"], [data-style="Quote"], [data-style="SubtleEmphasis"], [data-style="SubtleReference"])${DARK_TWIN_SUBJECT} { color:${dk2} !important } }`,
+    )
   }
   return rules.join('\n')
 }

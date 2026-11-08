@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client'
 import { htmlDir, htmlLang, type Lang } from '@softty/i18n'
 import { App } from './App'
 import { setAuthorName } from './author-name'
+import { DARK_PAGE_KEY } from './dark-page-pref'
 import { LocaleProvider, setModuleLang } from './i18n/locale'
 import type { DocTheme, UiTheme } from '../shared/ipc'
 import '@softty/ui/tokens.css'
@@ -58,8 +59,22 @@ async function bootstrap(): Promise<void> {
   document.documentElement.dir = htmlDir(lang)
   applyTheme(theme)
   applyDocumentTheme(docTheme ?? 'follow')
-  window.desktop?.onThemeChanged(applyTheme)
-  window.desktop?.onDocumentThemeChanged?.(applyDocumentTheme)
+  window.desktop?.onThemeChanged((next) => {
+    try {
+      localStorage.removeItem(DARK_PAGE_KEY)
+    } catch {
+      /* ignore */
+    }
+    applyTheme(next)
+  })
+  window.desktop?.onDocumentThemeChanged?.((next) => {
+    try {
+      localStorage.removeItem(DARK_PAGE_KEY)
+    } catch {
+      /* ignore */
+    }
+    applyDocumentTheme(next)
+  })
   await window.desktop
     ?.getAiPanelPrefs?.()
     .then(applyAiPanelPrefs)

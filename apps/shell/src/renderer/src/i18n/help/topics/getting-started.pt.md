@@ -16,7 +16,7 @@ A janela tem três partes:
 
 De qualquer uma destas formas:
 
-- Clique em um cartão de criação rápida na seção [Início rápido](help://getting-started) do **Início** (AI Docs, AI Sheets, AI Slides, ...).
+- Clique em um cartão de criação rápida na seção [Início rápido](help://getting-started) do **Início** (Softty Docs, Softty Sheets, Softty Slides, ...).
 - Menu **Arquivo ▸ Novo**: Docs (⌘N/ctrl+N), Sheets, Slides, Markdown, HTML ou PDF.
 - Arraste um arquivo para a janela, ou clique duas vezes nele no gerenciador de arquivos (se o Softty Office for o aplicativo padrão).
 

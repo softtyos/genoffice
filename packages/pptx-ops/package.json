@@ -16,8 +16,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@softty/docx-engine": "*",
-    "@softty/pptx-engine": "*"
+    "@softty/docx-engine": "workspace:*",
+    "@softty/pptx-engine": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

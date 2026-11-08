@@ -12,6 +12,7 @@
  * the theme; layout/master themselves are still untouched.
  */
 import type { OpenedPptx } from './index'
+import { parseTheme } from './theme'
 import { escapeXmlAttr } from './xml-utils'
 
 /** One theme definition: 12 scheme colors + optional heading/body fonts. */
@@ -72,6 +73,21 @@ export function patchThemeXml(xml: string, spec: ThemeSpec): string {
 }
 
 const THEME_PART_RE = /^ppt\/theme\/theme\d+\.xml$/
+
+/** Read the first theme part's parsed color scheme from the archive, if present. */
+export function readArchiveThemeColors(opened: OpenedPptx): Record<string, string> | undefined {
+  for (const path of opened.archive.entries.keys()) {
+    if (!THEME_PART_RE.test(path)) continue
+    const xml = opened.archive.readText(path)
+    if (!xml) continue
+    try {
+      return parseTheme(xml).colors
+    } catch {
+      /* ignore malformed theme */
+    }
+  }
+  return undefined
+}
 
 /** Apply the theme to all theme parts in the package; returns the number rewritten. */
 export function applyThemeToArchive(opened: OpenedPptx, spec: ThemeSpec): number {
@@ -179,9 +195,35 @@ export function collectExplicitColors(xmls: string[]): Map<string, number> {
  * Mapping table from explicit colors to new theme colors. Identity mappings are omitted.
  * Cluster assignment is deterministic: iterated by (occurrence count desc, hex asc).
  */
-export function buildColorMap(counts: Map<string, number>, spec: ThemeSpec): Map<string, string> {
+export function buildColorMap(
+  counts: Map<string, number>,
+  spec: ThemeSpec,
+  prevColors?: Record<string, string>,
+): Map<string, string> {
+  const prevSlotByHex = new Map<string, 'lt1' | 'lt2' | 'dk2' | 'dk1'>()
+  if (prevColors) {
+    for (const k of ['lt1', 'lt2', 'dk2', 'dk1'] as const) {
+      const c = prevColors[k]
+      if (c) prevSlotByHex.set(hex6(c), k)
+    }
+  }
+  const prevDark = prevColors?.lt1 ? hexToHsl(prevColors.lt1).l < 0.5 : false
   const neutralFor = (l: number): string => {
-    const key = l > 0.85 ? 'lt1' : l > 0.55 ? 'lt2' : l > 0.28 ? 'dk2' : 'dk1'
+    const key = prevDark
+      ? l < 0.2
+        ? 'lt1'
+        : l < 0.45
+          ? 'lt2'
+          : l < 0.75
+            ? 'dk2'
+            : 'dk1'
+      : l > 0.85
+        ? 'lt1'
+        : l > 0.55
+          ? 'lt2'
+          : l > 0.28
+            ? 'dk2'
+            : 'dk1'
     return hex6(spec.colors[key] ?? (l > 0.5 ? 'FFFFFF' : '000000'))
   }
   const accents = [1, 2, 3, 4, 5, 6]
@@ -194,8 +236,11 @@ export function buildColorMap(counts: Map<string, number>, spec: ThemeSpec): Map
   const map = new Map<string, string>()
   for (const [hex] of sorted) {
     const hsl = hexToHsl(hex)
+    const directSlot = prevSlotByHex.get(hex)
     let out: string
-    if (isNeutral(hsl)) {
+    if (directSlot && spec.colors[directSlot]) {
+      out = hex6(spec.colors[directSlot]!)
+    } else if (isNeutral(hsl)) {
       out = neutralFor(hsl.l)
     } else if (accents.length === 0) {
       continue
@@ -229,11 +274,15 @@ export function recolorXml(xml: string, map: Map<string, string>): string {
  * save→reopen first), otherwise dirty elements would overwrite with old colors on
  * save. Returns the number of distinct colors mapped.
  */
-export function remapDeckColors(opened: OpenedPptx, spec: ThemeSpec): number {
+export function remapDeckColors(
+  opened: OpenedPptx,
+  spec: ThemeSpec,
+  prevColors?: Record<string, string>,
+): number {
   const { archive, deck } = opened
   const paths = deck.slides.map((s) => s.path)
   const xmls = paths.map((p) => archive.readText(p)).filter((x): x is string => !!x)
-  const map = buildColorMap(collectExplicitColors(xmls), spec)
+  const map = buildColorMap(collectExplicitColors(xmls), spec, prevColors)
   if (map.size === 0) return 0
   for (const path of paths) {
     const xml = archive.readText(path)

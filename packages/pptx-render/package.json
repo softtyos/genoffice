@@ -16,7 +16,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@softty/pptx-engine": "*",
+    "@softty/pptx-engine": "workspace:*",
     "opentype.js": "^2.0.0",
     "bidi-js": "^1.0.3"
   },

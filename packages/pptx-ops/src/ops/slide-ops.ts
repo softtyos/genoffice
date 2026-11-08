@@ -15,6 +15,7 @@ import {
   applyThemeToArchive,
   commitSaved,
   materializeSlide,
+  readArchiveThemeColors,
   remapDeckColors,
   reparseDeck,
   deleteSlide,
@@ -760,8 +761,9 @@ register({
       ...(typeof op.minorFont === 'string' && op.minorFont ? { minorFont: op.minorFont } : {}),
     }
     commitSaved(ctx.opened)
+    const prevColors = readArchiveThemeColors(ctx.opened)
     const patched = applyThemeToArchive(ctx.opened, spec)
-    const remapped = remapDeckColors(ctx.opened, spec)
+    const remapped = remapDeckColors(ctx.opened, spec, prevColors)
     let backgrounds = 0
     const lt1 = spec.colors.lt1
     if ((patched > 0 || remapped > 0) && lt1) {
@@ -770,14 +772,22 @@ register({
       // exactly those slides from the stale model and undo the remap
       ctx.opened.deck.slides = reparseDeck(ctx.opened).deck.slides
       const slides = ctx.opened.deck.slides
+      const prevLt1 = prevColors?.lt1 ? `#${prevColors.lt1.replace(/^#/, '').toUpperCase()}` : undefined
+      const nextBg = `#${lt1.replace(/^#/, '').toUpperCase()}`
       for (let i = 0; i < slides.length; i++) {
         const s = slides[i]!
-        if (s.background) continue
-        setSlideBackground(ctx.opened, s, `#${lt1.replace(/^#/, '')}`)
+        if (
+          s.background &&
+          !(s.background.type === 'solid' && prevLt1 && s.background.color.toUpperCase() === prevLt1)
+        ) {
+          continue
+        }
+        if (s.background?.type === 'solid' && s.background.color.toUpperCase() === nextBg) continue
+        setSlideBackground(ctx.opened, s, nextBg)
         materializeSlide(ctx.opened, i)
         backgrounds++
       }
     }
-    return { op, after: { patched, remapped, backgrounds } }
+    return { op, after: { patched: patched + backgrounds, remapped, backgrounds } }
   },
 })

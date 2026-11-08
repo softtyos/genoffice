@@ -71,7 +71,9 @@ export interface SheetRedactionState {
 
 export const REDACTION_PART_PATH = 'xl/gxRedactions.json'
 const REDACTION_CONTENT_TYPE = 'application/json'
-const REDACTION_REL_TYPE = 'https://schemas.genspark.ai/genoffice/2026/relationships/redactions'
+export const REDACTION_REL_TYPE = 'https://schemas.softty.net/office/2026/relationships/redactions'
+export const LEGACY_REDACTION_REL_TYPE =
+  'https://schemas.genspark.ai/genoffice/2026/relationships/redactions'
 const WORKBOOK_RELS_PATH = 'xl/_rels/workbook.xml.rels'
 const CONTENT_TYPES_PATH = '[Content_Types].xml'
 const PART_VERSION = 1
@@ -276,10 +278,15 @@ async function removeRedactionPart(
   touchedEntries.add(REDACTION_PART_PATH)
 
   const relationships = await pkg.readText(WORKBOOK_RELS_PATH)
-  const withoutRel = relationships.replace(
-    new RegExp(`<Relationship\\b[^>]*Type="${REDACTION_REL_TYPE}"[^>]*/?>`),
-    '',
-  )
+  const withoutRel = relationships
+    .replace(
+      new RegExp(`<Relationship\\b[^>]*Type="${REDACTION_REL_TYPE}"[^>]*/?>`),
+      '',
+    )
+    .replace(
+      new RegExp(`<Relationship\\b[^>]*Type="${LEGACY_REDACTION_REL_TYPE}"[^>]*/?>`),
+      '',
+    )
   if (withoutRel !== relationships) {
     pkg.write(WORKBOOK_RELS_PATH, withoutRel)
     touchedEntries.add(WORKBOOK_RELS_PATH)

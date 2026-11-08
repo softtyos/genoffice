@@ -716,7 +716,8 @@ html.genoffice-popover-open .ribbon-tabs {
   box-shadow: var(--docs-shadow-badge);
 }
 
-/* Genspark brand logo (Ribbon AI button and AI panel title) */
+/* Softty brand logo (Ribbon AI button and AI panel title) */
+.softty-badge,
 .genspark-badge {
   display: block;
   width: 22px;
@@ -724,6 +725,7 @@ html.genoffice-popover-open .ribbon-tabs {
   border-radius: 50%;
 }
 
+.ai-panel-title .softty-badge,
 .ai-panel-title .genspark-badge {
   width: 18px;
   height: 18px;

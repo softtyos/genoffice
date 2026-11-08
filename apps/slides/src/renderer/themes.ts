@@ -61,7 +61,7 @@ export const THEME_PRESETS: SlideThemePreset[] = [
     name: 'Ember',
     colors: scheme(
       '2B1B14',
-      'FFFFFF',
+      'FFF8F5',
       '632B1A',
       'F7EBE6',
       ['C43E1C', 'E97132', 'FFC000', '8A3B12', 'D98F73', 'A33517'],
@@ -75,7 +75,7 @@ export const THEME_PRESETS: SlideThemePreset[] = [
     name: 'Indigo',
     colors: scheme(
       '1F2A44',
-      'FFFFFF',
+      'F6F8FD',
       '3B4C77',
       'E8ECF6',
       ['2E4FA3', '5B79C7', '8FA6DE', 'E97132', '31A5A0', '7030A0'],
@@ -89,7 +89,7 @@ export const THEME_PRESETS: SlideThemePreset[] = [
     name: 'Forest',
     colors: scheme(
       '1E2B20',
-      'FFFFFF',
+      'F5FAF6',
       '375E43',
       'E9F2EB',
       ['217346', '4EA72E', '92D050', 'FFC000', '3E8E8B', '70AD47'],
@@ -117,7 +117,7 @@ export const THEME_PRESETS: SlideThemePreset[] = [
     name: 'Rose',
     colors: scheme(
       '3A1F33',
-      'FFFFFF',
+      'FFF6FA',
       '6E3A62',
       'F8ECF4',
       ['B44582', 'D96FA8', 'E9A6C9', '7030A0', 'E97132', '4E7CA1'],

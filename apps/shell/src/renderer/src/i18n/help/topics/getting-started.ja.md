@@ -16,7 +16,7 @@ Softty Office は自分のマシン上でだけで動くオフィススイート
 
 以下のいずれかで作成できます。
 
-- **ホーム**の[クイックスタート](help://getting-started)欄にあるクイック作成カード（AI Docs、AI Sheets、AI Slides など）をクリックする。
+- **ホーム**の[クイックスタート](help://getting-started)欄にあるクイック作成カード（Softty Docs、Softty Sheets、Softty Slides など）をクリックする。
 - メニュー **ファイル ▸ 新規作成**：Docs（⌘N/ctrl+N）、Sheets、Slides、Markdown、HTML、PDF。
 - ファイルをウィンドウにドラッグする。あるいは、ファイルマネージャーでダブルクリックする（Softty Office が既定のアプリになっている場合）。
 

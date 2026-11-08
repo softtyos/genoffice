@@ -226,6 +226,7 @@ export {
   buildColorMap,
   collectExplicitColors,
   patchThemeXml,
+  readArchiveThemeColors,
   recolorXml,
   remapDeckColors,
   type ThemeSpec,

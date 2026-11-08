@@ -47,9 +47,9 @@ describe('the text-file dialog filter', () => {
  * otherwise.
  */
 describe('the File > New menu label', () => {
-  it('reads AI Markdown in every locale', () => {
+  it('reads Softty Markdown in every locale', () => {
     const labels = [...source.matchAll(/menuNewMarkdown: '([^']*)'/g)].map((match) => match[1])
     expect(labels.length).toBeGreaterThanOrEqual(19)
-    expect(new Set(labels)).toEqual(new Set(['AI Markdown']))
+    expect(new Set(labels)).toEqual(new Set(['Softty Markdown']))
   })
 })

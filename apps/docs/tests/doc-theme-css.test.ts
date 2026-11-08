@@ -71,6 +71,19 @@ describe('docThemeCss', () => {
     expect(docThemeCss(null, null)).toBe('')
     expect(docThemeCss({ major: '', minor: '' }, {})).toBe('')
   })
+
+  it('applies live font and color overrides when dirty flags are set even if bodyFontDeclared is true', () => {
+    const css = docThemeCss(
+      { major: 'Georgia', minor: 'Garamond', eastAsia: 'SimSun' },
+      { accent1: 'E97132', dk2: '632B1A' },
+      true,
+      { fonts: true, colors: true },
+    )
+    expect(css).toContain('Garamond')
+    expect(css).toContain('Georgia')
+    expect(css).toContain('color:#E97132 !important')
+    expect(css).toContain('color:#632B1A !important')
+  })
 })
 
 describe('docLineFactor — CJK factor source', () => {

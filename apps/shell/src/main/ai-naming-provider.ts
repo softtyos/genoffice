@@ -36,15 +36,20 @@ export interface NamingProvider {
  */
 export function resolveNamingProvider(stored: unknown, gskKey: string): NamingProvider | null {
   const settings = resolveAiSettings(stored, defaultAiSettings())
-  // a stored BYOK provider is honored when usable; a half-filled one falls back
-  // to genspark rather than silently disabling AI
+  // a stored BYOK provider is honored when usable; an unconfigured one falls back
+  // to the signed-in proxy key if available
   settings.provider = activeProvider(settings)
-  const provider = settings.provider
-  const storedConfig = settings.providers?.[provider]
+  let provider = settings.provider
+  let storedConfig = settings.providers?.[provider]
+
+  if (gskKey?.trim() && (!storedConfig?.apiKey?.trim() || provider === 'custom')) {
+    provider = 'genspark'
+    storedConfig = { ...settings.providers?.genspark, apiKey: gskKey }
+  }
+
   if (!storedConfig) return null
   let config = storedConfig
-  // the genspark key never enters the settings file; requests take it from the
-  // gsk login state
+  // the proxy key never enters the settings file; requests take it from the login state
   if (provider === 'genspark' && !config.apiKey?.trim()) {
     config = { ...config, apiKey: gskKey }
   }

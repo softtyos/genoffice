@@ -18,23 +18,23 @@
     "dist:dir": "electron-vite build && electron-builder --dir"
   },
   "devDependencies": {
-    "@softty/agent-core": "*",
-    "@softty/ai-provider": "*",
-    "@softty/ai-search": "*",
-    "@softty/file-parse": "*",
-    "@softty/i18n": "*",
-    "@softty/pptx-engine": "*",
-    "@softty/pptx-ops": "*",
-    "@softty/pptx-render": "*",
-    "@softty/project-store": "*",
-    "@softty/ui": "*",
+    "@softty/agent-core": "workspace:*",
+    "@softty/ai-provider": "workspace:*",
+    "@softty/ai-search": "workspace:*",
+    "@softty/file-parse": "workspace:*",
+    "@softty/i18n": "workspace:*",
+    "@softty/pptx-engine": "workspace:*",
+    "@softty/pptx-ops": "workspace:*",
+    "@softty/pptx-render": "workspace:*",
+    "@softty/project-store": "workspace:*",
+    "@softty/ui": "workspace:*",
     "@types/opentype.js": "^1.3.8",
     "@types/pngjs": "^6.0.5",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "^5.0.4",
-    "electron": "^43.8.3",
+    "electron": "43.8.3",
     "electron-builder": "^26.0.12",
     "electron-vite": "^5.0.0",
     "jsdom": "^28.0.0",
@@ -90,11 +90,11 @@
     }
   },
   "dependencies": {
-    "@softty/electron-utils": "*",
+    "@softty/electron-utils": "workspace:*",
     "acorn": "^8.18.0",
     "harfbuzzjs": "^1.4.0",
     "pngjs": "^7.0.0",
     "utif2": "^4.1.0",
-    "@softty/agent-core": "*"
+    "@softty/agent-core": "workspace:*"
   }
 }

@@ -16,8 +16,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@softty/pptx-engine": "*",
-    "@softty/pptx-render": "*"
+    "@softty/pptx-engine": "workspace:*",
+    "@softty/pptx-render": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

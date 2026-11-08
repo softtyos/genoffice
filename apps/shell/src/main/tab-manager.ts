@@ -93,7 +93,7 @@ const HOME_ID = 'home'
  */
 export class TabManager {
   private readonly tabs: TabRecord[] = [
-    { id: HOME_ID, kind: 'home', view: null, title: 'GenOffice', lastActiveAt: Date.now() },
+    { id: HOME_ID, kind: 'home', view: null, title: 'Softty Office', lastActiveAt: Date.now() },
   ]
   private activeId: string = HOME_ID
   private nextId = 1
@@ -352,7 +352,7 @@ export class TabManager {
       id,
       kind: 'help',
       view,
-      title: this.untitled('help', 'GenOffice Help'),
+      title: this.untitled('help', 'Softty Office Help'),
       lastActiveAt: Date.now(),
     })
     this.activateTab(id)
@@ -375,7 +375,7 @@ export class TabManager {
       lastActiveAt: Date.now(),
       kind: 'docs',
       view,
-      title: openPath ? basename(openPath) : this.untitled('docs', 'GenOffice Docs'),
+      title: openPath ? basename(openPath) : this.untitled('docs', 'Softty Docs'),
       filePath: openPath,
     })
     this.activateTab(id)
@@ -405,7 +405,7 @@ export class TabManager {
       lastActiveAt: Date.now(),
       kind: 'sheets',
       view,
-      title: openPath ? basename(openPath) : this.untitled('sheets', 'AI Sheets'),
+      title: openPath ? basename(openPath) : this.untitled('sheets', 'Softty Sheets'),
       filePath: openPath,
     })
     this.activateTab(id)
@@ -423,7 +423,7 @@ export class TabManager {
       lastActiveAt: Date.now(),
       kind: 'slides',
       view,
-      title: openPath ? basename(openPath) : this.untitled('slides', 'AI Slides'),
+      title: openPath ? basename(openPath) : this.untitled('slides', 'Softty Slides'),
       filePath: openPath,
     })
     this.activateTab(id)
@@ -468,7 +468,7 @@ export class TabManager {
       lastActiveAt: Date.now(),
       kind: 'markdown',
       view,
-      title: openPath ? basename(openPath) : this.untitled('markdown', 'AI Markdown'),
+      title: openPath ? basename(openPath) : this.untitled('markdown', 'Softty Markdown'),
       filePath: openPath,
     })
     this.activateTab(id)
@@ -486,7 +486,7 @@ export class TabManager {
       lastActiveAt: Date.now(),
       kind: 'html',
       view,
-      title: openPath ? basename(openPath) : this.untitled('html', 'AI HTML'),
+      title: openPath ? basename(openPath) : this.untitled('html', 'Softty HTML'),
       filePath: openPath,
     })
     this.activateTab(id)
@@ -505,7 +505,7 @@ export class TabManager {
       lastActiveAt: Date.now(),
       kind: 'html',
       view,
-      title: title || this.untitled('html', 'AI HTML'),
+      title: title || this.untitled('html', 'Softty HTML'),
       present: true,
     })
     this.activateTab(id)

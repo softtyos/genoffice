@@ -22,10 +22,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@softty/zip-gate": "*",
+    "@softty/zip-gate": "workspace:*",
     "fast-xml-parser": "^5.3.4",
     "jszip": "^3.10.1",
-    "@softty/agent-core": "*"
+    "@softty/agent-core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

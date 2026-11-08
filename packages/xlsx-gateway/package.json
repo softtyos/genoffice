@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "jszip": "^3.10.1",
-    "@softty/zip-gate": "*",
+    "@softty/zip-gate": "workspace:*",
     "numfmt": "^3.2.6",
     "zod": "^4.6.7"
   },

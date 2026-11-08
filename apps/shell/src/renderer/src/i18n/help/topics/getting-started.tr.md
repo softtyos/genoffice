@@ -16,7 +16,7 @@ Pencere üç parçadan oluşur:
 
 Şunlardan herhangi biri:
 
-- **Giriş** ekranının [Hızlı başlangıç](help://getting-started) bölümündeki bir hızlı oluşturma kartına tıklayın (AI Docs, AI Sheets, AI Slides, ...).
+- **Giriş** ekranının [Hızlı başlangıç](help://getting-started) bölümündeki bir hızlı oluşturma kartına tıklayın (Softty Docs, Softty Sheets, Softty Slides, ...).
 - Menü **Dosya ▸ Yeni**: Docs (⌘N/ctrl+N), Sheets, Slides, Markdown, HTML veya PDF.
 - Bir dosyayı pencereye sürükleyin ya da dosya yöneticinizde çift tıklayın (Softty Office varsayılan uygulamaysa).
 
