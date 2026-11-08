@@ -1,15 +1,46 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Alert,
+  Linking,
 } from 'react-native'
 import { SofttyAuthService } from '../services/auth'
 
 export function ProfileScreen() {
   const [user, setUser] = useState(SofttyAuthService.getCurrentUser())
+
+  useEffect(() => {
+    // Nạp session đã lưu
+    SofttyAuthService.init().then((u) => {
+      if (u) setUser(u)
+    })
+
+    // Lắng nghe deep link softty-office://auth/callback
+    const subscription = Linking.addEventListener('url', async ({ url }) => {
+      if (url.startsWith('softty-office://auth/callback')) {
+        const loggedInUser = await SofttyAuthService.handleDeepLink(url)
+        if (loggedInUser) {
+          setUser(loggedInUser)
+          Alert.alert('Thành công', `Chào mừng ${loggedInUser.name} đã đăng nhập Softty ID!`)
+        }
+      }
+    })
+
+    // Kiểm tra URL khởi động app nếu app được mở từ deep link
+    Linking.getInitialURL().then(async (url) => {
+      if (url && url.startsWith('softty-office://auth/callback')) {
+        const loggedInUser = await SofttyAuthService.handleDeepLink(url)
+        if (loggedInUser) setUser(loggedInUser)
+      }
+    })
+
+    return () => {
+      subscription.remove()
+    }
+  }, [])
 
   const handleLogout = () => {
     Alert.alert('Đăng xuất', 'Bạn có chắc chắn muốn đăng xuất tài khoản Softty ID?', [
@@ -17,8 +48,8 @@ export function ProfileScreen() {
       {
         text: 'Đăng xuất',
         style: 'destructive',
-        onPress: () => {
-          SofttyAuthService.logout()
+        onPress: async () => {
+          await SofttyAuthService.logout()
           setUser(null)
         },
       },
@@ -26,9 +57,11 @@ export function ProfileScreen() {
   }
 
   const handleLogin = async () => {
-    const loggedInUser = await SofttyAuthService.loginWithDeviceCode('DEMO')
-    setUser(loggedInUser)
-    Alert.alert('Thành công', `Chào mừng ${loggedInUser.name} đã đăng nhập Softty ID!`)
+    try {
+      await SofttyAuthService.startBrowserLogin()
+    } catch (err: any) {
+      Alert.alert('Lỗi', err.message || 'Không thể mở trình duyệt đăng nhập.')
+    }
   }
 
   return (

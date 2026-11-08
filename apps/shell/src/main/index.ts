@@ -4847,15 +4847,9 @@ function registerHomeIpc(): void {
     const send = (payload: AccountLoginEvent) => {
       if (!sender.isDestroyed()) sender.send(HOME_CHANNELS.accountLoginEvent, payload)
     }
-    // open the browser on the first url event only; later events refresh the rescue URL
-    let opened = false
-    const launched = await softtyAuth.startDeviceLogin((progress) => {
+    const launched = await softtyAuth.startLogin((progress) => {
       if (progress.url) {
         pendingLoginUrl = progress.url
-        if (!opened) {
-          opened = true
-          void shell.openExternal(progress.url)
-        }
       }
       if (progress.phase === 'success') analytics.track('login_success')
       send(progress)
@@ -7008,7 +7002,24 @@ app.on('open-file', (event, filePath) => {
   openLaunchPaths([filePath])
 })
 
+// Register deep link scheme for SSO OAuth Callback: softty-office://auth/callback
+app.setAsDefaultProtocolClient('softty-office')
+
+app.on('open-url', (event, url) => {
+  event.preventDefault()
+  if (url.startsWith('softty-office://auth/callback')) {
+    void softtyAuth.handleCallback(url)
+    revealShellWindow()
+  }
+})
+
 app.on('second-instance', (_event, argv, _cwd, additionalData) => {
+  const urlArg = argv.find((arg) => arg.startsWith('softty-office://'))
+  if (urlArg) {
+    void softtyAuth.handleCallback(urlArg)
+    revealShellWindow()
+    return
+  }
   const paths = collectLaunchPaths(argv, additionalData)
   revealShellWindow()
   openLaunchPaths(paths)

@@ -1,17 +1,23 @@
 /**
  * Softty ID Single Sign-On (SSO) Service for Softty Office Desktop
- * Implements OAuth 2.0 Device Authorization Grant (RFC 8628)
+ * Implements OAuth 2.0 Authorization Code Flow with PKCE (RFC 7636)
+ * Dual-Channel Callback: Local Loopback Server (RFC 8252) + Deep Link (softty-office://auth/callback)
+ *
  * Accounts Gateway: https://accounts.softty.net
+ * Client ID: 31d804fccdd8981c6a3aa5d650ae5e08
  */
 
+import http from 'node:http'
+import crypto from 'node:crypto'
 import os from 'node:os'
 import fs from 'node:fs'
 import path from 'node:path'
-import { app, safeStorage } from 'electron'
+import { app, BrowserWindow, safeStorage, shell } from 'electron'
 import type { AccountLoginEvent, AccountStatus } from '../shared/home-api'
 
 const ACCOUNTS_BASE_URL = process.env.SOFTTY_ACCOUNTS_URL || 'https://accounts.softty.net'
-const CLIENT_ID = process.env.SOFTTY_CLIENT_ID || 'softty-office'
+const CLIENT_ID = process.env.SOFTTY_CLIENT_ID || '31d804fccdd8981c6a3aa5d650ae5e08'
+const DEFAULT_REDIRECT_URI = 'softty-office://auth/callback'
 const CREDENTIALS_DIR = path.join(os.homedir(), '.config', 'softty')
 const CREDENTIALS_PATH = path.join(CREDENTIALS_DIR, 'office-auth.json')
 
@@ -28,10 +34,128 @@ export interface StoredAuthSession {
   }
 }
 
+interface PendingAuthState {
+  verifier: string
+  state: string
+  redirectUri: string
+  createdAt: number
+}
+
+function renderLoopbackCallbackHtml(isSuccess: boolean, errorMessage?: string): string {
+  return `<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>${isSuccess ? 'Đăng nhập thành công' : 'Lỗi đăng nhập'} - Softty Office</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0e1322;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 44px 36px;
+      max-width: 440px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    }
+    .icon-wrapper {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: ${isSuccess ? 'linear-gradient(135deg, #2563eb, #06b6d4)' : 'linear-gradient(135deg, #ef4444, #f97316)'};
+      box-shadow: 0 10px 25px -5px ${isSuccess ? 'rgba(37, 99, 235, 0.4)' : 'rgba(239, 68, 68, 0.4)'};
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 12px;
+      color: #ffffff;
+    }
+    p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #94a3b8;
+      margin: 0 0 28px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #38bdf8;
+      margin-bottom: 24px;
+    }
+    .tip {
+      font-size: 12px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon-wrapper">
+      ${
+        isSuccess
+          ? `<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`
+          : `<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`
+      }
+    </div>
+    <div class="badge">Softty Office Desktop</div>
+    <h1>${isSuccess ? 'Đăng Nhập Thành Công!' : 'Đăng Nhập Thất Bại'}</h1>
+    <p>${
+      isSuccess
+        ? 'Bạn đã xác thực an toàn bằng tài khoản Softty ID. Ứng dụng Softty Office trên máy tính đang tự động mở và cập nhật phiên làm việc của bạn.'
+        : errorMessage || 'Đã có lỗi xảy ra trong quá trình xác thực. Vui lòng quay lại ứng dụng và thử lại.'
+    }</p>
+    <div class="tip">Bạn có thể đóng tab trình duyệt này để tiếp tục làm việc.</div>
+  </div>
+  ${
+    isSuccess
+      ? `<script>
+          // Tự động đóng tab sau 2.5 giây
+          setTimeout(function() {
+            window.open('', '_self', '');
+            window.close();
+          }, 2500);
+        </script>`
+      : ''
+  }
+</body>
+</html>`
+}
+
 export class SofttyAuthService {
-  private activeAbortController: AbortController | null = null
+  private activeLoopbackServer: http.Server | null = null
+  private pendingState: PendingAuthState | null = null
   private cachedSession: StoredAuthSession | null = null
   private initialized = false
+  private onProgressCallback: ((ev: AccountLoginEvent) => void) | null = null
+
+  // Chống xử lý trùng lặp callback
+  private inFlightCodes = new Set<string>()
+  private completedCodes = new Map<string, number>()
 
   constructor() {
     this.loadSessionFromDisk()
@@ -47,21 +171,20 @@ export class SofttyAuthService {
 
       const raw = fs.readFileSync(CREDENTIALS_PATH, 'utf-8')
       const parsed = JSON.parse(raw)
-      
-      // Decrypt access token if stored as encrypted buffer
+
       if (parsed.encryptedToken && safeStorage?.isEncryptionAvailable()) {
         try {
           const decrypted = safeStorage.decryptString(Buffer.from(parsed.encryptedToken, 'base64'))
           parsed.accessToken = decrypted
         } catch {
-          // Fallback to unencrypted accessToken if decryption fails
+          // Fallback to unencrypted accessToken
         }
       }
 
       this.cachedSession = parsed as StoredAuthSession
       this.initialized = true
     } catch (err) {
-      console.warn('[SofttyAuth] Failed to load stored session:', err)
+      console.warn('[SofttyAuth] Failed to load stored credentials:', err)
       this.cachedSession = null
       this.initialized = true
     }
@@ -75,11 +198,10 @@ export class SofttyAuthService {
 
       const toStore: Record<string, any> = { ...session }
 
-      // Encrypt token on supported platforms
       if (safeStorage?.isEncryptionAvailable() && session.accessToken) {
         try {
           toStore.encryptedToken = safeStorage.encryptString(session.accessToken).toString('base64')
-          delete toStore.accessToken // Do not leave plaintext token on disk
+          delete toStore.accessToken
         } catch {
           toStore.accessToken = session.accessToken
         }
@@ -88,7 +210,7 @@ export class SofttyAuthService {
       fs.writeFileSync(CREDENTIALS_PATH, JSON.stringify(toStore, null, 2), { mode: 0o600 })
       this.cachedSession = session
     } catch (err) {
-      console.error('[SofttyAuth] Failed to persist credentials:', err)
+      console.error('[SofttyAuth] Failed to save credentials:', err)
     }
   }
 
@@ -99,9 +221,7 @@ export class SofttyAuthService {
       return { loggedIn: false }
     }
 
-    // Check expiration (with 60-second grace window)
     if (this.cachedSession.expiresAt && Date.now() > this.cachedSession.expiresAt - 60_000) {
-      // Token expired, attempt refresh in background if refresh token exists
       if (this.cachedSession.refreshToken) {
         void this.refreshAccessToken()
       }
@@ -116,138 +236,288 @@ export class SofttyAuthService {
     }
   }
 
-  public async startDeviceLogin(
-    onProgress: (ev: AccountLoginEvent) => void,
-  ): Promise<boolean> {
-    // Cancel any previous pending login flow
-    this.cancelPendingLogin()
+  /**
+   * Tạo cặp PKCE verifier & challenge (S256)
+   */
+  private generatePKCE(): { verifier: string; challenge: string } {
+    const verifier = crypto.randomBytes(32).toString('hex')
+    const challenge = crypto
+      .createHash('sha256')
+      .update(verifier)
+      .digest('base64')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '')
+    return { verifier, challenge }
+  }
 
-    const abortController = new AbortController()
-    this.activeAbortController = abortController
-    const { signal } = abortController
+  /**
+   * Khởi chạy Local Loopback HTTP Server nhận callback RFC 8252
+   */
+  private startLocalLoopbackServer(preferredPort = 18235): Promise<{ port: number; redirectUri: string } | null> {
+    return new Promise((resolve) => {
+      this.stopLocalLoopbackServer()
 
-    const deviceName = `Softty Office on ${os.type()} ${os.arch()} (${os.hostname()})`
+      const tryListen = (port: number) => {
+        if (port > 18260) {
+          console.warn('[SofttyAuth] Port range exhausted, fallback to deep link')
+          resolve(null)
+          return
+        }
+
+        const server = http.createServer(async (req, res) => {
+          try {
+            if (!req.url) return
+            const reqUrl = new URL(req.url, `http://127.0.0.1:${port}`)
+
+            if (reqUrl.pathname === '/callback') {
+              const code = reqUrl.searchParams.get('code')
+              const state = reqUrl.searchParams.get('state')
+              const error = reqUrl.searchParams.get('error')
+
+              res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' })
+              res.end(renderLoopbackCallbackHtml(!error && !!code, error || undefined))
+
+              this.bringAppToForeground()
+
+              const fullCallbackUrl = `softty-office://auth/callback?code=${encodeURIComponent(code || '')}&state=${encodeURIComponent(state || '')}${
+                error ? `&error=${encodeURIComponent(error)}` : ''
+              }`
+
+              void this.handleCallback(fullCallbackUrl)
+
+              setTimeout(() => this.stopLocalLoopbackServer(), 2000)
+            } else {
+              res.writeHead(404)
+              res.end('Not Found')
+            }
+          } catch (err) {
+            console.error('[SofttyAuth] Error in Loopback HTTP handler:', err)
+          }
+        })
+
+        server.on('error', (err: any) => {
+          if (err.code === 'EADDRINUSE') {
+            tryListen(port + 1)
+          } else {
+            console.error('[SofttyAuth] Loopback server error:', err)
+            resolve(null)
+          }
+        })
+
+        server.listen(port, '127.0.0.1', () => {
+          this.activeLoopbackServer = server
+          const redirectUri = `http://127.0.0.1:${port}/callback`
+          console.log(`[SofttyAuth] Loopback HTTP Server listening on ${redirectUri}`)
+
+          // Auto shutdown sau 5 phút nếu người dùng bỏ dở
+          setTimeout(() => {
+            if (this.activeLoopbackServer === server) {
+              this.stopLocalLoopbackServer()
+            }
+          }, 5 * 60 * 1000)
+
+          resolve({ port, redirectUri })
+        })
+      }
+
+      tryListen(preferredPort)
+    })
+  }
+
+  private stopLocalLoopbackServer(): void {
+    if (this.activeLoopbackServer) {
+      try {
+        this.activeLoopbackServer.close()
+      } catch {
+        // ignore
+      }
+      this.activeLoopbackServer = null
+    }
+  }
+
+  /**
+   * Kéo ứng dụng Softty Office lên màn hình trước sau khi trình duyệt duyệt xong
+   */
+  private bringAppToForeground(): void {
+    try {
+      if (process.platform === 'darwin') {
+        app.focus({ steal: true })
+      }
+      for (const win of BrowserWindow.getAllWindows()) {
+        if (!win.isDestroyed()) {
+          if (win.isMinimized()) win.restore()
+          win.show()
+          win.focus()
+          break
+        }
+      }
+    } catch (err) {
+      console.warn('[SofttyAuth] Failed to bring app to foreground:', err)
+    }
+  }
+
+  /**
+   * Bước 1: Bắt đầu luồng đăng nhập SSO OAuth 2.0 PKCE
+   */
+  public async startLogin(onProgress: (ev: AccountLoginEvent) => void): Promise<boolean> {
+    this.onProgressCallback = onProgress
+
+    const { verifier, challenge } = this.generatePKCE()
+    const state = crypto.randomBytes(16).toString('hex')
+
+    // Bật Loopback Server trước
+    const loopback = await this.startLocalLoopbackServer()
+    const effectiveRedirectUri = loopback ? loopback.redirectUri : DEFAULT_REDIRECT_URI
+
+    this.pendingState = {
+      verifier,
+      state,
+      redirectUri: effectiveRedirectUri,
+      createdAt: Date.now(),
+    }
+
+    const authUrlObj = new URL(`${ACCOUNTS_BASE_URL}/vi/authorize`)
+    authUrlObj.searchParams.set('client_id', CLIENT_ID)
+    authUrlObj.searchParams.set('redirect_uri', effectiveRedirectUri)
+    authUrlObj.searchParams.set('response_type', 'code')
+    authUrlObj.searchParams.set('scope', 'openid profile email')
+    authUrlObj.searchParams.set('state', state)
+    authUrlObj.searchParams.set('code_challenge', challenge)
+    authUrlObj.searchParams.set('code_challenge_method', 'S256')
+
+    const authUrl = authUrlObj.toString()
+    console.log('[SofttyAuth] Opening login URL with PKCE:', authUrl)
+
+    onProgress({
+      phase: 'url',
+      url: authUrl,
+      expiresInSec: 300,
+    })
 
     try {
-      // Step 1: Request device_code & user_code from Softty Accounts
-      const initUrl = `${ACCOUNTS_BASE_URL}/api/oauth/v2/device/code`
-      const initRes = await fetch(initUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          client_id: CLIENT_ID,
-          scope: 'openid profile email',
-          device_name: deviceName,
-        }),
-        signal,
+      await shell.openExternal(authUrl)
+      return true
+    } catch (err: any) {
+      console.error('[SofttyAuth] Failed to open external browser:', err)
+      onProgress({
+        phase: 'error',
+        error: 'Không thể mở trình duyệt mặc định. Vui lòng kiểm tra lại cài đặt.',
       })
+      return false
+    }
+  }
 
-      if (!initRes.ok) {
-        const errorData = await initRes.json().catch(() => ({}))
-        const errorMsg = errorData.error_description || errorData.error || initRes.statusText
-        console.warn('[SofttyAuth] Device code request failed:', errorMsg)
-        onProgress({ phase: 'error', error: errorMsg })
+  /**
+   * Bước 2 & 3: Nhận callback code (từ Loopback hoặc Deep Link OS) -> Đổi lấy Token -> Lấy Profile
+   */
+  public async handleCallback(rawUrl: string): Promise<boolean> {
+    console.log('[SofttyAuth] Received auth callback:', rawUrl.replace(/code=[^&]+/, 'code=********'))
+
+    try {
+      const urlObj = new URL(rawUrl)
+      const code = urlObj.searchParams.get('code')
+      const state = urlObj.searchParams.get('state')
+      const error = urlObj.searchParams.get('error')
+
+      if (error) {
+        console.error('[SofttyAuth] Auth error from server:', error)
+        this.onProgressCallback?.({
+          phase: 'error',
+          error: 'Người dùng đã hủy hoặc từ chối ủy quyền đăng nhập.',
+        })
         return false
       }
 
-      const {
-        device_code,
-        user_code,
-        verification_uri,
-        verification_uri_complete,
-        expires_in = 600,
-        interval = 5,
-      } = await initRes.json()
+      if (!code) {
+        console.warn('[SofttyAuth] Missing code in callback')
+        return false
+      }
 
-      const finalUrl = verification_uri_complete || `${verification_uri}?user_code=${user_code}`
+      const authKey = `${code}:${state || ''}`
+      const now = Date.now()
 
-      // Push URL & code to UI and notify renderer
-      onProgress({
-        phase: 'url',
-        url: finalUrl,
-        userCode: user_code,
-        expiresInSec: expires_in,
+      // Chống xung đột kép (Race condition giữa loopback & deep link)
+      if (this.inFlightCodes.has(authKey)) {
+        return false
+      }
+      const completedAt = this.completedCodes.get(authKey)
+      if (completedAt && now - completedAt < 20_000) {
+        return false
+      }
+
+      this.inFlightCodes.add(authKey)
+
+      if (!this.pendingState) {
+        throw new Error('Không tìm thấy phiên đăng nhập đang chờ. Vui lòng thử bấm Đăng Nhập lại.')
+      }
+
+      if (now - this.pendingState.createdAt > 10 * 60 * 1000) {
+        this.pendingState = null
+        throw new Error('Yêu cầu đăng nhập đã hết hạn. Vui lòng thử lại.')
+      }
+
+      if (state !== this.pendingState.state) {
+        throw new Error('Mã trạng thái bảo mật (state) không khớp.')
+      }
+
+      const { verifier, redirectUri } = this.pendingState
+      this.pendingState = null
+
+      // Bước 3: Đổi Code lấy Token bằng PKCE Verifier tại /api/oauth/v1/token
+      const tokenEndpoint = `${ACCOUNTS_BASE_URL}/api/oauth/v1/token`
+      const bodyParams = new URLSearchParams()
+      bodyParams.append('grant_type', 'authorization_code')
+      bodyParams.append('code', code)
+      bodyParams.append('redirect_uri', redirectUri)
+      bodyParams.append('client_id', CLIENT_ID)
+      bodyParams.append('code_verifier', verifier)
+
+      const tokenRes = await fetch(tokenEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: bodyParams.toString(),
       })
 
-      // Step 2: Poll token endpoint until user approves or code expires
-      let pollIntervalMs = Math.max(interval, 3) * 1000
-      const deadline = Date.now() + expires_in * 1000
-
-      while (Date.now() < deadline && !signal.aborted) {
-        await new Promise((resolve) => setTimeout(resolve, pollIntervalMs))
-        if (signal.aborted) return false
-
-        const tokenRes = await fetch(`${ACCOUNTS_BASE_URL}/api/oauth/v2/token`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
-            device_code,
-            client_id: CLIENT_ID,
-          }),
-          signal,
-        })
-
-        const tokenData = await tokenRes.json().catch(() => ({}))
-
-        if (tokenRes.ok && tokenData.access_token) {
-          // Step 3: Fetch User Info
-          const userInfo = await this.fetchUserInfo(tokenData.access_token)
-
-          const session: StoredAuthSession = {
-            accessToken: tokenData.access_token,
-            refreshToken: tokenData.refresh_token,
-            expiresAt: Date.now() + (tokenData.expires_in || 3600) * 1000,
-            user: {
-              id: userInfo.sub || userInfo.id || 'softty_user',
-              email: userInfo.email || 'user@softty.net',
-              name: userInfo.name || userInfo.email?.split('@')[0],
-              avatarUrl: userInfo.picture || userInfo.avatarUrl,
-              tier: userInfo.softty_entitlements?.tier || userInfo.tier || 'pro',
-            },
-          }
-
-          this.saveSessionToDisk(session)
-          onProgress({ phase: 'success' })
-          return true
-        }
-
-        if (tokenData.error === 'authorization_pending') {
-          continue
-        }
-
-        if (tokenData.error === 'slow_down') {
-          pollIntervalMs += 5000
-          continue
-        }
-
-        if (tokenData.error === 'access_denied') {
-          onProgress({ phase: 'error', error: 'Người dùng đã từ chối yêu cầu kết nối.' })
-          return false
-        }
-
-        if (tokenData.error === 'expired_token') {
-          onProgress({ phase: 'error', error: 'Mã xác thực đã hết hạn.' })
-          return false
-        }
-
-        if (tokenData.error) {
-          onProgress({ phase: 'error', error: tokenData.error_description || tokenData.error })
-          return false
-        }
+      if (!tokenRes.ok) {
+        const errJson = await tokenRes.json().catch(() => ({}))
+        throw new Error(errJson.error_description || errJson.error || `Lỗi server ${tokenRes.status}`)
       }
 
-      onProgress({ phase: 'error', error: 'Quá thời gian chờ xác thực thiết bị.' })
-      return false
+      const tokenData = await tokenRes.json()
+      if (!tokenData.access_token) {
+        throw new Error('Máy chủ không trả về access token')
+      }
+
+      // Bước 4: Lấy User Profile
+      const userInfo = await this.fetchUserInfo(tokenData.access_token)
+
+      const session: StoredAuthSession = {
+        accessToken: tokenData.access_token,
+        refreshToken: tokenData.refresh_token,
+        expiresAt: Date.now() + (tokenData.expires_in || 3600) * 1000,
+        user: {
+          id: userInfo.sub || userInfo.id || 'softty_user',
+          email: userInfo.email || 'user@softty.net',
+          name: userInfo.name || userInfo.email?.split('@')[0],
+          avatarUrl: userInfo.picture || userInfo.avatarUrl,
+          tier: userInfo.softty_entitlements?.tier || userInfo.tier || 'pro',
+        },
+      }
+
+      this.saveSessionToDisk(session)
+      this.bringAppToForeground()
+
+      this.onProgressCallback?.({ phase: 'success' })
+
+      this.completedCodes.set(authKey, Date.now())
+      return true
     } catch (err: any) {
-      if (signal.aborted) return false
-      console.error('[SofttyAuth] Error during device login:', err)
-      onProgress({ phase: 'error', error: err.message || 'Lỗi kết nối tới máy chủ định danh.' })
+      console.error('[SofttyAuth] Error processing callback:', err)
+      this.onProgressCallback?.({ phase: 'error', error: err.message || 'Lỗi xác thực tài khoản' })
       return false
     } finally {
-      if (this.activeAbortController === abortController) {
-        this.activeAbortController = null
-      }
+      this.stopLocalLoopbackServer()
     }
   }
 
@@ -272,20 +542,18 @@ export class SofttyAuthService {
     if (!this.cachedSession?.refreshToken) return false
 
     try {
-      const res = await fetch(`${ACCOUNTS_BASE_URL}/api/oauth/v2/token`, {
+      const bodyParams = new URLSearchParams()
+      bodyParams.append('grant_type', 'refresh_token')
+      bodyParams.append('refresh_token', this.cachedSession.refreshToken)
+      bodyParams.append('client_id', CLIENT_ID)
+
+      const res = await fetch(`${ACCOUNTS_BASE_URL}/api/oauth/v1/token`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          grant_type: 'refresh_token',
-          refresh_token: this.cachedSession.refreshToken,
-          client_id: CLIENT_ID,
-        }),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: bodyParams.toString(),
       })
 
-      if (!res.ok) {
-        console.warn('[SofttyAuth] Refresh token rejected')
-        return false
-      }
+      if (!res.ok) return false
 
       const data = await res.json()
       if (data.access_token) {
@@ -302,24 +570,21 @@ export class SofttyAuthService {
   }
 
   public cancelPendingLogin(): void {
-    if (this.activeAbortController) {
-      this.activeAbortController.abort()
-      this.activeAbortController = null
-    }
+    this.stopLocalLoopbackServer()
+    this.pendingState = null
   }
 
   public async logout(): Promise<void> {
     this.cancelPendingLogin()
 
     if (this.cachedSession?.accessToken) {
-      // Fire-and-forget token revocation
-      fetch(`${ACCOUNTS_BASE_URL}/api/oauth/v2/revoke`, {
+      fetch(`${ACCOUNTS_BASE_URL}/api/oauth/v1/revoke`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
           token: this.cachedSession.accessToken,
           client_id: CLIENT_ID,
-        }),
+        }).toString(),
       }).catch(() => {})
     }
 
