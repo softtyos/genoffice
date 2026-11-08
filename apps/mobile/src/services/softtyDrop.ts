@@ -1,25 +1,55 @@
-import { DesktopPeer, TransferProgress } from '../types'
+import { DesktopPeer } from '../types'
 
 export class SofttyDropService {
   /**
    * Probe common local ports or broadcast to find Desktop Softty Office instances
    */
   static async scanNearbyDesktops(): Promise<DesktopPeer[]> {
-    // In production, mDNS / Bonjour is used. In typical local development or Wi-Fi,
-    // Softty Office Desktop listens on port 54321 or a designated local LAN port.
     const peers: DesktopPeer[] = []
 
-    // Return current active local peer if discoverable
-    return [
-      {
-        id: 'desktop-mac-local',
-        name: 'MacBook Pro (Softty Office Desktop)',
-        ip: '127.0.0.1',
+    // Probing localhost/loopback for simulator/local dev
+    const candidates = ['127.0.0.1', 'localhost', '10.0.2.2']
+
+    for (const ip of candidates) {
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 1200)
+
+        const res = await fetch(`http://${ip}:54321/api/softty-drop/ping`, {
+          signal: controller.signal,
+        })
+        clearTimeout(timeoutId)
+
+        if (res.ok) {
+          const data = await res.json()
+          peers.push({
+            id: `peer-${ip}`,
+            name: data.name || 'Máy tính Softty Office',
+            ip: ip === '10.0.2.2' ? '10.0.2.2' : ip,
+            port: data.port || 54321,
+            deviceType: data.platform === 'win32' ? 'windows' : 'mac',
+            lastSeen: Date.now(),
+          })
+          break
+        }
+      } catch {
+        // Continue searching
+      }
+    }
+
+    // Default fallback entry for quick manual connection
+    if (peers.length === 0) {
+      peers.push({
+        id: 'desktop-manual-1',
+        name: 'Máy tính cá nhân (Softty Office)',
+        ip: '192.168.1.100',
         port: 54321,
         deviceType: 'mac',
         lastSeen: Date.now(),
-      },
-    ]
+      })
+    }
+
+    return peers
   }
 
   /**
@@ -51,6 +81,7 @@ export class SofttyDropService {
         body: formData,
         headers: {
           'Accept': 'application/json',
+          'X-Filename': encodeURIComponent(fileName),
         },
       })
 

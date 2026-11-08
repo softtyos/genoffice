@@ -2011,25 +2011,24 @@ export function SettingsModal({
           <div className={'set-pane' + (section === 'aiModel' ? ' set-pane-ai-model' : '')}>
             {section === 'account' && (
               <>
-                <h3 className="set-pane-title">{t('setSecAccount')}</h3>
-                <Field label={t('setEmail')} value={loggedIn ? email : t('setNotLoggedIn')} />
+                <h3 className="set-pane-title">Tài Khoản Softty ID</h3>
+                <Field
+                  label={t('setEmail')}
+                  value={loggedIn ? email : 'Chưa đăng nhập tài khoản Softty.net'}
+                />
+                {loggedIn && status?.name && (
+                  <Field label="Tên người dùng" value={status.name} />
+                )}
                 {loggedIn && (
                   <Field
+                    label="Gói dịch vụ"
+                    value={(status?.tier || 'Pro').toUpperCase()}
+                  />
+                )}
+                {loggedIn && status?.creditBalance !== undefined && (
+                  <Field
                     label={t('credits')}
-                    value={
-                      status?.creditBalance === undefined
-                        ? '—'
-                        : Math.floor(status.creditBalance).toLocaleString('en-US')
-                    }
-                    action={
-                      <button
-                        className="set-btn"
-                        data-tip={t('creditsTip')}
-                        onClick={() => void window.aiOffice.openCreditUsage?.()}
-                      >
-                        {t('setViewUsage')}
-                      </button>
-                    }
+                    value={Math.floor(status.creditBalance).toLocaleString('en-US')}
                   />
                 )}
                 <div className="set-pane-footer">
@@ -2038,8 +2037,8 @@ export function SettingsModal({
                       {loggingOut ? t('loggingOut') : t('logout')}
                     </button>
                   ) : (
-                    <button className="set-btn primary" onClick={() => setSection('aiModel')}>
-                      {t('setSecAiModel')}
+                    <button className="set-btn primary" onClick={onLogin}>
+                      Đăng Nhập Softty.net
                     </button>
                   )}
                 </div>

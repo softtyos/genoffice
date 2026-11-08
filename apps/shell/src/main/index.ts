@@ -138,13 +138,12 @@ import {
 import { handleDroppedFiles } from './dropped-files'
 import { collectLaunchPaths } from './launch-paths'
 import {
-  genofficeLogout,
-  gskLoginInfo,
-  loadGenofficeAuth,
   setGskProxyUrl,
-  startGenofficeLogin,
   watchGskApiKey,
 } from '@softty/ai-search'
+import { SofttyAuthService } from './softty-auth-service'
+
+const softtyAuth = new SofttyAuthService()
 
 import {
   buildDocsMenu,
@@ -4833,15 +4832,9 @@ function statEntries(paths: string[]): Promise<RecentEntry[]> {
 }
 
 function registerHomeIpc(): void {
-  // signed-in means GenOffice's own device-code login; the shared gsk CLI key
-  // is only a silent fallback, deliberately not shown here to nudge users onto our key
-  ipcMain.handle(HOME_CHANNELS.accountStatus, async () => {
-    if (!loadGenofficeAuth()) return { loggedIn: false }
-    await proxyBootstrap
-    const info = await gskLoginInfo()
-    if (info) return { loggedIn: true, email: info.email, creditBalance: info.creditBalance }
-    // login-info answering 401 drops an expired key: report signed-out right away
-    return { loggedIn: !!loadGenofficeAuth() }
+  // Softty ID Account Status & Device Flow SSO
+  ipcMain.handle(HOME_CHANNELS.accountStatus, async (): Promise<AccountStatus> => {
+    return softtyAuth.getAccountStatus()
   })
 
   // login progress is streamed to the requesting renderer; the auth URL is
@@ -4851,13 +4844,12 @@ function registerHomeIpc(): void {
     analytics.track('login_click')
     const sender = event.sender
     pendingLoginUrl = ''
-    await proxyBootstrap
     const send = (payload: AccountLoginEvent) => {
       if (!sender.isDestroyed()) sender.send(HOME_CHANNELS.accountLoginEvent, payload)
     }
     // open the browser on the first url event only; later events refresh the rescue URL
     let opened = false
-    const launched = startGenofficeLogin((progress) => {
+    const launched = await softtyAuth.startDeviceLogin((progress) => {
       if (progress.url) {
         pendingLoginUrl = progress.url
         if (!opened) {
@@ -4877,7 +4869,7 @@ function registerHomeIpc(): void {
   })
 
   ipcMain.handle(HOME_CHANNELS.accountLogout, async () => {
-    await genofficeLogout()
+    await softtyAuth.logout()
     // the cloud projects cache belongs to the account that just signed out
     clearCloudProjectsStore(cloudProjectsStorePath())
   })
@@ -7166,7 +7158,8 @@ app.whenReady().then(async () => {
   // home page re-reads its account status. A logout that leaves only the
   // gsk CLI fallback key is not a login
   stopAuthWatch = watchGskApiKey(() => {
-    if (!loadGenofficeAuth()) return
+    const status = softtyAuth.getAccountStatus()
+    if (!status.loggedIn) return
     for (const w of BrowserWindow.getAllWindows())
       w.webContents.send(HOME_CHANNELS.accountLoginEvent, { phase: 'success' })
   })

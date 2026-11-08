@@ -559,17 +559,21 @@ export interface CloudProjectsSnapshot {
 }
 
 export interface AccountStatus {
-  /** gsk is installed and logged in */
+  /** user is logged in via Softty ID */
   loggedIn: boolean
   email?: string
-  /** remaining Genspark credits (absent when the balance query failed) */
+  name?: string
+  avatarUrl?: string
+  tier?: string
+  /** remaining credits */
   creditBalance?: number
 }
 
-/** login flow progress pushed from main (gsk login CLI output) */
+/** login flow progress pushed from main (Softty ID OAuth 2.0 Device Flow) */
 export interface AccountLoginEvent {
   phase: 'launched' | 'url' | 'success' | 'error'
   url?: string
+  userCode?: string
   expiresInSec?: number
   /** 'network' | 'expired' | raw CLI error text */
   error?: string
