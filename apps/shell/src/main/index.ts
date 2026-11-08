@@ -333,6 +333,7 @@ import {
   renameStaysInApp,
 } from './app-routing'
 import { isSameFile, pdfSaveAsTarget, isValidRawRenameName } from './rename-validation'
+import { SofttyDropServer } from './softty-drop-server'
 import {
   FolderWatcher,
   createFolder,
@@ -7303,6 +7304,18 @@ app.whenReady().then(async () => {
   })
   void startMcpFromSettings(currentMcpSettings()).catch((error) => {
     console.error('[mcp] failed to start on boot:', error)
+  })
+  const softtyDropServer = new SofttyDropServer({
+    onFileReceived: (filePath) => {
+      if (shellWindow && !shellWindow.isDestroyed()) {
+        shellWindow.show()
+        shellWindow.focus()
+      }
+      return routeDocumentPath(filePath)
+    },
+  })
+  void softtyDropServer.start().catch((err) => {
+    console.warn('[softty-drop] Failed to start LAN receiver:', err)
   })
   installUiScale()
   createShellWindow()

@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-brand-blue: #2563eb;
+  --color-brand-blue-hover: #1d4ed8;
+  --color-brand-cyan: #06b6d4;
+  --color-brand-dark: #0e1322;
+  --color-brand-slate: #1e293b;
+  --color-brand-surface: #131b2e;
+}
+
+:root {
+  --bg-page: #0e1322;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --card-bg: #131b2e;
+  --card-border: #1e293b;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+}

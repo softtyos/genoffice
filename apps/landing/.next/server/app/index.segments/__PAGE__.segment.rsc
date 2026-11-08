@@ -1,0 +1,32 @@
+1:"$Sreact.fragment"
+2:"/_next/static/chunks/1lszqxd0vh4v9.js"
+3:I[70858,["$2"],"default"]
+4:I[57714,["$2"],"default"]
+8:"/_next/static/chunks/0ihh6upl4ojq0.js"
+9:I[94822,["$2","$8"],"Navbar"]
+a:I[7883,["$2","$8"],"Hero"]
+b:I[81417,["$2","$8"],"ShowcaseSection"]
+c:"SofttyDropSection"
+d:I[93204,["$2","$8"],"$c"]
+e:I[45297,["$2","$8"],"ScannerSection"]
+f:I[51465,["$2","$8"],"PrivacySecurity"]
+10:I[25158,["$2","$8"],"DownloadSection"]
+11:I[92314,["$2","$8"],"Footer"]
+12:I[45742,["$2"],"OutletBoundary"]
+13:"$Sreact.suspense"
+16:"ViewportBoundary"
+17:I[45742,["$2"],"$16"]
+18:"MetadataBoundary"
+19:I[45742,["$2"],"$18"]
+:HL["/_next/static/chunks/1-i2y8tq5e0fa.css","style"]
+6:X
+7:[["children",{"s":"__PAGE__","h":160,"d":{"r":["$","$1","c",{"children":[["$","main",null,{"className":"min-h-screen bg-[#0e1322]","children":[["$","$L9",null,{}],["$","$La",null,{}],["$","$Lb",null,{}],["$","$Ld",null,{}],["$","$Le",null,{}],["$","$Lf",null,{}],["$","$L10",null,{}],["$","$L11",null,{}]]}],[["$","script","script-0",{"src":"/_next/static/chunks/0ihh6upl4ojq0.js","async":true}]],["$","$L12",null,{"children":["$","$13",null,{"name":"Next.MetadataOutlet","children":"$@14"}]}]]}],"p":"$@15","v":null,"s":"$6"}}]]
+0:{"t":{"t":{"s":"","h":80,"d":{"r":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/1-i2y8tq5e0fa.css","precedence":"next"}],["$","script","script-0",{"src":"/_next/static/chunks/1lszqxd0vh4v9.js","async":true}]],["$","html",null,{"lang":"vi","className":"dark","children":["$","body",null,{"className":"min-h-screen bg-[#0e1322] text-[#f8fafc] antialiased selection:bg-[#2563eb] selection:text-white","children":["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]]}]}]}]]}],"p":"$@5","v":null,"s":"$6"},"c":"$Q7"},"h":{"r":["$","$1","h",{"children":[null,["$","$L17",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","$L19",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$13",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Softty Office — Bộ Ứng Dụng Văn Phòng AI Toàn Diện"}],["$","meta","1",{"name":"description","content":"Bộ ứng dụng văn phòng AI 6-trong-1 bảo mật, ngoại tuyến, xử lý bảng tính triệu dòng với Rust, chia sẻ file tức thì Softty Drop và Camera Scanner."}],["$","meta","2",{"name":"keywords","content":"Softty Office,AI Office,Docs,Sheets,Slides,PDF,Markdown,Softty Drop"}]]}]}],null]}],null]}],"p":"$@1a","v":null,"s":"$6"}},"a":"$@1b","u":"$@1c","b":"zlOqxesUFnPkLL1joze6c"}
+14:null
+6:300
+1c:true
+6:C
+1b:0
+5:"$undefined"
+1a:"$undefined"
+15:"$undefined"
