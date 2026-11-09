@@ -51,7 +51,9 @@
     "dist:linux": "npm run notices && npm run build:all && npm run dist:linux -w softty-office"
   },
   "dependencies": {
+    "@rhwp/core": "0.8.7",
     "harfbuzzjs": "^1.4.0",
+    "jsdom": "^28.0.0",
     "undici": "^6.29.1",
     "ws": "^8.21.1"
   },

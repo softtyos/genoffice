@@ -1,12 +1,29 @@
-import { resolve } from 'node:path'
+import { createRequire } from 'node:module'
+import { dirname, resolve } from 'node:path'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'electron-vite'
+
+const require = createRequire(import.meta.url)
+let harfbuzzDist = ''
+try {
+  harfbuzzDist = dirname(require.resolve('harfbuzzjs'))
+} catch {}
 
 export default defineConfig({
   // Bundle everything into the shell main (same policy as apps/docs): the
   // imported docs/sheets main modules are TS source with no build artifacts,
   // so externalizing them would break Node ESM resolution at runtime.
   main: {
+    resolve: {
+      alias: harfbuzzDist
+        ? {
+            'harfbuzzjs/dist/harfbuzz.js': resolve(harfbuzzDist, 'harfbuzz.js'),
+            'harfbuzzjs/dist/harfbuzz.wasm': resolve(harfbuzzDist, 'harfbuzz.wasm'),
+            '../../../../node_modules/harfbuzzjs/dist/harfbuzz.js': resolve(harfbuzzDist, 'harfbuzz.js'),
+            '../../../../node_modules/harfbuzzjs/dist/harfbuzz.wasm': resolve(harfbuzzDist, 'harfbuzz.wasm'),
+          }
+        : {},
+    },
     // node:sqlite is a Node 22+ builtin the bundler's builtin list may predate
     build: { rollupOptions: { external: ['node:sqlite'] } },
   },
