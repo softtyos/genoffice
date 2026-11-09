@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
@@ -127,11 +128,12 @@ export function DocumentsScreen() {
       {/* Top Header */}
       <View style={[styles.header, { backgroundColor: theme.bgSurface, borderBottomColor: theme.border }]}>
         <View style={styles.brandRow}>
-          <View style={[styles.brandLogo, { backgroundColor: '#2563eb' }]}>
-            <Text style={styles.brandLogoIcon}>S</Text>
-          </View>
+          <Image
+            source={require('../../assets/icon.png')}
+            style={styles.brandLogoImage}
+          />
           <View>
-            <Text style={[styles.brandTitle, { color: theme.textPrimary }]}>Office</Text>
+            <Text style={[styles.brandTitle, { color: theme.textPrimary }]}>Softty Office</Text>
             <Text style={[styles.brandSubtitle, { color: theme.textMuted }]}>{t.home.subtitle}</Text>
           </View>
         </View>
@@ -348,18 +350,10 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 12,
   },
-  brandLogo: {
-    width: 36,
-    height: 36,
+  brandLogoImage: {
+    width: 38,
+    height: 38,
     borderRadius: 10,
-    backgroundColor: '#2563eb',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  brandLogoIcon: {
-    color: '#ffffff',
-    fontSize: 20,
-    fontWeight: '900',
   },
   brandTitle: {
     fontSize: 18,

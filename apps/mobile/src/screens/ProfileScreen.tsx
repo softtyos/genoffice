@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   TouchableOpacity,
   Alert,
@@ -273,6 +274,11 @@ export function ProfileScreen() {
 
         {/* About Info */}
         <View style={styles.aboutBox}>
+          <Image
+            source={require('../../assets/icon.png')}
+            style={styles.aboutLogoImage}
+          />
+          <Text style={[styles.aboutBrandTitle, { color: theme.textPrimary }]}>Softty Office</Text>
           <Text style={[styles.aboutTitle, { color: theme.textMuted }]}>{t.profile.version}</Text>
           <Text style={[styles.aboutSubtitle, { color: theme.textMuted }]}>{t.profile.offlineGuaranteed}</Text>
           <Text style={[styles.copyright, { color: theme.textMuted }]}>{t.profile.copyright}</Text>
@@ -499,6 +505,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 30,
     gap: 4,
+  },
+  aboutLogoImage: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+    marginBottom: 8,
+  },
+  aboutBrandTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    marginBottom: 2,
   },
   aboutTitle: {
     fontSize: 12,
