@@ -70,6 +70,11 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
       if (!targetFile.exists) {
         targetFile.create({ overwrite: true })
       }
+      const fileContent =
+        doc.textContent ||
+        (doc.sheetData ? JSON.stringify(doc.sheetData, null, 2) : '') ||
+        'Softty Office Document Content'
+      targetFile.write(fileContent)
       return targetFile.uri
     } catch {
       return doc.uri
