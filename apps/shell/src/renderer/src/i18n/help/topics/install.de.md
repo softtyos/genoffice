@@ -1,6 +1,6 @@
 # Softty Office installieren
 
-Jeder Build wird auf der [Releases-Seite](https://github.com/genspark-ai/genoffice/releases/latest) veröffentlicht. Alle stammen aus `main`; die Installer für macOS und Windows sind signiert.
+Jeder Build wird auf der [Releases-Seite](https://github.com/softtyos/genoffice/releases/latest) veröffentlicht. Alle stammen aus `main`; die Installer für macOS und Windows sind signiert.
 
 ## Die Datei für Ihren Rechner wählen
 

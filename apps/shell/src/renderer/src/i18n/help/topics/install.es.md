@@ -1,6 +1,6 @@
 # Instalar Softty Office
 
-Cada versión publicada está en la [página de versiones](https://github.com/genspark-ai/genoffice/releases/latest). Todas salen de `main`; los instaladores de macOS y Windows están firmados.
+Cada versión publicada está en la [página de versiones](https://github.com/softtyos/genoffice/releases/latest). Todas salen de `main`; los instaladores de macOS y Windows están firmados.
 
 ## Elija el archivo para su equipo
 

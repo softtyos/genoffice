@@ -1,6 +1,6 @@
 # Pemasangan Softty Office
 
-Setiap keluaran diterbitkan pada [halaman Keluaran](https://github.com/genspark-ai/genoffice/releases/latest). Semuanya datang daripada `main`; pemasang untuk macOS dan Windows adalah bertanda tangan.
+Setiap keluaran diterbitkan pada [halaman Keluaran](https://github.com/softtyos/genoffice/releases/latest). Semuanya datang daripada `main`; pemasang untuk macOS dan Windows adalah bertanda tangan.
 
 ## Memilih fail untuk mesin anda
 

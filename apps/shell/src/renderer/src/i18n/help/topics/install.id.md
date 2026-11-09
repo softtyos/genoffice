@@ -1,6 +1,6 @@
 # Memasang Softty Office
 
-Setiap build dipublikasikan di [halaman Rilis](https://github.com/genspark-ai/genoffice/releases/latest). Semuanya berasal dari `main`; installer untuk macOS dan Windows sudah ditandatangani.
+Setiap build dipublikasikan di [halaman Rilis](https://github.com/softtyos/genoffice/releases/latest). Semuanya berasal dari `main`; installer untuk macOS dan Windows sudah ditandatangani.
 
 ## Pilih berkas untuk komputer Anda
 
