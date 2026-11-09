@@ -10,6 +10,12 @@
       "ios",
       "android"
     ],
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#090d16"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "net.softty.office.mobile",
@@ -73,7 +79,11 @@
     },
     "android": {
       "package": "net.softty.office.mobile",
-      "versionCode": 6,
+      "versionCode": 5,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#090d16"
+      },
       "permissions": [
         "INTERNET",
         "ACCESS_NETWORK_STATE",

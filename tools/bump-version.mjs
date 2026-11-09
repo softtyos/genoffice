@@ -89,16 +89,15 @@ try {
   if (!json.expo) json.expo = {};
   json.expo.version = nextVersion;
 
-  // Android versionCode
+  // Synchronized Android versionCode & iOS buildNumber
   if (!json.expo.android) json.expo.android = {};
-  const currentCode = typeof json.expo.android.versionCode === 'number' ? json.expo.android.versionCode : 1;
-  nextVersionCode = currentCode + 1;
-  json.expo.android.versionCode = nextVersionCode;
-
-  // iOS buildNumber
   if (!json.expo.ios) json.expo.ios = {};
+  const currentCode = typeof json.expo.android.versionCode === 'number' ? json.expo.android.versionCode : 1;
   const currentBuild = parseInt(json.expo.ios.buildNumber || '0', 10) || 0;
-  nextBuildNumber = String(currentBuild + 1);
+  const synchronizedNumber = Math.max(currentCode, currentBuild) + 1;
+  nextVersionCode = synchronizedNumber;
+  nextBuildNumber = String(synchronizedNumber);
+  json.expo.android.versionCode = nextVersionCode;
   json.expo.ios.buildNumber = nextBuildNumber;
 
   writeFileSync(mobileAppJsonPath, JSON.stringify(json, null, 2) + '\n', 'utf8');
