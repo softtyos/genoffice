@@ -333,11 +333,13 @@ export function DocumentsScreen() {
       </ScrollView>
 
       {/* Document Viewer Modal */}
-      <DocumentViewerModal
-        document={activeDocument}
-        visible={!!activeDocument}
-        onClose={closeDocument}
-      />
+      {activeDocument && (
+        <DocumentViewerModal
+          document={activeDocument}
+          visible={!!activeDocument}
+          onClose={closeDocument}
+        />
+      )}
     </View>
   )
 }

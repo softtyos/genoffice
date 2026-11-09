@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import {
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
 } from 'react-native'
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { AppProvider, useApp } from './src/context/AppContext'
 import { DocumentsScreen } from './src/screens/DocumentsScreen'
 import { DropScreen } from './src/screens/DropScreen'
@@ -20,7 +20,7 @@ function MainTabs() {
   const [activeTab, setActiveTab] = useState<TabKey>('documents')
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.bg }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.bg }]} edges={['top', 'left', 'right']}>
       <StatusBar
         barStyle={theme.isDark ? 'light-content' : 'dark-content'}
         backgroundColor={theme.bg}
@@ -114,9 +114,11 @@ function MainTabs() {
 
 export default function App() {
   return (
-    <AppProvider>
-      <MainTabs />
-    </AppProvider>
+    <SafeAreaProvider>
+      <AppProvider>
+        <MainTabs />
+      </AppProvider>
+    </SafeAreaProvider>
   )
 }
 

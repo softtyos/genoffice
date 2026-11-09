@@ -19,11 +19,36 @@ export function ScannerScreen() {
   const [pages, setPages] = useState<ScannedPage[]>([])
   const [processing, setProcessing] = useState(false)
 
+  const sampleScanImages = [
+    'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80',
+    'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=800&q=80',
+    'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80',
+  ]
+
+  const addSampleScannedPage = () => {
+    const nextUri = sampleScanImages[pages.length % sampleScanImages.length]
+    const newPage: ScannedPage = {
+      id: `sample_page_${Date.now()}`,
+      uri: nextUri,
+      width: 800,
+      height: 1100,
+    }
+    setPages((prev) => [...prev, newPage])
+  }
+
   const handleCapturePage = async () => {
     try {
       const { status } = await ImagePicker.requestCameraPermissionsAsync()
       if (status !== 'granted') {
-        Alert.alert(t.common.error, 'Ứng dụng cần quyền camera để quét tài liệu.')
+        Alert.alert(
+          'Quyền Camera',
+          'Ứng dụng cần quyền camera để quét tài liệu. Bạn có muốn thêm trang tài liệu quét mẫu không?',
+          [
+            { text: 'Thêm trang mẫu', onPress: addSampleScannedPage },
+            { text: 'Chọn từ thư viện ảnh', onPress: handlePickFromGallery },
+            { text: 'Hủy', style: 'cancel' },
+          ]
+        )
         return
       }
 
@@ -44,7 +69,15 @@ export function ScannerScreen() {
         setPages((prev) => [...prev, newPage])
       }
     } catch (err: any) {
-      Alert.alert(t.common.error, err.message || 'Không thể chụp ảnh.')
+      Alert.alert(
+        'Máy ảo không có Camera',
+        'Máy ảo iOS không hỗ trợ camera phần cứng. Bạn có muốn thêm trang hợp đồng mẫu để tiếp tục thử nghiệm số hóa tài liệu?',
+        [
+          { text: 'Thêm trang mẫu', onPress: addSampleScannedPage },
+          { text: 'Chọn từ thư viện ảnh', onPress: handlePickFromGallery },
+          { text: 'Hủy', style: 'cancel' },
+        ]
+      )
     }
   }
 

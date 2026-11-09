@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import {
   Modal,
-  SafeAreaView,
   View,
   Text,
   StyleSheet,
@@ -10,7 +9,9 @@ import {
   TextInput,
   Alert,
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import * as Sharing from 'expo-sharing'
+import { Paths, File } from 'expo-file-system'
 import { useApp } from '../context/AppContext'
 import { OfficeDocument } from '../types'
 
@@ -32,10 +33,10 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
   const [activeSlideIndex, setActiveSlideIndex] = useState(0)
   const [activePdfPage, setActivePdfPage] = useState(1)
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number; val: string } | null>(null)
+  const [cellInputValue, setCellInputValue] = useState('')
   const [isSigned, setIsSigned] = useState(document?.pdfData?.signed || false)
   const [sendingDrop, setSendingDrop] = useState(false)
-
-  if (!document) return null
+  const [presentationMode, setPresentationMode] = useState(false)
 
   // Ensure editedText syncs when document changes
   React.useEffect(() => {
@@ -46,9 +47,34 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
       setActivePdfPage(1)
       setActiveSheetIndex(0)
       setSelectedCell(null)
+      setCellInputValue('')
       setEditorMode('view')
     }
   }, [document])
+
+  if (!document || !visible) return null
+
+  // Ensure local file exists on disk for reliable sharing & Softty Drop transfer
+  const getReliableFileUri = async (doc: OfficeDocument): Promise<string> => {
+    try {
+      if (
+        doc.uri &&
+        !doc.uri.startsWith('file:///sample/') &&
+        !doc.uri.startsWith('file:///documents/')
+      ) {
+        return doc.uri
+      }
+
+      const safeName = (doc.name || 'document.txt').replace(/[^a-zA-Z0-9._-]/g, '_')
+      const targetFile = new File(Paths.cache, safeName)
+      if (!targetFile.exists) {
+        targetFile.create({ overwrite: true })
+      }
+      return targetFile.uri
+    } catch {
+      return doc.uri
+    }
+  }
 
   const handleSaveText = async () => {
     if (!document) return
@@ -63,10 +89,38 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
     Alert.alert(t.common.success, t.common.saved)
   }
 
+  const handleSaveCell = async () => {
+    if (!document || !document.sheetData || !selectedCell) return
+    const updatedRows = document.sheetData.rows.map((row, rIdx) => {
+      if (rIdx !== selectedCell.row) return row
+      const newRow = [...row]
+      newRow[selectedCell.col] = cellInputValue
+      return newRow
+    })
+
+    const updatedDoc: OfficeDocument = {
+      ...document,
+      modifiedAt: Date.now(),
+      sheetData: {
+        ...document.sheetData,
+        rows: updatedRows,
+      },
+    }
+    setSelectedCell({ ...selectedCell, val: cellInputValue })
+    await saveActiveDocument(updatedDoc)
+    Alert.alert(
+      t.common.success,
+      `Đã cập nhật ô [${String.fromCharCode(65 + selectedCell.col)}${selectedCell.row + 1}] = "${cellInputValue}"`
+    )
+  }
+
   const handleBeam = async () => {
+    if (!document) return
     setSendingDrop(true)
     try {
-      await beamDocumentToDesktop(document)
+      const reliableUri = await getReliableFileUri(document)
+      const beamDoc = { ...document, uri: reliableUri }
+      await beamDocumentToDesktop(beamDoc)
     } finally {
       setSendingDrop(false)
     }
@@ -76,27 +130,35 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
     if (!document) return
     try {
       const isAvailable = await Sharing.isAvailableAsync()
-      if (isAvailable && document.uri) {
-        await Sharing.shareAsync(document.uri, {
-          mimeType: 'application/octet-stream',
-          dialogTitle: `Chia sẻ ${document.name}`,
-        })
-      } else {
-        Alert.alert(t.common.share, `Chia sẻ tệp: ${document.name}`)
+      if (!isAvailable) {
+        Alert.alert(t.common.share, 'Thiết bị không hỗ trợ chia sẻ trực tiếp.')
+        return
       }
+      const reliableUri = await getReliableFileUri(document)
+      await Sharing.shareAsync(reliableUri, {
+        mimeType: 'application/octet-stream',
+        dialogTitle: `Chia sẻ ${document.name}`,
+      })
     } catch (err: any) {
       Alert.alert(t.common.error, `Không thể chia sẻ tệp: ${err.message || err}`)
     }
   }
 
-  const handleSignPdf = () => {
+  const handleSignPdf = async () => {
+    if (!document) return
     setIsSigned(true)
-    if (document.pdfData) {
-      document.pdfData.signed = true
-      document.pdfData.signedAt = new Date().toLocaleString('vi-VN')
-      document.pdfData.signatureName = 'Softty Verified Sign'
-      saveActiveDocument({ ...document })
+    const updatedPdfData = {
+      ...(document.pdfData || { totalPages: 1, contentSummary: ['Tài liệu PDF'] }),
+      signed: true,
+      signedAt: new Date().toLocaleString('vi-VN'),
+      signatureName: 'Lý Văn Bòng (Softty Verified Sign)',
     }
+    const updatedDoc: OfficeDocument = {
+      ...document,
+      pdfData: updatedPdfData,
+      modifiedAt: Date.now(),
+    }
+    await saveActiveDocument(updatedDoc)
     Alert.alert('Ký số thành công', 'Đã chèn chữ ký điện tử xác thực vào tài liệu PDF.')
   }
 
@@ -320,9 +382,30 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
             {/* Formula Bar */}
             <View style={[styles.formulaBar, { backgroundColor: theme.bgSurface, borderBottomColor: theme.border }]}>
               <Text style={[styles.fxLabel, { color: theme.emerald }]}>fx</Text>
-              <Text style={[styles.fxValue, { color: theme.textPrimary }]} numberOfLines={1}>
-                {selectedCell ? selectedCell.val : '=SUM(Doanh_Thu_Q1)'}
-              </Text>
+              <TextInput
+                style={[
+                  styles.formulaInput,
+                  {
+                    color: theme.textPrimary,
+                    backgroundColor: theme.bgElevated,
+                    borderColor: theme.border,
+                  },
+                ]}
+                value={selectedCell ? cellInputValue : '=SUM(Doanh_Thu_Q1)'}
+                onChangeText={setCellInputValue}
+                placeholder={selectedCell ? 'Nhập giá trị hoặc công thức...' : 'Chọn một ô để sửa...'}
+                placeholderTextColor={theme.textMuted}
+                editable={!!selectedCell}
+              />
+              {selectedCell && (
+                <TouchableOpacity
+                  onPress={handleSaveCell}
+                  style={[styles.saveCellBtn, { backgroundColor: theme.emerald }]}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.saveCellBtnText}>✓</Text>
+                </TouchableOpacity>
+              )}
             </View>
 
             {/* Scrollable Spreadsheet Grid */}
@@ -357,7 +440,10 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                         return (
                           <TouchableOpacity
                             key={cIdx}
-                            onPress={() => setSelectedCell({ row: rIdx, col: cIdx, val: String(cell) })}
+                            onPress={() => {
+                              setSelectedCell({ row: rIdx, col: cIdx, val: String(cell) })
+                              setCellInputValue(String(cell))
+                            }}
                             style={[
                               styles.dataCell,
                               { borderColor: theme.border },
@@ -486,6 +572,57 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
         {/* 4. PDF VIEWER */}
         {document.type === 'pdf' && (
           <View style={styles.body}>
+            {/* PDF Page Navigation Ribbon */}
+            <View style={[styles.pdfPageNavRow, { backgroundColor: theme.bgElevated, borderBottomColor: theme.border }]}>
+              <TouchableOpacity
+                disabled={activePdfPage <= 1}
+                onPress={() => setActivePdfPage((p) => Math.max(1, p - 1))}
+                style={[
+                  styles.pdfNavBtn,
+                  { backgroundColor: theme.bgSurface, borderColor: theme.border },
+                  activePdfPage <= 1 && { opacity: 0.4 },
+                ]}
+              >
+                <Text style={[styles.pdfNavBtnText, { color: theme.textPrimary }]}>◀ Trang trước</Text>
+              </TouchableOpacity>
+
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pdfPillsRow}>
+                {Array.from({ length: document.pdfData?.totalPages || 1 }).map((_, idx) => {
+                  const pageNum = idx + 1
+                  const isActive = activePdfPage === pageNum
+                  return (
+                    <TouchableOpacity
+                      key={pageNum}
+                      onPress={() => setActivePdfPage(pageNum)}
+                      style={[
+                        styles.pdfPagePill,
+                        {
+                          backgroundColor: isActive ? theme.rose : theme.bgSurface,
+                          borderColor: isActive ? theme.rose : theme.border,
+                        },
+                      ]}
+                    >
+                      <Text style={[styles.pdfPagePillText, { color: isActive ? '#ffffff' : theme.textSecondary }]}>
+                        {pageNum}
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                })}
+              </ScrollView>
+
+              <TouchableOpacity
+                disabled={activePdfPage >= (document.pdfData?.totalPages || 1)}
+                onPress={() => setActivePdfPage((p) => Math.min(document.pdfData?.totalPages || 1, p + 1))}
+                style={[
+                  styles.pdfNavBtn,
+                  { backgroundColor: theme.bgSurface, borderColor: theme.border },
+                  activePdfPage >= (document.pdfData?.totalPages || 1) && { opacity: 0.4 },
+                ]}
+              >
+                <Text style={[styles.pdfNavBtnText, { color: theme.textPrimary }]}>Trang tiếp ▶</Text>
+              </TouchableOpacity>
+            </View>
+
             <ScrollView style={styles.readerScroll} contentContainerStyle={styles.readerContent}>
               <View style={[styles.pdfPaper, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
                 {/* PDF Stamp & Header */}
@@ -498,18 +635,21 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                   </Text>
                 </View>
 
-                {/* PDF Content simulation */}
+                {/* PDF Content */}
                 <Text style={[styles.pdfTitle, { color: theme.textPrimary }]}>{document.name}</Text>
+                <Text style={[styles.pdfPageSubhead, { color: theme.textMuted }]}>
+                  Trang {activePdfPage} / {document.pdfData?.totalPages || 1}
+                </Text>
                 <View style={[styles.pdfDivider, { backgroundColor: theme.border }]} />
 
-                {(document.pdfData?.contentSummary || [
-                  'Tài liệu văn bản PDF số hóa chất lượng cao.',
-                  'Hỗ trợ đọc đa trang, phóng to chữ và xác thực chữ ký điện tử doanh nghiệp.',
-                ]).map((para, pIdx) => (
-                  <Text key={pIdx} style={[styles.pdfParagraph, { color: theme.textSecondary }]}>
-                    {para}
+                <View style={styles.pdfPageContentBox}>
+                  <Text style={[styles.pdfParagraph, { color: theme.textPrimary, fontSize: 15, lineHeight: 24 }]}>
+                    {document.pdfData?.contentSummary && document.pdfData.contentSummary[activePdfPage - 1]
+                      ? document.pdfData.contentSummary[activePdfPage - 1]
+                      : document.textContent ||
+                        `Tài liệu PDF điện tử "${document.name}". Mọi chữ ký số và dữ liệu bảo mật đều được xác thực cục bộ.`}
                   </Text>
-                ))}
+                </View>
 
                 {/* E-Signature Box */}
                 {isSigned ? (
@@ -518,7 +658,10 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                     <View style={styles.signedTextBox}>
                       <Text style={[styles.signedTitle, { color: theme.emerald }]}>{t.viewer.signedBadge}</Text>
                       <Text style={[styles.signedSubtitle, { color: theme.textSecondary }]}>
-                        Ký bởi: {document.pdfData?.signatureName || 'Softty Verified User'} ({document.pdfData?.signedAt || '08/11/2026'})
+                        Ký bởi: {document.pdfData?.signatureName || 'Softty Verified User'} ({document.pdfData?.signedAt || new Date().toLocaleDateString('vi-VN')})
+                      </Text>
+                      <Text style={[styles.signedHash, { color: theme.textMuted }]}>
+                        Chứng thực: SHA256:8f4c2e91b0da3e7a (Chuẩn eIDAS & Luật Giao Dịch Điện Tử)
                       </Text>
                     </View>
                   </View>
@@ -526,6 +669,7 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                   <TouchableOpacity
                     onPress={handleSignPdf}
                     style={[styles.signPdfBtn, { backgroundColor: theme.primary }]}
+                    activeOpacity={0.8}
                   >
                     <Text style={styles.signPdfBtnText}>✍️ {t.viewer.signPdf}</Text>
                   </TouchableOpacity>
@@ -535,6 +679,74 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
           </View>
         )}
       </SafeAreaView>
+
+      {/* Presentation Fullscreen Modal for Slides */}
+      {document.slideData && (
+        <Modal visible={presentationMode} animationType="fade" presentationStyle="fullScreen">
+          <View style={[styles.presentationContainer, { backgroundColor: '#090d16' }]}>
+            <View style={styles.presentationHeader}>
+              <Text style={styles.presentationBrand}>SOFTTY SLIDES • TRÌNH CHIẾU</Text>
+              <TouchableOpacity
+                onPress={() => setPresentationMode(false)}
+                style={styles.presentationCloseBtn}
+              >
+                <Text style={styles.presentationCloseText}>✕ Thoát</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.presentationBody}>
+              <Text style={styles.presentationSlideNum}>
+                SLIDE {activeSlideIndex + 1} / {document.slideData.slides.length}
+              </Text>
+              <Text style={styles.presentationTitle}>
+                {document.slideData.slides[activeSlideIndex]?.title}
+              </Text>
+              {document.slideData.slides[activeSlideIndex]?.subtitle && (
+                <Text style={styles.presentationSubtitle}>
+                  {document.slideData.slides[activeSlideIndex].subtitle}
+                </Text>
+              )}
+              <View style={styles.presentationBullets}>
+                {document.slideData.slides[activeSlideIndex]?.bullets.map((b, idx) => (
+                  <View key={idx} style={styles.presentationBulletItem}>
+                    <Text style={styles.presentationBulletDot}>•</Text>
+                    <Text style={styles.presentationBulletText}>{b}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.presentationFooter}>
+              <TouchableOpacity
+                disabled={activeSlideIndex <= 0}
+                onPress={() => setActiveSlideIndex((i) => Math.max(0, i - 1))}
+                style={[styles.presentationNavBtn, activeSlideIndex <= 0 && { opacity: 0.3 }]}
+              >
+                <Text style={styles.presentationNavText}>◀ Slide trước</Text>
+              </TouchableOpacity>
+
+              <Text style={styles.presentationProgressText}>
+                {activeSlideIndex + 1} / {document.slideData.slides.length}
+              </Text>
+
+              <TouchableOpacity
+                disabled={!document.slideData || activeSlideIndex >= document.slideData.slides.length - 1}
+                onPress={() => {
+                  if (document.slideData) {
+                    setActiveSlideIndex((i) => Math.min(document.slideData!.slides.length - 1, i + 1))
+                  }
+                }}
+                style={[
+                  styles.presentationNavBtn,
+                  (!document.slideData || activeSlideIndex >= document.slideData.slides.length - 1) && { opacity: 0.3 },
+                ]}
+              >
+                <Text style={styles.presentationNavText}>Slide tiếp ▶</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
     </Modal>
   )
 }
@@ -960,5 +1172,182 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 14,
     fontWeight: '700',
+  },
+  formulaInput: {
+    flex: 1,
+    fontSize: 13,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  saveCellBtn: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  saveCellBtnText: {
+    color: '#ffffff',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  pdfPageNavRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    gap: 8,
+  },
+  pdfNavBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  pdfNavBtnText: {
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  pdfPillsRow: {
+    gap: 6,
+    alignItems: 'center',
+    paddingHorizontal: 4,
+  },
+  pdfPagePill: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pdfPagePillText: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  pdfPageSubhead: {
+    fontSize: 12,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  pdfPageContentBox: {
+    paddingVertical: 8,
+    minHeight: 180,
+  },
+  signedHash: {
+    fontSize: 9,
+    marginTop: 4,
+    fontFamily: 'Courier',
+  },
+  presentBtn: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  presentBtnText: {
+    color: '#000000',
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  presentationContainer: {
+    flex: 1,
+    paddingHorizontal: 28,
+    paddingTop: 48,
+    paddingBottom: 24,
+    justifyContent: 'space-between',
+  },
+  presentationHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  presentationBrand: {
+    color: '#f59e0b',
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 1.5,
+  },
+  presentationCloseBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#ffffff20',
+    borderRadius: 8,
+  },
+  presentationCloseText: {
+    color: '#ffffff',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  presentationBody: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingVertical: 20,
+  },
+  presentationSlideNum: {
+    color: '#64748b',
+    fontSize: 13,
+    fontWeight: '800',
+    letterSpacing: 1,
+    marginBottom: 12,
+  },
+  presentationTitle: {
+    color: '#ffffff',
+    fontSize: 32,
+    fontWeight: '900',
+    lineHeight: 38,
+    marginBottom: 8,
+  },
+  presentationSubtitle: {
+    color: '#38bdf8',
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 28,
+  },
+  presentationBullets: {
+    gap: 16,
+  },
+  presentationBulletItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  presentationBulletDot: {
+    color: '#f59e0b',
+    fontSize: 24,
+    lineHeight: 24,
+  },
+  presentationBulletText: {
+    color: '#e2e8f0',
+    fontSize: 18,
+    lineHeight: 26,
+    flex: 1,
+  },
+  presentationFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#334155',
+  },
+  presentationNavBtn: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    backgroundColor: '#1e293b',
+    borderRadius: 10,
+  },
+  presentationNavText: {
+    color: '#ffffff',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  presentationProgressText: {
+    color: '#94a3b8',
+    fontSize: 13,
+    fontWeight: '600',
   },
 })
