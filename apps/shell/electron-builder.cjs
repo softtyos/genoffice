@@ -31,7 +31,7 @@
 const { Buffer } = require('node:buffer')
 const { execFileSync } = require('node:child_process')
 const { closeSync, existsSync, openSync, readFileSync, readSync, rmSync } = require('node:fs')
-const { join } = require('node:path')
+const { dirname, join, relative } = require('node:path')
 
 function normalizeHttpsBaseUrl(name, value) {
   if (!value || !value.trim()) return null
@@ -121,29 +121,99 @@ const LINUX_SIDECAR =
   linuxSidecarCandidates.find((rel) => existsSync(join(__dirname, rel))) ??
   linuxSidecarCandidates[0]
 
+function resolveSafe(specifier, paths = [__dirname, join(__dirname, '../..')]) {
+  try {
+    return require.resolve(specifier, { paths })
+  } catch {
+    return null
+  }
+}
+
+const electronPkg = resolveSafe('electron/package.json')
+const electronLicensePath = electronPkg ? join(dirname(electronPkg), 'dist/LICENSES.chromium.html') : null
+const electronLicenseCandidates = [
+  electronLicensePath ? relative(__dirname, electronLicensePath) : null,
+  '../../node_modules/electron/dist/LICENSES.chromium.html',
+].filter(Boolean)
+const ELECTRON_LICENSE_SRC =
+  electronLicenseCandidates.find((rel) => existsSync(join(__dirname, rel))) ?? '../../node_modules/electron/dist/LICENSES.chromium.html'
+
+const pdfiumPkg = resolveSafe('@embedpdf/pdfium/package.json')
+const pdfiumWasmPath = pdfiumPkg ? join(dirname(pdfiumPkg), 'dist/pdfium.wasm') : null
+const pdfiumCandidates = [
+  pdfiumWasmPath ? relative(__dirname, pdfiumWasmPath) : null,
+  '../../node_modules/@embedpdf/pdfium/dist/pdfium.wasm',
+].filter(Boolean)
+const PDFIUM_WASM_SRC =
+  pdfiumCandidates.find((rel) => existsSync(join(__dirname, rel))) ?? '../../node_modules/@embedpdf/pdfium/dist/pdfium.wasm'
+
+const gskPkg = resolveSafe('@genspark/cli/package.json')
+const gskPath = gskPkg ? dirname(gskPkg) : null
+const gskCandidates = [
+  gskPath ? relative(__dirname, gskPath) : null,
+  '../../node_modules/@genspark/cli',
+].filter(Boolean)
+const GSK_SRC =
+  gskCandidates.find((rel) => existsSync(join(__dirname, rel))) ?? '../../node_modules/@genspark/cli'
+
+let commanderPkg = null
+try {
+  if (gskPkg) {
+    const { createRequire } = require('node:module')
+    commanderPkg = createRequire(gskPkg).resolve('commander')
+  }
+} catch {}
+if (!commanderPkg) {
+  try {
+    commanderPkg = resolveSafe('commander')
+  } catch {}
+}
+const commanderDir = commanderPkg ? dirname(commanderPkg) : null
 const commanderCandidates = [
+  commanderDir ? relative(__dirname, commanderDir) : null,
   '../../node_modules/@genspark/cli/node_modules/commander',
   '../../node_modules/commander',
-]
+].filter(Boolean)
 const COMMANDER_SRC =
-  commanderCandidates.find((rel) => existsSync(join(__dirname, rel))) ?? commanderCandidates[0]
+  commanderCandidates.find((rel) => existsSync(join(__dirname, rel))) ?? '../../node_modules/commander'
 
-const harfbuzzSubsetCandidates = [
+const hbPkg = resolveSafe('harfbuzzjs/package.json', [join(__dirname, '../pdf'), __dirname, join(__dirname, '../..')])
+const hbWasmPath = hbPkg ? join(dirname(hbPkg), 'hb-subset.wasm') : null
+const harfbuzzCandidates = [
+  hbWasmPath ? relative(__dirname, hbWasmPath) : null,
   '../pdf/node_modules/harfbuzzjs/hb-subset.wasm',
   '../../node_modules/harfbuzzjs/hb-subset.wasm',
-]
+].filter(Boolean)
 const HARFBUZZ_SUBSET_SRC =
-  harfbuzzSubsetCandidates.find((rel) => existsSync(join(__dirname, rel))) ?? harfbuzzSubsetCandidates[0]
+  harfbuzzCandidates.find((rel) => existsSync(join(__dirname, rel))) ?? '../pdf/node_modules/harfbuzzjs/hb-subset.wasm'
+
+const rhwpPkg = resolveSafe('@rhwp/core/package.json')
+const rhwpWasmPath = rhwpPkg ? join(dirname(rhwpPkg), 'rhwp_bg.wasm') : null
+const rhwpCandidates = [
+  rhwpWasmPath ? relative(__dirname, rhwpWasmPath) : null,
+  '../../node_modules/@rhwp/core/rhwp_bg.wasm',
+].filter(Boolean)
+const RHWP_WASM_SRC =
+  rhwpCandidates.find((rel) => existsSync(join(__dirname, rel))) ?? '../../node_modules/@rhwp/core/rhwp_bg.wasm'
+
+const wsPkg = resolveSafe('ws/package.json')
+const wsPath = wsPkg ? dirname(wsPkg) : null
+const wsCandidates = [
+  wsPath ? relative(__dirname, wsPath) : null,
+  '../../node_modules/ws',
+].filter(Boolean)
+const WS_SRC =
+  wsCandidates.find((rel) => existsSync(join(__dirname, rel))) ?? '../../node_modules/ws'
 
 function assertExtraResourceSources() {
   for (const rel of [
-    '../../node_modules/@genspark/cli',
+    GSK_SRC,
     COMMANDER_SRC,
-    '../../node_modules/ws',
-    '../../node_modules/electron/dist/LICENSES.chromium.html',
-    '../../node_modules/@embedpdf/pdfium/dist/pdfium.wasm',
+    WS_SRC,
+    ELECTRON_LICENSE_SRC,
+    PDFIUM_WASM_SRC,
     HARFBUZZ_SUBSET_SRC,
-    '../../node_modules/@rhwp/core/rhwp_bg.wasm',
+    RHWP_WASM_SRC,
   ]) {
     if (!existsSync(join(__dirname, rel))) {
       throw new Error(
@@ -591,7 +661,7 @@ const config = {
       to: 'THIRD-PARTY-NOTICES.txt',
     },
     {
-      from: '../../node_modules/electron/dist/LICENSES.chromium.html',
+      from: ELECTRON_LICENSE_SRC,
       to: 'LICENSES.chromium.html',
     },
     {
@@ -621,7 +691,7 @@ const config = {
     // PDF text editing engines: the bundled main resolves these under
     // Resources/wasm when node_modules is absent (apps/pdf/src/main/wasm-path.ts)
     {
-      from: '../../node_modules/@embedpdf/pdfium/dist/pdfium.wasm',
+      from: PDFIUM_WASM_SRC,
       to: 'wasm/pdfium.wasm',
     },
     {
@@ -630,7 +700,7 @@ const config = {
     },
     // .hwp import (packages/hwp2docx/src/hwp.ts): rhwp reads HWP binaries into HWPX
     {
-      from: '../../node_modules/@rhwp/core/rhwp_bg.wasm',
+      from: RHWP_WASM_SRC,
       to: 'wasm/rhwp_bg.wasm',
     },
     // platform system-OCR helpers for scanned-page recovery (each exists only
@@ -645,7 +715,7 @@ const config = {
       to: 'ocr/win-ocr.exe',
     },
     {
-      from: '../../node_modules/@genspark/cli',
+      from: GSK_SRC,
       to: 'gsk/node_modules/@genspark/cli',
     },
     // genoffice command line: runs on the app binary with ELECTRON_RUN_AS_NODE (as
@@ -709,7 +779,7 @@ const config = {
       to: 'gsk/node_modules/commander',
     },
     {
-      from: '../../node_modules/ws',
+      from: WS_SRC,
       to: 'gsk/node_modules/ws',
     },
   ],
