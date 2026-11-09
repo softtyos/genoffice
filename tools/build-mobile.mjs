@@ -139,9 +139,9 @@ if (!existsSync(workspacePath)) {
 const tempArchiveDir = `/tmp/SofttyOffice_v${currentVersion}_b${buildNumber}.xcarchive`;
 const tempExportDir = `/tmp/SofttyOffice_v${currentVersion}_b${buildNumber}_export`;
 
-// Clean previous temp dirs if exist
+// Clean previous temp dirs and Xcode DerivedData to guarantee fresh asset compilation
 try {
-  execSync(`rm -rf "${tempArchiveDir}" "${tempExportDir}"`);
+  execSync(`rm -rf "${tempArchiveDir}" "${tempExportDir}" ~/Library/Developer/Xcode/DerivedData/SofttyOffice-*`);
 } catch {}
 
 console.log('  ⚙️ Đang Archive với xcodebuild...');

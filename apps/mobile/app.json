@@ -3,7 +3,7 @@
     "name": "Softty Office",
     "slug": "softty-office",
     "scheme": "softty-office",
-    "version": "1.0.10",
+    "version": "1.0.12",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "platforms": [
@@ -14,7 +14,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#090d16"
+      "backgroundColor": "#FFFFFF"
     },
     "ios": {
       "supportsTablet": true,
@@ -76,14 +76,14 @@
           }
         ]
       },
-      "buildNumber": "10"
+      "buildNumber": "12"
     },
     "android": {
       "package": "net.softty.office.mobile",
-      "versionCode": 10,
+      "versionCode": 12,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#090d16"
+        "backgroundColor": "#FFFFFF"
       },
       "permissions": [
         "INTERNET",
