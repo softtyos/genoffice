@@ -1,0 +1,65 @@
+name: Release Mobile
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to build'
+        required: true
+        type: choice
+        options:
+          - all
+          - android
+          - ios
+        default: all
+      profile:
+        description: 'EAS Build Profile'
+        required: true
+        type: choice
+        options:
+          - preview
+          - production
+        default: preview
+
+jobs:
+  build-mobile:
+    name: EAS Build (${{ github.event.inputs.platform || 'all' }})
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Expo & EAS CLI
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Typecheck Mobile App
+        run: pnpm --filter @softty/mobile typecheck
+
+      - name: Run EAS Build
+        if: env.EXPO_TOKEN != ''
+        working-directory: apps/mobile
+        run: |
+          if [ "${{ github.event.inputs.platform }}" = "all" ]; then
+            eas build --platform all --profile ${{ github.event.inputs.profile }} --non-interactive
+          else
+            eas build --platform ${{ github.event.inputs.platform }} --profile ${{ github.event.inputs.profile }} --non-interactive
+          fi
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}

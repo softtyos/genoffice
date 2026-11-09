@@ -1,0 +1,103 @@
+name: Release Desktop
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release Tag (e.g. v1.0.0)'
+        required: false
+        default: 'v1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  build-desktop:
+    name: Build Desktop (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            platform: mac
+            artifact_pattern: 'apps/shell/dist/*.{dmg,zip}'
+          - os: windows-latest
+            platform: win
+            artifact_pattern: 'apps/shell/dist/*.exe'
+          - os: ubuntu-latest
+            platform: linux
+            artifact_pattern: 'apps/shell/dist/*.{AppImage,deb}'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: ${{ matrix.platform == 'mac' && 'x86_64-apple-darwin,aarch64-apple-darwin' || '' }}
+
+      - name: Install Linux Build Dependencies
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libarchive-tools libfuse2
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Build All Workspaces
+        run: pnpm run build:all
+
+      - name: Build Native xlsx-engine Sidecar (macOS Universal)
+        if: matrix.platform == 'mac'
+        run: pnpm --filter @softty/sheets run native:build:universal
+
+      - name: Build Native xlsx-engine Sidecar (Windows / Linux)
+        if: matrix.platform != 'mac'
+        run: pnpm --filter @softty/sheets run native:build
+
+      - name: Package Desktop Installer (${{ matrix.platform }})
+        env:
+          GENOFFICE_UPDATE_URL: ${{ secrets.GENOFFICE_UPDATE_URL }}
+        run: |
+          if [ "${{ matrix.platform }}" = "mac" ]; then
+            pnpm run dist:mac
+          elif [ "${{ matrix.platform }}" = "win" ]; then
+            pnpm run dist:win
+          elif [ "${{ matrix.platform }}" = "linux" ]; then
+            pnpm run dist:linux
+          fi
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: softty-office-${{ matrix.platform }}
+          path: apps/shell/dist/*
+          if-no-files-found: warn
+
+      - name: Release to GitHub
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: apps/shell/dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
