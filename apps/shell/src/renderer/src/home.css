@@ -349,6 +349,184 @@ body.vib .home {
   cursor: pointer;
 }
 
+/* ── Softty Account Menu & Styling ── */
+.account-tier-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  font-size: 10px;
+  font-weight: 700;
+  color: #06b6d4;
+  margin-left: 6px;
+  letter-spacing: 0.5px;
+}
+
+.account-menu {
+  position: absolute;
+  left: -8px;
+  bottom: calc(100% + 6px);
+  width: calc(100% + 16px);
+  padding: 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  z-index: 50;
+}
+
+.account-menu-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px 8px;
+}
+
+.account-menu-profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.account-menu-profile-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.account-menu-profile-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-menu-profile-email {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-menu-divider {
+  height: 1px;
+  margin: 6px 0;
+  background: var(--border-subtle);
+}
+
+.account-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 36px;
+  margin: 2px 0;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.12s ease;
+}
+
+.account-menu-item:hover {
+  background: var(--surface-hover, rgba(255, 255, 255, 0.08));
+}
+
+.account-menu-login-action {
+  height: 44px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(6, 182, 212, 0.08));
+  border: 1px solid rgba(37, 99, 235, 0.35);
+  border-radius: 10px;
+}
+
+.account-menu-login-action:hover {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.22), rgba(6, 182, 212, 0.16));
+  border-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.account-menu-login-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: #2563eb;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.account-menu-login-labels {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.account-menu-login-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #38bdf8;
+}
+
+.account-menu-login-subtitle {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.account-menu-item.danger {
+  color: #ef4444;
+}
+
+.account-menu-item.danger:hover {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.account-menu-item.danger svg {
+  color: #ef4444;
+}
+
+.account-menu-item svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.account-menu-item:hover svg {
+  color: var(--text);
+}
+
+.account-menu-version {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 32px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  user-select: text;
+}
+
 .login-hint-open:hover,
 .login-hint-copy:hover {
   background: var(--bg-hover);

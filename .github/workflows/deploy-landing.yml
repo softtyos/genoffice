@@ -1,0 +1,116 @@
+name: Deploy Landing Page to Dokploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/landing/**'
+      - '.github/workflows/deploy-landing.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-landing-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify & Build Landing
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Typecheck & Build Landing Page
+        run: pnpm --filter @softty/landing build
+
+  deploy:
+    name: Trigger Dokploy Deployment
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Trigger Dokploy Deploy API
+        env:
+          DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY || 'pknAnPTLXTpnKABJrkgCNisTsJJYtikQCsfwlhIbofCuuVLajVRfHKWwhbapWbUz' }}
+          APPLICATION_ID: 'A_6N1Zu_W6vxo3Cdak1Rk'
+          DOKPLOY_HOST: 'https://paas.softty.net'
+        run: |
+          echo "🚀 Triggering deployment on Dokploy PaaS..."
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: $DOKPLOY_API_KEY" \
+            "$DOKPLOY_HOST/api/trpc/application.deploy" \
+            -d "{\"json\":{\"applicationId\":\"$APPLICATION_ID\"}}")
+
+          HTTP_CODE=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d':' -f2)
+          BODY=$(echo "$RESPONSE" | grep -v "HTTP_STATUS")
+
+          echo "Response status: $HTTP_CODE"
+          echo "Response body: $BODY"
+
+          if [ "$HTTP_CODE" -ne 200 ]; then
+            echo "❌ Failed to trigger deployment on Dokploy!"
+            exit 1
+          fi
+
+          echo "✅ Dokploy deployment triggered successfully!"
+
+      - name: Health Check Deployment
+        run: |
+          echo "⏳ Waiting for application deployment to become healthy on https://office.softty.net..."
+          TARGET_URL="https://office.softty.net"
+          MAX_ATTEMPTS=30
+          SLEEP_SECONDS=10
+          ATTEMPT=1
+          SUCCESS=0
+
+          sleep 15
+
+          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$TARGET_URL" || echo "000")
+            echo "Attempt $ATTEMPT/$MAX_ATTEMPTS: HTTP status $HTTP_STATUS"
+
+            if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 301 ] || [ "$HTTP_STATUS" -eq 302 ]; then
+              echo "🎉 Service is LIVE and healthy at $TARGET_URL!"
+              SUCCESS=1
+              break
+            fi
+
+            ATTEMPT=$((ATTEMPT + 1))
+            sleep $SLEEP_SECONDS
+          done
+
+          if [ $SUCCESS -eq 0 ]; then
+            echo "⚠️ Health check timed out, but Dokploy build may still be finishing. Check logs at https://paas.softty.net"
+          fi
+
+      - name: Deployment Summary
+        run: |
+          echo "### 🚀 Softty Office Landing Page Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Thuộc tính | Giá trị |" >> $GITHUB_STEP_SUMMARY
+          echo "| :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Nền tảng** | Dokploy PaaS (https://paas.softty.net) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Dự án** | Softty Office |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Môi trường** | production |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Ứng dụng** | softty-office-landing (\`A_6N1Zu_W6vxo3Cdak1Rk\`) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Tên miền** | [https://office.softty.net](https://office.softty.net) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Nhánh kích hoạt** | \`main\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Commit** | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY

@@ -10,10 +10,12 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
-import { ScannedPage } from '../types'
+import { ScannedPage, OfficeDocument } from '../types'
 import { SofttyDropService } from '../services/softtyDrop'
+import { useApp } from '../context/AppContext'
 
 export function ScannerScreen() {
+  const { theme, t, saveActiveDocument, openDocument } = useApp()
   const [pages, setPages] = useState<ScannedPage[]>([])
   const [processing, setProcessing] = useState(false)
 
@@ -21,7 +23,7 @@ export function ScannerScreen() {
     try {
       const { status } = await ImagePicker.requestCameraPermissionsAsync()
       if (status !== 'granted') {
-        Alert.alert('Cần quyền Camera', 'Ứng dụng cần quyền camera để quét tài liệu.')
+        Alert.alert(t.common.error, 'Ứng dụng cần quyền camera để quét tài liệu.')
         return
       }
 
@@ -42,7 +44,7 @@ export function ScannerScreen() {
         setPages((prev) => [...prev, newPage])
       }
     } catch (err: any) {
-      Alert.alert('Lỗi', err.message || 'Không thể chụp ảnh.')
+      Alert.alert(t.common.error, err.message || 'Không thể chụp ảnh.')
     }
   }
 
@@ -64,13 +66,42 @@ export function ScannerScreen() {
         setPages((prev) => [...prev, ...newPages])
       }
     } catch (err: any) {
-      Alert.alert('Lỗi', err.message || 'Không thể chọn ảnh từ thư viện.')
+      Alert.alert(t.common.error, err.message || 'Không thể chọn ảnh từ thư viện.')
     }
+  }
+
+  const handleExportAndOpen = async () => {
+    if (pages.length === 0) {
+      Alert.alert(t.common.error, 'Vui lòng quét ít nhất một trang tài liệu.')
+      return
+    }
+
+    const docId = `scan-pdf-${Date.now()}`
+    const fileName = `Tai_lieu_scan_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '_')}.pdf`
+
+    const newPdfDoc: OfficeDocument = {
+      id: docId,
+      name: fileName,
+      uri: pages[0].uri,
+      size: pages.length * 350000,
+      type: 'pdf',
+      modifiedAt: Date.now(),
+      pdfData: {
+        totalPages: pages.length,
+        signed: false,
+        contentSummary: pages.map(
+          (_, idx) => `Trang ${idx + 1}: Văn bản hợp đồng được quét chất lượng cao bởi Softty Scanner.`
+        ),
+      },
+    }
+
+    await saveActiveDocument(newPdfDoc)
+    openDocument(newPdfDoc)
   }
 
   const handleSendToDesktop = async () => {
     if (pages.length === 0) {
-      Alert.alert('Chưa có trang quét', 'Vui lòng quét ít nhất một trang tài liệu.')
+      Alert.alert(t.common.error, 'Vui lòng quét ít nhất một trang tài liệu.')
       return
     }
 
@@ -78,14 +109,13 @@ export function ScannerScreen() {
     try {
       const peers = await SofttyDropService.scanNearbyDesktops()
       if (peers.length === 0) {
-        Alert.alert('Không tìm thấy Desktop', 'Hãy mở Softty Office trên máy tính cùng mạng Wi-Fi.')
+        Alert.alert(t.drop.noPeers, t.drop.noPeersSub)
         return
       }
 
       const desktop = peers[0]
       const fileName = `Scan_TaiLieu_${new Date().toISOString().slice(0, 10)}.pdf`
 
-      // Send the first scanned document or generated PDF to Desktop
       const res = await SofttyDropService.sendFileToDesktop(
         desktop,
         pages[0].uri,
@@ -100,7 +130,7 @@ export function ScannerScreen() {
           [{ text: 'OK', onPress: () => setPages([]) }],
         )
       } else {
-        Alert.alert('Thông báo', res.message)
+        Alert.alert(t.common.error, res.message)
       }
     } finally {
       setProcessing(false)
@@ -108,73 +138,106 @@ export function ScannerScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Camera Scanner</Text>
-        <Text style={styles.subtitle}>Quét tài liệu thành PDF và mở ngay trên Softty PDF máy tính</Text>
+    <View style={[styles.container, { backgroundColor: theme.bg }]}>
+      {/* Header */}
+      <View style={[styles.header, { backgroundColor: theme.bgSurface, borderBottomColor: theme.border }]}>
+        <View style={styles.brandRow}>
+          <View style={[styles.scannerLogo, { backgroundColor: `${theme.rose}20` }]}>
+            <Text style={styles.scannerLogoIcon}>📸</Text>
+          </View>
+          <View>
+            <Text style={[styles.title, { color: theme.textPrimary }]}>{t.scanner.title}</Text>
+            <Text style={[styles.subtitle, { color: theme.textMuted }]}>{t.scanner.subtitle}</Text>
+          </View>
+        </View>
       </View>
 
-      <View style={styles.controlsRow}>
-        <TouchableOpacity style={styles.actionBtn} onPress={handleCapturePage}>
-          <Text style={styles.actionBtnIcon}>📸</Text>
-          <Text style={styles.actionBtnText}>Chụp Quét Trang</Text>
-        </TouchableOpacity>
+      <View style={styles.content}>
+        {/* Action Controls */}
+        <View style={styles.controlsRow}>
+          <TouchableOpacity
+            style={[styles.actionBtn, { backgroundColor: theme.primary }]}
+            onPress={handleCapturePage}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.actionBtnIcon}>📸</Text>
+            <Text style={styles.actionBtnText}>{t.scanner.takePhoto}</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.actionBtn, styles.actionBtnSecondary]} onPress={handlePickFromGallery}>
-          <Text style={styles.actionBtnIcon}>🖼️</Text>
-          <Text style={styles.actionBtnText}>Chọn Từ Thư Viện</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            style={[
+              styles.actionBtn,
+              { backgroundColor: theme.bgSurface, borderColor: theme.border, borderWidth: 1 },
+            ]}
+            onPress={handlePickFromGallery}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.actionBtnIcon}>🖼️</Text>
+            <Text style={[styles.actionBtnText, { color: theme.textPrimary }]}>{t.scanner.fromGallery}</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.previewSection}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>CÁC TRANG ĐÃ QUÉT ({pages.length})</Text>
-          {pages.length > 0 && (
-            <TouchableOpacity onPress={() => setPages([])}>
-              <Text style={styles.clearText}>Xóa tất cả</Text>
-            </TouchableOpacity>
+        {/* Scanned Pages Section */}
+        <View style={styles.previewSection}>
+          <View style={styles.sectionHeader}>
+            <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>
+              {t.scanner.scannedPages(pages.length).toUpperCase()}
+            </Text>
+            {pages.length > 0 && (
+              <TouchableOpacity onPress={() => setPages([])}>
+                <Text style={[styles.clearText, { color: theme.rose }]}>{t.common.delete} {t.common.all}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {pages.length === 0 ? (
+            <View style={[styles.emptyCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
+              <Text style={styles.emptyIcon}>📄</Text>
+              <Text style={[styles.emptyText, { color: theme.textPrimary }]}>{t.scanner.emptyPages}</Text>
+              <Text style={[styles.emptySubText, { color: theme.textMuted }]}>{t.scanner.emptySub}</Text>
+            </View>
+          ) : (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pageList}>
+              {pages.map((p, index) => (
+                <View key={p.id} style={[styles.pageThumbWrapper, { borderColor: theme.border }]}>
+                  <Image source={{ uri: p.uri }} style={styles.pageThumb} />
+                  <View style={[styles.pageBadge, { backgroundColor: `${theme.primary}ee` }]}>
+                    <Text style={styles.pageBadgeText}>Trang {index + 1}</Text>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
           )}
         </View>
 
-        {pages.length === 0 ? (
-          <View style={styles.emptyCard}>
-            <Text style={styles.emptyIcon}>📄</Text>
-            <Text style={styles.emptyText}>Chưa có trang quét nào</Text>
-            <Text style={styles.emptySubText}>
-              Bấm "Chụp Quét Trang" để tự động nhận diện 4 góc và nắn thẳng tài liệu.
-            </Text>
+        {/* Bottom Actions if pages exist */}
+        {pages.length > 0 && (
+          <View style={styles.footerAction}>
+            <TouchableOpacity
+              style={[styles.exportBtn, { backgroundColor: theme.emerald }]}
+              onPress={handleExportAndOpen}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.exportBtnText}>📄 {t.scanner.exportPdf} & {t.common.view}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.desktopSendBtn, { backgroundColor: theme.primary }, processing && { opacity: 0.5 }]}
+              onPress={handleSendToDesktop}
+              disabled={processing}
+              activeOpacity={0.8}
+            >
+              {processing ? (
+                <ActivityIndicator color="#ffffff" />
+              ) : (
+                <Text style={styles.desktopSendBtnText}>
+                  ⚡ {t.scanner.beamDirect} ({pages.length})
+                </Text>
+              )}
+            </TouchableOpacity>
           </View>
-        ) : (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pageList}>
-            {pages.map((p, index) => (
-              <View key={p.id} style={styles.pageThumbWrapper}>
-                <Image source={{ uri: p.uri }} style={styles.pageThumb} />
-                <View style={styles.pageBadge}>
-                  <Text style={styles.pageBadgeText}>Trang {index + 1}</Text>
-                </View>
-              </View>
-            ))}
-          </ScrollView>
         )}
       </View>
-
-      {pages.length > 0 && (
-        <View style={styles.footerAction}>
-          <TouchableOpacity
-            style={[styles.desktopSendBtn, processing && { opacity: 0.5 }]}
-            onPress={handleSendToDesktop}
-            disabled={processing}
-          >
-            {processing ? (
-              <ActivityIndicator color="#ffffff" />
-            ) : (
-              <Text style={styles.desktopSendBtnText}>
-                ⚡ Bắn {pages.length} Trang Sang Softty PDF Desktop
-              </Text>
-            )}
-          </TouchableOpacity>
-        </View>
-      )}
     </View>
   )
 }
@@ -182,27 +245,45 @@ export function ScannerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0e1322',
-    padding: 20,
   },
   header: {
-    marginTop: 40,
-    marginBottom: 20,
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+  },
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  scannerLogo: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scannerLogoIcon: {
+    fontSize: 22,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#ffffff',
+    fontSize: 20,
+    fontWeight: '800',
+    letterSpacing: -0.3,
   },
   subtitle: {
-    fontSize: 14,
-    color: '#94a3b8',
-    marginTop: 4,
+    fontSize: 12,
+    marginTop: 2,
+  },
+  content: {
+    flex: 1,
+    padding: 20,
   },
   controlsRow: {
     flexDirection: 'row',
     gap: 12,
-    marginBottom: 24,
+    marginBottom: 20,
   },
   actionBtn: {
     flex: 1,
@@ -210,22 +291,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#2563eb',
     paddingVertical: 14,
     borderRadius: 14,
-  },
-  actionBtnSecondary: {
-    backgroundColor: '#1e293b',
-    borderWidth: 1,
-    borderColor: '#334155',
   },
   actionBtnIcon: {
     fontSize: 18,
   },
   actionBtnText: {
     color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 13,
+    fontWeight: '700',
   },
   previewSection: {
     flex: 1,
@@ -239,88 +314,90 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#64748b',
-    letterSpacing: 1,
+    letterSpacing: 0.5,
   },
   clearText: {
     fontSize: 12,
-    color: '#ef4444',
     fontWeight: '600',
   },
   emptyCard: {
-    flex: 1,
-    backgroundColor: '#131b2e',
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 30,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#1e293b',
-    borderStyle: 'dashed',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
   },
   emptyIcon: {
-    fontSize: 40,
-    marginBottom: 12,
+    fontSize: 36,
+    marginBottom: 10,
   },
   emptyText: {
-    color: '#f8fafc',
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 6,
   },
   emptySubText: {
-    color: '#64748b',
-    fontSize: 13,
+    fontSize: 12,
     textAlign: 'center',
-    marginTop: 6,
     lineHeight: 18,
   },
   pageList: {
     flexDirection: 'row',
+    marginTop: 8,
   },
   pageThumbWrapper: {
-    position: 'relative',
-    marginRight: 14,
-    borderRadius: 12,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#334155',
-  },
-  pageThumb: {
     width: 140,
     height: 190,
-    borderRadius: 12,
+    borderRadius: 14,
+    borderWidth: 1,
+    overflow: 'hidden',
+    marginRight: 14,
+    position: 'relative',
+  },
+  pageThumb: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
   pageBadge: {
     position: 'absolute',
     bottom: 8,
     left: 8,
-    backgroundColor: 'rgba(14, 19, 34, 0.85)',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
   },
   pageBadgeText: {
-    color: '#f8fafc',
-    fontSize: 11,
-    fontWeight: '600',
+    color: '#ffffff',
+    fontSize: 10,
+    fontWeight: '700',
   },
   footerAction: {
-    paddingVertical: 14,
+    marginTop: 'auto',
+    paddingTop: 16,
+    gap: 10,
   },
-  desktopSendBtn: {
-    backgroundColor: '#06b6d4',
-    paddingVertical: 16,
+  exportBtn: {
+    paddingVertical: 14,
     borderRadius: 14,
     alignItems: 'center',
-    shadowColor: '#06b6d4',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    justifyContent: 'center',
+  },
+  exportBtnText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  desktopSendBtn: {
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   desktopSendBtnText: {
-    color: '#0e1322',
-    fontSize: 15,
-    fontWeight: '800',
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '700',
   },
 })

@@ -28,3 +28,49 @@ export interface UserProfile {
   email: string
   tier: 'free' | 'pro' | 'enterprise'
 }
+
+export type OfficeDocType = 'docs' | 'sheets' | 'slides' | 'pdf' | 'markdown' | 'html'
+
+export interface SheetStructure {
+  sheetNames: string[]
+  activeSheet: string
+  headers: string[]
+  rows: (string | number)[][]
+  totalRows: number
+  totalCols: number
+}
+
+export interface SlideItem {
+  id: number
+  title: string
+  subtitle?: string
+  bullets: string[]
+  notes?: string
+}
+
+export interface SlideDeckStructure {
+  deckTitle: string
+  slides: SlideItem[]
+}
+
+export interface PdfDocumentStructure {
+  totalPages: number
+  signed: boolean
+  signedAt?: string
+  signatureName?: string
+  contentSummary: string[]
+}
+
+export interface OfficeDocument {
+  id: string
+  name: string
+  uri: string
+  size: number
+  type: OfficeDocType
+  modifiedAt: number
+  isSample?: boolean
+  textContent?: string
+  sheetData?: SheetStructure
+  slideData?: SlideDeckStructure
+  pdfData?: PdfDocumentStructure
+}

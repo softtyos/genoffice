@@ -11,8 +11,10 @@ import {
 import * as DocumentPicker from 'expo-document-picker'
 import { DesktopPeer } from '../types'
 import { SofttyDropService } from '../services/softtyDrop'
+import { useApp } from '../context/AppContext'
 
 export function DropScreen() {
+  const { theme, t } = useApp()
   const [peers, setPeers] = useState<DesktopPeer[]>([])
   const [scanning, setScanning] = useState(false)
   const [selectedPeer, setSelectedPeer] = useState<DesktopPeer | null>(null)
@@ -38,7 +40,7 @@ export function DropScreen() {
 
   const handlePickAndSend = async () => {
     if (!selectedPeer) {
-      Alert.alert('Chưa chọn thiết bị', 'Vui lòng chọn một máy tính để gửi file.')
+      Alert.alert(t.common.error, t.drop.selectPeer)
       return
     }
 
@@ -65,12 +67,12 @@ export function DropScreen() {
       )
 
       if (result.success) {
-        Alert.alert('Thành công', `Đã bắn file "${file.name}" sang ${selectedPeer.name}!`)
+        Alert.alert(t.common.success, t.drop.sendSuccess)
       } else {
-        Alert.alert('Thông báo', result.message)
+        Alert.alert(t.common.error, result.message)
       }
     } catch (err: any) {
-      Alert.alert('Lỗi', err.message || 'Không thể chọn hoặc gửi file.')
+      Alert.alert(t.common.error, err.message || 'Không thể chọn hoặc gửi file.')
     } finally {
       setTransferring(false)
       setProgress(0)
@@ -78,26 +80,40 @@ export function DropScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Softty Drop</Text>
-        <Text style={styles.subtitle}>Bắn file 1-chạm sang máy tính trong mạng Wi-Fi</Text>
+    <View style={[styles.container, { backgroundColor: theme.bg }]}>
+      {/* Header */}
+      <View style={[styles.header, { backgroundColor: theme.bgSurface, borderBottomColor: theme.border }]}>
+        <View style={styles.brandRow}>
+          <View style={[styles.dropLogo, { backgroundColor: `${theme.cyan}20` }]}>
+            <Text style={styles.dropLogoIcon}>📡</Text>
+          </View>
+          <View>
+            <Text style={[styles.title, { color: theme.textPrimary }]}>{t.drop.title}</Text>
+            <Text style={[styles.subtitle, { color: theme.textMuted }]}>{t.drop.subtitle}</Text>
+          </View>
+        </View>
       </View>
 
-      <View style={styles.section}>
+      <View style={styles.content}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>MÁY TÍNH LÂN CẬN</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>{t.drop.selectPeer}</Text>
           <TouchableOpacity onPress={scan} disabled={scanning}>
-            <Text style={styles.refreshText}>{scanning ? 'Đang quét...' : 'Làm mới'}</Text>
+            <Text style={[styles.refreshText, { color: theme.primary }]}>
+              {scanning ? t.common.loading : t.drop.refresh}
+            </Text>
           </TouchableOpacity>
         </View>
 
         {scanning ? (
-          <ActivityIndicator color="#06b6d4" style={{ marginVertical: 20 }} />
+          <ActivityIndicator color={theme.cyan} style={{ marginVertical: 30 }} />
         ) : peers.length === 0 ? (
-          <View style={styles.emptyCard}>
-            <Text style={styles.emptyText}>Chưa tìm thấy máy tính nào đang mở Softty Office.</Text>
-            <Text style={styles.emptySubText}>Đảm bảo máy tính và điện thoại kết nối cùng mạng Wi-Fi.</Text>
+          <View style={[styles.emptyCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
+            <Text style={styles.emptyIcon}>📡</Text>
+            <Text style={[styles.emptyText, { color: theme.textPrimary }]}>{t.drop.noPeers}</Text>
+            <Text style={[styles.emptySubText, { color: theme.textMuted }]}>{t.drop.noPeersSub}</Text>
+            <TouchableOpacity onPress={scan} style={[styles.retryBtn, { backgroundColor: theme.primary }]}>
+              <Text style={styles.retryBtnText}>{t.drop.refresh}</Text>
+            </TouchableOpacity>
           </View>
         ) : (
           <FlatList
@@ -107,40 +123,68 @@ export function DropScreen() {
               const isSelected = selectedPeer?.id === item.id
               return (
                 <TouchableOpacity
-                  style={[styles.peerCard, isSelected && styles.peerCardActive]}
+                  style={[
+                    styles.peerCard,
+                    {
+                      backgroundColor: theme.bgSurface,
+                      borderColor: isSelected ? theme.primary : theme.border,
+                    },
+                    isSelected && { borderWidth: 2 },
+                  ]}
                   onPress={() => setSelectedPeer(item)}
+                  activeOpacity={0.8}
                 >
-                  <View style={styles.peerIcon}>
+                  <View style={[styles.peerIcon, { backgroundColor: isSelected ? `${theme.primary}20` : theme.bgElevated }]}>
                     <Text style={styles.peerIconText}>💻</Text>
                   </View>
                   <View style={{ flex: 1 }}>
-                    <Text style={styles.peerName}>{item.name}</Text>
-                    <Text style={styles.peerMeta}>{item.ip}:{item.port} • Sẵn sàng nhận</Text>
+                    <Text style={[styles.peerName, { color: theme.textPrimary }]}>{item.name}</Text>
+                    <Text style={[styles.peerMeta, { color: theme.textMuted }]}>
+                      {item.ip}:{item.port} • Sẵn sàng kết nối
+                    </Text>
                   </View>
-                  {isSelected && <Text style={styles.selectedBadge}>Đã chọn</Text>}
+                  {isSelected && (
+                    <View style={[styles.selectedBadge, { backgroundColor: theme.primary }]}>
+                      <Text style={styles.selectedBadgeText}>✓</Text>
+                    </View>
+                  )}
                 </TouchableOpacity>
               )
             }}
           />
         )}
-      </View>
 
-      <View style={styles.actionSection}>
-        <TouchableOpacity
-          style={[styles.sendButton, (!selectedPeer || transferring) && styles.sendButtonDisabled]}
-          onPress={handlePickAndSend}
-          disabled={!selectedPeer || transferring}
-        >
-          {transferring ? (
-            <ActivityIndicator color="#ffffff" />
-          ) : (
-            <Text style={styles.sendButtonText}>🚀 Chọn File & Bắn Sang Máy Tính</Text>
+        <View style={styles.actionSection}>
+          <TouchableOpacity
+            style={[
+              styles.sendButton,
+              { backgroundColor: theme.primary },
+              (!selectedPeer || transferring) && { opacity: 0.5 },
+            ]}
+            onPress={handlePickAndSend}
+            disabled={!selectedPeer || transferring}
+            activeOpacity={0.8}
+          >
+            {transferring ? (
+              <ActivityIndicator color="#ffffff" />
+            ) : (
+              <Text style={styles.sendButtonText}>🚀 {t.drop.pickAndSend}</Text>
+            )}
+          </TouchableOpacity>
+
+          {transferring && (
+            <Text style={[styles.progressText, { color: theme.cyan }]}>
+              {t.drop.sending} {Math.round(progress * 100)}%
+            </Text>
           )}
-        </TouchableOpacity>
 
-        {transferring && (
-          <Text style={styles.progressText}>Đang truyền dữ liệu: {Math.round(progress * 100)}%</Text>
-        )}
+          <View style={[styles.infoBanner, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}>
+            <Text style={styles.infoBannerIcon}>🔒</Text>
+            <Text style={[styles.infoBannerText, { color: theme.textMuted }]}>
+              {t.drop.listening}
+            </Text>
+          </View>
+        </View>
       </View>
     </View>
   )
@@ -149,135 +193,165 @@ export function DropScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0e1322',
-    padding: 20,
   },
   header: {
-    marginTop: 40,
-    marginBottom: 24,
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+  },
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  dropLogo: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dropLogoIcon: {
+    fontSize: 22,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#ffffff',
+    fontSize: 20,
+    fontWeight: '800',
+    letterSpacing: -0.3,
   },
   subtitle: {
-    fontSize: 14,
-    color: '#94a3b8',
-    marginTop: 4,
+    fontSize: 12,
+    marginTop: 2,
   },
-  section: {
+  content: {
     flex: 1,
+    padding: 20,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 14,
   },
   sectionTitle: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#64748b',
-    letterSpacing: 1,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   refreshText: {
-    fontSize: 13,
-    color: '#06b6d4',
+    fontSize: 12,
     fontWeight: '600',
+  },
+  emptyCard: {
+    padding: 28,
+    borderRadius: 16,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+  },
+  emptyIcon: {
+    fontSize: 36,
+    marginBottom: 10,
+  },
+  emptyText: {
+    fontSize: 14,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: 6,
+  },
+  emptySubText: {
+    fontSize: 12,
+    textAlign: 'center',
+    lineHeight: 18,
+    marginBottom: 16,
+  },
+  retryBtn: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  retryBtnText: {
+    color: '#ffffff',
+    fontSize: 12,
+    fontWeight: '700',
   },
   peerCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#131b2e',
+    padding: 14,
     borderRadius: 14,
-    padding: 16,
-    marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#1e293b',
-  },
-  peerCardActive: {
-    borderColor: '#2563eb',
-    backgroundColor: '#162238',
+    marginBottom: 10,
+    gap: 12,
   },
   peerIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: '#1e293b',
-    justifyContent: 'center',
+    width: 42,
+    height: 42,
+    borderRadius: 10,
     alignItems: 'center',
-    marginRight: 14,
+    justifyContent: 'center',
   },
   peerIconText: {
-    fontSize: 22,
+    fontSize: 20,
   },
   peerName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '700',
   },
   peerMeta: {
-    fontSize: 12,
-    color: '#94a3b8',
+    fontSize: 11,
     marginTop: 2,
   },
   selectedBadge: {
-    fontSize: 11,
-    color: '#06b6d4',
-    fontWeight: '700',
-    backgroundColor: 'rgba(6, 182, 212, 0.15)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  emptyCard: {
-    backgroundColor: '#131b2e',
-    borderRadius: 14,
-    padding: 24,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#1e293b',
+    justifyContent: 'center',
   },
-  emptyText: {
-    color: '#f8fafc',
-    fontSize: 14,
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  emptySubText: {
-    color: '#64748b',
-    fontSize: 12,
-    marginTop: 6,
-    textAlign: 'center',
+  selectedBadgeText: {
+    color: '#ffffff',
+    fontSize: 13,
+    fontWeight: '900',
   },
   actionSection: {
-    paddingVertical: 16,
+    marginTop: 'auto',
+    paddingTop: 16,
+    gap: 12,
   },
   sendButton: {
-    backgroundColor: '#2563eb',
-    borderRadius: 14,
-    paddingVertical: 16,
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
-    shadowColor: '#2563eb',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  sendButtonDisabled: {
-    opacity: 0.5,
+    justifyContent: 'center',
   },
   sendButtonText: {
     color: '#ffffff',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '700',
   },
   progressText: {
-    textAlign: 'center',
-    color: '#06b6d4',
     fontSize: 12,
-    marginTop: 10,
+    textAlign: 'center',
     fontWeight: '600',
+  },
+  infoBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 10,
+  },
+  infoBannerIcon: {
+    fontSize: 14,
+  },
+  infoBannerText: {
+    fontSize: 11,
+    flex: 1,
+    lineHeight: 16,
   },
 })

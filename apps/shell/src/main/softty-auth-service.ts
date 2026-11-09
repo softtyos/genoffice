@@ -126,7 +126,7 @@ function renderLoopbackCallbackHtml(isSuccess: boolean, errorMessage?: string): 
     <h1>${isSuccess ? 'Đăng Nhập Thành Công!' : 'Đăng Nhập Thất Bại'}</h1>
     <p>${
       isSuccess
-        ? 'Bạn đã xác thực an toàn bằng tài khoản Softty ID. Ứng dụng Softty Office trên máy tính đang tự động mở và cập nhật phiên làm việc của bạn.'
+        ? 'Bạn đã xác thực an toàn bằng Softty Account. Ứng dụng Softty Office trên máy tính đang tự động mở và cập nhật phiên làm việc của bạn.'
         : errorMessage || 'Đã có lỗi xảy ra trong quá trình xác thực. Vui lòng quay lại ứng dụng và thử lại.'
     }</p>
     <div class="tip">Bạn có thể đóng tab trình duyệt này để tiếp tục làm việc.</div>

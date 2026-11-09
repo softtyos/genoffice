@@ -6,11 +6,33 @@ release/
 .expo/
 *.log
 .DS_Store
+Thumbs.db
+*.swp
+*.swo
 .refs/
 .env
 .env.*
+!.env.example
 electron-builder.env
 ~$*
+
+# TypeScript & Cache
+*.tsbuildinfo
+.turbo/
+target/
+apps/landing/AGENTS.md
+
+# Mobile (Expo / React Native)
+*.apk
+*.aab
+*.ipa
+.gradle/
+/apps/mobile/android/
+/apps/mobile/ios/
+
+# Test & Coverage
+coverage/
+.nyc_output/
 
 # Local ad-hoc e2e driver scripts (not pushed); the folder and README are tracked, the scripts are not
 /scripts/drivers/driver.*.mjs

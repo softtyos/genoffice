@@ -1,0 +1,31 @@
+<svg width="1160" height="240" viewBox="0 0 1160 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="softty_bg" x1="16" y1="12" x2="224" y2="228" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="52%" stop-color="#4F46E5"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="softty_shine" x1="40" y1="20" x2="180" y2="140" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="softty_star" x1="156" y1="32" x2="208" y2="84" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#BAE6FD"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="224" height="224" rx="54" fill="url(#softty_bg)"/>
+  <path d="M62 8H178C207.823 8 232 32.1766 232 62V112C182 132 108 118 8 88V62C8 32.1766 32.1766 8 62 8Z" fill="url(#softty_shine)"/>
+  <path
+    d="M142 70H92C54 70 52 116 94 124C118 128.5 122 130 132 133C168 142 166 186 124 186H68"
+    stroke="#FFFFFF"
+    stroke-width="30"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M182 32C185.4 50.2 189.8 54.6 208 58C189.8 61.4 185.4 65.8 182 84C178.6 65.8 174.2 61.4 156 58C174.2 54.6 178.6 50.2 182 32Z"
+    fill="url(#softty_star)"
+  />
+  <text x="284" y="166" fill="#0F172A" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Inter, Roboto, Helvetica, Arial, sans-serif" font-size="132" font-weight="800" letter-spacing="-3.5">Softty <tspan fill="#2563EB">Office</tspan></text>
+</svg>

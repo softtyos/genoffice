@@ -2011,10 +2011,10 @@ export function SettingsModal({
           <div className={'set-pane' + (section === 'aiModel' ? ' set-pane-ai-model' : '')}>
             {section === 'account' && (
               <>
-                <h3 className="set-pane-title">Tài Khoản Softty ID</h3>
+                <h3 className="set-pane-title">Softty Account</h3>
                 <Field
                   label={t('setEmail')}
-                  value={loggedIn ? email : 'Chưa đăng nhập tài khoản Softty.net'}
+                  value={loggedIn ? email : 'Chưa đăng nhập Softty Account'}
                 />
                 {loggedIn && status?.name && (
                   <Field label="Tên người dùng" value={status.name} />
@@ -2038,7 +2038,7 @@ export function SettingsModal({
                     </button>
                   ) : (
                     <button className="set-btn primary" onClick={onLogin}>
-                      Đăng Nhập Softty.net
+                      {t('login')}
                     </button>
                   )}
                 </div>

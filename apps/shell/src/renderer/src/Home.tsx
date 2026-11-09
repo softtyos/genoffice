@@ -772,6 +772,8 @@ function AccountEntry({
 }) {
   const { t } = useI18n()
   const [status, setStatus] = useState<AccountStatus | null>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [appVersion, setAppVersion] = useState<string>('')
 
   useEffect(() => {
     onStatusChange?.(status)
@@ -793,16 +795,32 @@ function AccountEntry({
   // report logged-in) is discarded instead of resurrecting the UI
   const statusSeq = useRef(0)
 
-  // query login state once on mount
+  // query login state & app version on mount
   useEffect(() => {
     let alive = true
     void window.aiOffice.accountStatus?.().then((s) => {
       if (alive) setStatus(s)
     })
+    void window.aiOffice.getAppVersion?.().then((v) => {
+      if (alive && v) setAppVersion(v)
+    })
     return () => {
       alive = false
     }
   }, [])
+
+  // close the menu on outside click
+  useEffect(() => {
+    if (!menuOpen) return
+    const handler = (e: PointerEvent) => {
+      const target = e.target as Element | null
+      if (!target?.closest?.('.account-entry')) {
+        setMenuOpen(false)
+      }
+    }
+    window.addEventListener('pointerdown', handler)
+    return () => window.removeEventListener('pointerdown', handler)
+  }, [menuOpen])
 
   // the skill state is a few file reads; re-probe after the modal closes so an
   // update done inside it clears the dot
@@ -884,13 +902,14 @@ function AccountEntry({
   }
 
   const startLogin = () => {
-    // clicking again while waiting = relaunch the login (main kills the stale CLI, so the new device code is the live one)
+    // clicking again while waiting = relaunch the login
     setLoginError(null)
     setWaiting(true)
     setAuthUrl(null)
     setUrlCopied(false)
     loginDeadline.current = Date.now() + LOGIN_MAX_WAIT_MS
     setLoginNonce((n) => n + 1)
+    setMenuOpen(false)
     void window.aiOffice.accountLogin().then((launched) => {
       if (!launched) {
         setWaiting(false)
@@ -920,7 +939,7 @@ function AccountEntry({
     setTarget(to)
     setSettingsOpen(true)
   }, [])
-  const handleClick = () => openSettings(null)
+  const handleClick = () => setMenuOpen((v) => !v)
   useEffect(() => {
     if (openRequest) openSettings(openRequest)
   }, [openRequest, openSettings])
@@ -994,19 +1013,112 @@ function AccountEntry({
           </button>
         </div>
       )}
+      {/* Floating account menu popup */}
+      {menuOpen && (
+        <div className="account-menu" role="menu">
+          {loggedIn ? (
+            <div className="account-menu-profile">
+              <div className="account-menu-profile-avatar">{initial}</div>
+              <div className="account-menu-profile-text">
+                <span className="account-menu-profile-name">
+                  {status?.name || (email ? email.split('@')[0] : t('loggedIn'))}
+                </span>
+                <span className="account-menu-profile-email" title={email}>
+                  {email}
+                </span>
+              </div>
+              <span className="account-tier-badge">{(status?.tier || 'PRO').toUpperCase()}</span>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="account-menu-item account-menu-login-action"
+              role="menuitem"
+              onClick={startLogin}
+            >
+              <div className="account-menu-login-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                  <polyline points="10 17 15 12 10 7"/>
+                  <line x1="15" y1="12" x2="3" y2="12"/>
+                </svg>
+              </div>
+              <div className="account-menu-login-labels">
+                <span className="account-menu-login-title">{t('login')}</span>
+                <span className="account-menu-login-subtitle">Softty Account</span>
+              </div>
+            </button>
+          )}
+
+          <div className="account-menu-divider" />
+
+          <button
+            type="button"
+            className="account-menu-item"
+            role="menuitem"
+            onClick={() => {
+              setMenuOpen(false)
+              openSettings(loggedIn ? { section: 'account' } : null)
+            }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span>{t('settings')}</span>
+          </button>
+
+          {appVersion && (
+            <div className="account-menu-version">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <circle cx="8" cy="8" r="6.3" stroke="currentColor" strokeWidth="1.2" />
+                <path d="M8 7.4v3.4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                <circle cx="8" cy="5.1" r="0.8" fill="currentColor" />
+              </svg>
+              <span>Softty Office v{appVersion}</span>
+            </div>
+          )}
+
+          {loggedIn && (
+            <>
+              <div className="account-menu-divider" />
+              <button
+                type="button"
+                className="account-menu-item danger"
+                role="menuitem"
+                disabled={loggingOut}
+                onClick={() => {
+                  setMenuOpen(false)
+                  doLogout()
+                }}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                <span>{loggingOut ? t('loggingOut') : t('logout')}</span>
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Main unified account button in sidebar */}
       <button
+        type="button"
         className="account-btn"
         onClick={handleClick}
-        aria-haspopup="dialog"
-        aria-expanded={settingsOpen}
+        aria-haspopup="menu"
+        aria-expanded={menuOpen}
         data-tip={
           loggedIn
-            ? email || t('loggedInGenspark')
+            ? email
             : waiting
               ? t('waitingLogin')
-              : (errorText ?? t('settings'))
+              : (errorText ?? 'Đăng nhập Softty Account')
         }
-        aria-label={t('settings')}
+        aria-label={loggedIn ? t('account') : t('login')}
       >
         <span
           className={`account-avatar${loggedIn ? ' logged-in' : ''}${waiting ? ' waiting' : ''}`}
@@ -1031,8 +1143,13 @@ function AccountEntry({
                 strokeLinecap="round"
               />
             </svg>
-          ) : (
+          ) : loggedIn ? (
             initial
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
           )}
           {skillUpdate && (
             <span className="account-badge" role="img" aria-label={t('intgUpdateDue')} />
@@ -1046,28 +1163,21 @@ function AccountEntry({
                 : t('loggedIn')
               : waiting
                 ? t('waitingShort')
-                : t('settings')}
+                : t('login')}
           </span>
-          {!loggedIn && !waiting && errorText && (
-            <span className="account-sub error">{errorText}</span>
-          )}
+          <span className={`account-sub${!waiting && errorText ? ' error' : ''}`}>
+            {loggedIn
+              ? email
+              : waiting
+                ? t('waitingLogin')
+                : errorText
+                  ? errorText
+                  : 'Softty Account'}
+          </span>
         </span>
-        <svg
-          className="account-chevron"
-          width="14"
-          height="14"
-          viewBox="0 0 16 16"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="M5 6.2 8 3.4l3 2.8M5 9.8l3 2.8 3-2.8"
-            stroke="currentColor"
-            strokeWidth="1.4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        {loggedIn && (
+          <span className="account-tier-badge">{(status?.tier || 'PRO').toUpperCase()}</span>
+        )}
       </button>
     </div>
   )
