@@ -1,0 +1,21 @@
+#!/bin/sh
+# Softty Office - Git pre-commit hook
+# Automatically increments version across monorepo and mobile on commit.
+
+if [ "$SKIP_BUMP" = "1" ] || [ "$NO_BUMP" = "1" ]; then
+  exit 0
+fi
+
+# Skip during merge or rebase
+if [ -d ".git/rebase-merge" ] || [ -d ".git/rebase-apply" ] || [ -f ".git/MERGE_HEAD" ]; then
+  exit 0
+fi
+
+# Check if there are staged changes
+if git diff --cached --quiet; then
+  exit 0
+fi
+
+# Auto-increment version and stage version files
+echo "⚡ [pre-commit] Auto-incrementing version (desktop & mobile)..."
+node tools/bump-version.mjs --stage

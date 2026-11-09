@@ -3,10 +3,13 @@
     "name": "Softty Office",
     "slug": "softty-office",
     "scheme": "softty-office",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "net.softty.office.mobile",
@@ -15,11 +18,12 @@
         "NSCameraUsageDescription": "Softty Office cần quyền truy cập camera để quét tài liệu, hóa đơn chuyển thành file PDF.",
         "NSPhotoLibraryUsageDescription": "Softty Office cần quyền truy cập thư viện ảnh để chọn ảnh tài liệu cần gửi sang máy tính.",
         "NSLocalNetworkUsageDescription": "Softty Office cần quyền truy cập mạng cục bộ để tự động tìm kiếm máy tính trong cùng mạng Wi-Fi (Softty Drop)."
-      }
+      },
+      "buildNumber": "1"
     },
     "android": {
       "package": "net.softty.office.mobile",
-      "versionCode": 1,
+      "versionCode": 2,
       "permissions": [
         "INTERNET",
         "ACCESS_NETWORK_STATE",

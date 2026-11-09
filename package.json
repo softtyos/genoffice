@@ -1,7 +1,7 @@
 {
   "name": "@softty/monorepo",
   "productName": "Softty Office",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Softty Office — AI-native office suite (docs, sheets, slides, pdf, markdown, html)",
   "license": "Apache-2.0",
@@ -19,7 +19,12 @@
     "packages/*"
   ],
   "scripts": {
-    "postinstall": "node tools/ensure-electron.mjs",
+    "prepare": "git config core.hooksPath .githooks || true",
+    "version:bump": "node tools/bump-version.mjs",
+    "version:patch": "node tools/bump-version.mjs --patch",
+    "version:minor": "node tools/bump-version.mjs --minor",
+    "version:major": "node tools/bump-version.mjs --major",
+    "postinstall": "git config core.hooksPath .githooks 2>/dev/null || true && node tools/ensure-electron.mjs",
     "format": "node tools/format-changed.mjs --write",
     "format:check": "node tools/format-changed.mjs --check",
     "check:theme-colors": "node tools/check-theme-colors.mjs",
