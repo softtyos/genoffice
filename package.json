@@ -1,7 +1,7 @@
 {
   "name": "@softty/monorepo",
   "productName": "Softty Office",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "private": true,
   "description": "Softty Office — AI-native office suite (docs, sheets, slides, pdf, markdown, html)",
   "license": "Apache-2.0",

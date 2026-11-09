@@ -1,6 +1,6 @@
 {
   "name": "@softty/mobile",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "private": true,
   "description": "Softty Office Mobile Companion App (Softty Drop & Document Scanner)",
   "main": "index.ts",
