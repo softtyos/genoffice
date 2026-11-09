@@ -26,7 +26,7 @@ export function DropScreen() {
     try {
       const found = await SofttyDropService.scanNearbyDesktops()
       setPeers(found)
-      if (found.length > 0 && !selectedPeer) {
+      if (found.length > 0) {
         setSelectedPeer(found[0])
       }
     } finally {
@@ -34,32 +34,14 @@ export function DropScreen() {
     }
   }
 
-  const handleManualAddIp = () => {
-    Alert.prompt
-      ? Alert.prompt(
-          'Kết Nối Máy Tính (LAN P2P)',
-          'Nhập địa chỉ IP máy tính trong mạng Wi-Fi (ví dụ: 192.168.1.15 hoặc 127.0.0.1):',
-          async (ip) => {
-            if (ip && ip.trim()) {
-              const peer = await SofttyDropService.addCustomPeer(ip.trim())
-              setPeers((prev) => [peer, ...prev.filter((p) => p.ip !== peer.ip)])
-              setSelectedPeer(peer)
-              Alert.alert(t.common.success, `Đã kết nối mục tiêu: ${peer.name} (${peer.ip})`)
-            }
-          },
-          'plain-text',
-          '192.168.88.175'
-        )
-      : Alert.alert('Thêm IP', 'Vui lòng nhập IP máy tính.')
-  }
-
   useEffect(() => {
     scan()
   }, [])
 
   const handlePickAndSend = async () => {
-    if (!selectedPeer) {
-      Alert.alert(t.common.error, t.drop.selectPeer)
+    const target = selectedPeer || (peers.length > 0 ? peers[0] : null)
+    if (!target) {
+      Alert.alert(t.common.error, 'Chưa tìm thấy máy tính trong mạng Wi-Fi.')
       return
     }
 
@@ -75,10 +57,10 @@ export function DropScreen() {
 
       const file = res.assets[0]
       setTransferring(true)
-      setProgress(0.1)
+      setProgress(0.15)
 
       const result = await SofttyDropService.sendFileToDesktop(
-        selectedPeer,
+        target,
         file.uri,
         file.name,
         file.mimeType || 'application/octet-stream',
@@ -86,7 +68,7 @@ export function DropScreen() {
       )
 
       if (result.success) {
-        Alert.alert(t.common.success, t.drop.sendSuccess)
+        Alert.alert(t.common.success, result.message || 'Đã bắn tệp sang máy tính thành công!')
       } else {
         Alert.alert(t.common.error, result.message)
       }
@@ -114,93 +96,108 @@ export function DropScreen() {
       </View>
 
       <View style={styles.content}>
-        <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>{t.drop.selectPeer}</Text>
-          <View style={{ flexDirection: 'row', gap: 14, alignItems: 'center' }}>
-            <TouchableOpacity onPress={handleManualAddIp} activeOpacity={0.7}>
-              <Text style={[styles.refreshText, { color: theme.cyan }]}>+ Thêm IP</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={scan} disabled={scanning} activeOpacity={0.7}>
-              <Text style={[styles.refreshText, { color: theme.primary }]}>
-                {scanning ? t.common.loading : t.drop.refresh}
-              </Text>
-            </TouchableOpacity>
+        {/* AirDrop Style Radar Animation Card */}
+        <View style={[styles.radarCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
+          <View style={[styles.radarOuterRing, { borderColor: `${theme.cyan}25` }]}>
+            <View style={[styles.radarMiddleRing, { borderColor: `${theme.cyan}45` }]}>
+              <View style={[styles.radarCenterCircle, { backgroundColor: theme.cyan }]}>
+                <Text style={styles.radarIcon}>📡</Text>
+              </View>
+            </View>
           </View>
+
+          <Text style={[styles.radarHeadline, { color: theme.textPrimary }]}>
+            {scanning ? 'Đang tự động dò tìm máy tính...' : 'Đã kết nối tự động (Zero-Config)'}
+          </Text>
+          <Text style={[styles.radarDescription, { color: theme.textMuted }]}>
+            Giao thức P2P Wi-Fi cục bộ • Không qua máy chủ trung gian
+          </Text>
+
+          <TouchableOpacity
+            onPress={scan}
+            disabled={scanning}
+            style={[styles.rescanPill, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
+          >
+            <Text style={[styles.rescanText, { color: theme.primary }]}>
+              {scanning ? '🔄 Đang quét mạng...' : '🔄 Quét lại mạng'}
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        {scanning ? (
-          <ActivityIndicator color={theme.cyan} style={{ marginVertical: 30 }} />
-        ) : peers.length === 0 ? (
-          <View style={[styles.emptyCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
-            <Text style={styles.emptyIcon}>📡</Text>
-            <Text style={[styles.emptyText, { color: theme.textPrimary }]}>{t.drop.noPeers}</Text>
-            <Text style={[styles.emptySubText, { color: theme.textMuted }]}>{t.drop.noPeersSub}</Text>
-            <TouchableOpacity onPress={scan} style={[styles.retryBtn, { backgroundColor: theme.primary }]}>
-              <Text style={styles.retryBtnText}>{t.drop.refresh}</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <FlatList
-            data={peers}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => {
-              const isSelected = selectedPeer?.id === item.id
-              return (
-                <TouchableOpacity
-                  style={[
-                    styles.peerCard,
-                    {
-                      backgroundColor: theme.bgSurface,
-                      borderColor: isSelected ? theme.primary : theme.border,
-                    },
-                    isSelected && { borderWidth: 2 },
-                  ]}
-                  onPress={() => setSelectedPeer(item)}
-                  activeOpacity={0.8}
-                >
-                  <View style={[styles.peerIcon, { backgroundColor: isSelected ? `${theme.primary}20` : theme.bgElevated }]}>
-                    <Text style={styles.peerIconText}>💻</Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.peerName, { color: theme.textPrimary }]}>{item.name}</Text>
-                    <Text style={[styles.peerMeta, { color: theme.textMuted }]}>
-                      {item.ip}:{item.port} • Sẵn sàng kết nối
-                    </Text>
-                  </View>
-                  {isSelected && (
-                    <View style={[styles.selectedBadge, { backgroundColor: theme.primary }]}>
-                      <Text style={styles.selectedBadgeText}>✓</Text>
-                    </View>
-                  )}
-                </TouchableOpacity>
-              )
-            }}
-          />
-        )}
+        {/* Section Header */}
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>MÁY TÍNH TIẾP NHẬN (P2P)</Text>
+          <Text style={[styles.autoBadge, { color: theme.emerald }]}>● Tự động ghép đôi</Text>
+        </View>
 
+        {/* Peers List */}
+        <FlatList
+          data={peers}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => {
+            const isSelected = selectedPeer?.id === item.id || (!selectedPeer && peers[0]?.id === item.id)
+            return (
+              <TouchableOpacity
+                style={[
+                  styles.peerCard,
+                  {
+                    backgroundColor: theme.bgSurface,
+                    borderColor: isSelected ? theme.primary : theme.border,
+                  },
+                  isSelected && { borderWidth: 2 },
+                ]}
+                onPress={() => setSelectedPeer(item)}
+                activeOpacity={0.8}
+              >
+                <View style={[styles.peerIcon, { backgroundColor: isSelected ? `${theme.primary}20` : theme.bgElevated }]}>
+                  <Text style={styles.peerIconText}>💻</Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <View style={styles.peerTitleRow}>
+                    <Text style={[styles.peerName, { color: theme.textPrimary }]}>{item.name}</Text>
+                    <View style={[styles.onlineBadge, { backgroundColor: `${theme.emerald}20` }]}>
+                      <Text style={[styles.onlineText, { color: theme.emerald }]}>Sẵn sàng</Text>
+                    </View>
+                  </View>
+                  <Text style={[styles.peerMeta, { color: theme.textMuted }]}>
+                    Mạng Wi-Fi nội bộ • Cổng {item.port} • Tốc độ tối đa
+                  </Text>
+                </View>
+                {isSelected && (
+                  <View style={[styles.selectedBadge, { backgroundColor: theme.primary }]}>
+                    <Text style={styles.selectedBadgeText}>✓</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            )
+          }}
+        />
+
+        {/* Action Bottom Section */}
         <View style={styles.actionSection}>
           <TouchableOpacity
             style={[
               styles.sendButton,
               { backgroundColor: theme.primary },
-              (!selectedPeer || transferring) && { opacity: 0.5 },
+              transferring && { opacity: 0.7 },
             ]}
             onPress={handlePickAndSend}
-            disabled={!selectedPeer || transferring}
+            disabled={transferring}
             activeOpacity={0.8}
           >
             {transferring ? (
-              <ActivityIndicator color="#ffffff" />
+              <View style={styles.transferringRow}>
+                <ActivityIndicator color="#ffffff" size="small" />
+                <Text style={styles.sendButtonText}>
+                  Đang bắn tệp... {Math.round(progress * 100)}%
+                </Text>
+              </View>
             ) : (
-              <Text style={styles.sendButtonText}>🚀 {t.drop.pickAndSend}</Text>
+              <Text style={styles.sendButtonText}>
+                🚀 Bắn Tệp Sang {selectedPeer?.name?.replace(/\s*\(.*\)/, '') || 'Máy Tính'}
+              </Text>
             )}
           </TouchableOpacity>
-
-          {transferring && (
-            <Text style={[styles.progressText, { color: theme.cyan }]}>
-              {t.drop.sending} {Math.round(progress * 100)}%
-            </Text>
-          )}
 
           <View style={[styles.infoBanner, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}>
             <Text style={styles.infoBannerIcon}>🔒</Text>
@@ -250,56 +247,82 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 20,
+    padding: 16,
+  },
+  radarCard: {
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    borderWidth: 1,
+    marginBottom: 18,
+  },
+  radarOuterRing: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  radarMiddleRing: {
+    width: 74,
+    height: 74,
+    borderRadius: 37,
+    borderWidth: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  radarCenterCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#06b6d4',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+  },
+  radarIcon: {
+    fontSize: 22,
+  },
+  radarHeadline: {
+    fontSize: 15,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  radarDescription: {
+    fontSize: 11,
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+  rescanPill: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  rescanText: {
+    fontSize: 11,
+    fontWeight: '700',
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 14,
+    marginBottom: 10,
+    paddingHorizontal: 4,
   },
   sectionTitle: {
-    fontSize: 12,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 0.8,
   },
-  refreshText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  emptyCard: {
-    padding: 28,
-    borderRadius: 16,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 10,
-  },
-  emptyIcon: {
-    fontSize: 36,
-    marginBottom: 10,
-  },
-  emptyText: {
-    fontSize: 14,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: 6,
-  },
-  emptySubText: {
-    fontSize: 12,
-    textAlign: 'center',
-    lineHeight: 18,
-    marginBottom: 16,
-  },
-  retryBtn: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  retryBtnText: {
-    color: '#ffffff',
-    fontSize: 12,
+  autoBadge: {
+    fontSize: 11,
     fontWeight: '700',
   },
   peerCard: {
@@ -312,22 +335,37 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   peerIcon: {
-    width: 42,
-    height: 42,
-    borderRadius: 10,
+    width: 44,
+    height: 44,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
   peerIconText: {
-    fontSize: 20,
+    fontSize: 22,
+  },
+  peerTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   peerName: {
     fontSize: 14,
     fontWeight: '700',
+    flex: 1,
+  },
+  onlineBadge: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  onlineText: {
+    fontSize: 10,
+    fontWeight: '800',
   },
   peerMeta: {
     fontSize: 11,
-    marginTop: 2,
+    marginTop: 3,
   },
   selectedBadge: {
     width: 24,
@@ -343,39 +381,39 @@ const styles = StyleSheet.create({
   },
   actionSection: {
     marginTop: 'auto',
-    paddingTop: 16,
-    gap: 12,
+    paddingTop: 12,
+    gap: 10,
   },
   sendButton: {
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  transferringRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   sendButtonText: {
     color: '#ffffff',
     fontSize: 14,
-    fontWeight: '700',
-  },
-  progressText: {
-    fontSize: 12,
-    textAlign: 'center',
-    fontWeight: '600',
+    fontWeight: '800',
   },
   infoBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
-    borderRadius: 12,
+    padding: 10,
+    borderRadius: 10,
     borderWidth: 1,
-    gap: 10,
+    gap: 8,
   },
   infoBannerIcon: {
-    fontSize: 14,
+    fontSize: 13,
   },
   infoBannerText: {
     fontSize: 11,
     flex: 1,
-    lineHeight: 16,
+    lineHeight: 15,
   },
 })
