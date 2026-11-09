@@ -57,6 +57,7 @@ export default defineConfig({
     plugins: [
       externalizeDepsPlugin({
         exclude: [
+          'undici',
           '@softty/pptx-engine',
           '@softty/pptx-ops',
           '@softty/pptx-render',

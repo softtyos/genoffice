@@ -111,6 +111,7 @@ jobs:
         run: pnpm --filter @softty/sheets run native:build
 
       - name: Package Desktop Installer (${{ matrix.platform }})
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GENOFFICE_UPDATE_URL: ${{ secrets.GENOFFICE_UPDATE_URL }}
@@ -142,9 +143,10 @@ jobs:
           if-no-files-found: warn
 
       - name: Release to GitHub
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && github.event.inputs.release_tag != '')
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
           files: |
             apps/shell/release/*.dmg
             apps/shell/release/*.zip

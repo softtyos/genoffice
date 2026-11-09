@@ -1,4 +1,6 @@
-import { EnvHttpProxyAgent, type Dispatcher } from 'undici'
+import { EnvHttpProxyAgent, setGlobalDispatcher, type Dispatcher } from 'undici'
+
+export { setGlobalDispatcher }
 
 /**
  * The NO_PROXY list the main-process dispatcher ships with: the caller's own
@@ -26,4 +28,12 @@ export async function createMainProcessProxyDispatcher(proxyUrl: string): Promis
     httpsProxy: proxyUrl,
     noProxy: mergeNoProxy(process.env.no_proxy ?? process.env.NO_PROXY),
   })
+}
+
+/**
+ * Convenience helper to configure undici's global dispatcher with the proxy URL.
+ */
+export async function applyMainProcessDispatcher(proxyUrl: string): Promise<void> {
+  const dispatcher = await createMainProcessProxyDispatcher(proxyUrl)
+  setGlobalDispatcher(dispatcher)
 }

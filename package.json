@@ -51,6 +51,7 @@
     "dist:linux": "npm run notices && npm run build:all && npm run dist:linux -w softty-office"
   },
   "dependencies": {
+    "undici": "^6.29.1",
     "ws": "^8.21.1"
   },
   "overrides": {

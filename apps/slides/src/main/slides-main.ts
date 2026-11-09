@@ -60,7 +60,7 @@ import {
   readLegacyImportSkip,
   writeLegacyImportSkip,
 } from '@softty/electron-utils'
-import { createMainProcessProxyDispatcher } from '@softty/electron-utils/main-proxy'
+import { createMainProcessProxyDispatcher, applyMainProcessDispatcher } from '@softty/electron-utils/main-proxy'
 import {
   resolveGroupChildId,
   runTxn,
@@ -5323,10 +5323,9 @@ async function applyMainProcessProxy(): Promise<void> {
     // dispatcher below — forward the proxy to them via env
     setGskProxyUrl(proxyUrl)
     try {
-      const { setGlobalDispatcher } = await import('undici')
       // loopback stays direct: a Custom provider on 127.0.0.1 must not ride
       // the proxy as an absolute-form request (genoffice#2084)
-      setGlobalDispatcher(await createMainProcessProxyDispatcher(proxyUrl))
+      await applyMainProcessDispatcher(proxyUrl)
       // strip user:pass credentials before logging
       console.log('[proxy] main-process fetch via', proxyUrl.replace(/\/\/[^@/]*@/, '//***@'))
     } catch (e) {

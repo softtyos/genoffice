@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      undici:
+        specifier: ^6.29.1
+        version: 6.29.1
       ws:
         specifier: ^8.21.1
         version: 8.22.1
@@ -670,6 +673,9 @@ importers:
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
+      undici:
+        specifier: ^6.29.1
+        version: 6.29.1
       zod:
         specifier: ^4.6.7
         version: 4.6.7
@@ -710,6 +716,9 @@ importers:
 
   apps/shell:
     devDependencies:
+      '@embedpdf/pdfium':
+        specifier: ^2.15.1
+        version: 2.15.1
       '@modelcontextprotocol/sdk':
         specifier: ^1.32.1
         version: 1.32.2(zod@4.6.7)
@@ -797,6 +806,9 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      undici:
+        specifier: ^6.29.1
+        version: 6.29.1
       vite:
         specifier: ^7.3.7
         version: 7.3.7(@types/node@26.6.6)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
@@ -903,6 +915,9 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      undici:
+        specifier: ^6.29.1
+        version: 6.29.1
       vite:
         specifier: ^7.3.7
         version: 7.3.7(@types/node@26.6.6)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)

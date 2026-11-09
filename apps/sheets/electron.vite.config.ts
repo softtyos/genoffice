@@ -10,6 +10,7 @@ export default defineConfig({
     plugins: [
       externalizeDepsPlugin({
         exclude: [
+          'undici',
           '@softty/ai-provider',
           '@softty/agent-core',
           '@softty/ai-search',
