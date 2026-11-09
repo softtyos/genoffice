@@ -97,6 +97,7 @@ export function Onboarding({ onDone }: OnboardingProps) {
   const finish = () => {
     if (submitting) return
     setSubmitting(true)
+    void window.aiOffice?.setDefaultApp?.().catch(() => {})
     void onDone()
       .catch(() => false)
       .finally(() => setSubmitting(false))

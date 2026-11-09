@@ -23,6 +23,12 @@ export const OFFICE_TYPES: readonly OfficeType[] = [
     progId: 'Word Document',
   },
   {
+    ext: 'doc',
+    uti: 'com.microsoft.word.doc',
+    mime: 'application/msword',
+    progId: 'Word 97-2003 Document',
+  },
+  {
     ext: 'xlsx',
     uti: 'org.openxmlformats.spreadsheetml.sheet',
     mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -46,9 +52,15 @@ export const OFFICE_TYPES: readonly OfficeType[] = [
     mime: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
     progId: 'PowerPoint Presentation',
   },
+  {
+    ext: 'pdf',
+    uti: 'com.adobe.pdf',
+    mime: 'application/pdf',
+    progId: 'PDF Document',
+  },
 ]
 
-const LINUX_DESKTOP_ID = 'genoffice.desktop'
+const LINUX_DESKTOP_ID = 'softty-office.desktop'
 const WINDOWS_DEFAULT_APPS_URL = 'ms-settings:defaultapps'
 
 export type RunCommand = (cmd: string, args: string[]) => Promise<string>
@@ -80,7 +92,7 @@ export function execFileRunner(cmd: string, args: string[]): Promise<string> {
   })
 }
 
-/** /Applications/GenOffice.app/Contents/MacOS/GenOffice → /Applications/GenOffice.app */
+/** /Applications/Softty Office.app/Contents/MacOS/Softty Office → /Applications/Softty Office.app */
 export function macAppBundlePath(exePath: string): string | null {
   let dir = exePath
   for (let i = 0; i < 6; i++) {
@@ -216,8 +228,9 @@ export function createDefaultAppService(deps: DefaultAppDeps): DefaultAppService
         return { ...st, others: st.others.map((id) => linuxDesktopName(id, readFile)) }
       }
       if (deps.platform === 'win32') {
-        const owners = await Promise.all(OFFICE_TYPES.map((t) => windowsOwner(t)))
-        const st = summarize(owners, (id) => OFFICE_TYPES.some((t) => t.progId === id))
+        const winTypes = OFFICE_TYPES.filter((t) => t.ext !== 'doc')
+        const owners = await Promise.all(winTypes.map((t) => windowsOwner(t)))
+        const st = summarize(owners, (id) => winTypes.some((t) => t.progId === id))
         const names = await Promise.all(st.others.map((id) => windowsProgIdName(id)))
         return { ...st, others: [...new Set(names)], manualOnly: true }
       }

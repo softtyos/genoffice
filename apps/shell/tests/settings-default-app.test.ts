@@ -115,7 +115,7 @@ describe('Settings default-app row', () => {
       getDefaultAppStatus: async () => ({ state: 'other', others: [], manualOnly: false }),
     })
     const field = row()!
-    expect(field.textContent).toContain('Open .docx, .xlsx and .pptx files in Softty Office')
+    expect(field.textContent).toContain('Open .docx, .xlsx, .pptx, .pdf and .doc files in Softty Office')
     expect(field.querySelector<HTMLButtonElement>('button')!.disabled).toBe(false)
   })
 

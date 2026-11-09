@@ -338,7 +338,7 @@ export const strings = {
     intgCliTitle: '高级：命令行 soffice',
     intgCliReady: 'soffice {v} · 已可在终端直接使用（{path}）',
     intgCliNotOnPath:
-      'soffice {v} · 尚未加入终端 PATH。助手仍能通过 ~/.softty-office/launcher 找到它，skill 不受影响。若想自己在终端输入 genoffice，运行一次：',
+      'soffice {v} · 尚未加入终端 PATH。助手仍能通过 ~/.softty-office/launcher 找到它，skill 不受影响。若想自己在终端输入 soffice，运行一次：',
     intgCliLauncher: '启动器目录',
     intgStateOutdated: '已安装 {v}，可更新到 {next}',
     intgStateModified: '已安装 {v}（已被修改）',
@@ -765,7 +765,7 @@ export const strings = {
     setLegacyImportPromptDesc:
       'Explain what carries over before opening .doc, .odt, .hwp, .ods or .odp files. When off, Save As opens right away.',
     setDefaultApp: 'Default app for Office documents',
-    setDefaultAppDesc: 'Open .docx, .xlsx and .pptx files in Softty Office when double-clicked.',
+    setDefaultAppDesc: 'Open .docx, .xlsx, .pptx, .pdf and .doc files in Softty Office when double-clicked.',
     setDefaultAppIs: 'Softty Office is already the default.',
     setDefaultAppOther: 'Current default: {app}',
     setDefaultAppSet: 'Make default',
@@ -872,7 +872,7 @@ export const strings = {
     intgCliTitle: 'Advanced: soffice command line',
     intgCliReady: 'soffice {v} · ready in your terminal ({path})',
     intgCliNotOnPath:
-      "soffice {v} · not on your terminal's PATH. Assistants still find it through ~/.softty-office/launcher, so the skill works. To type genoffice yourself, run this once:",
+      "soffice {v} · not on your terminal's PATH. Assistants still find it through ~/.softty-office/launcher, so the skill works. To type soffice yourself, run this once:",
     intgCliLauncher: 'Launcher folder',
     intgStateOutdated: 'Installed {v}, update to {next} available',
     intgStateModified: 'Installed {v} (modified)',
@@ -1303,7 +1303,7 @@ export const strings = {
     setLegacyImportPromptDesc:
       'Giải thích nội dung được giữ lại trước khi mở tệp .doc, .odt, .hwp, .ods hoặc .odp. Khi tắt, hộp thoại Lưu dưới dạng mở ngay.',
     setDefaultApp: 'Ứng dụng mặc định cho tài liệu Office',
-    setDefaultAppDesc: 'Mở các tệp .docx, .xlsx và .pptx bằng Softty Office khi bấm đúp.',
+    setDefaultAppDesc: 'Mở các tệp .docx, .xlsx, .pptx, .pdf và .doc bằng Softty Office khi bấm đúp.',
     setDefaultAppIs: 'Softty Office đã là ứng dụng mặc định.',
     setDefaultAppOther: 'Mặc định hiện tại: {app}',
     setDefaultAppSet: 'Đặt làm mặc định',
@@ -1932,7 +1932,7 @@ export const strings = {
       'Asistan Softty Office’i komut satırı veya MCP üzerinden kendisi çağırır; sizin yazmanız hiç gerekmez.',
     intgCliPartTitle: 'CLI · komut satırı + beceri',
     intgCliPartDesc:
-      'Terminal komutları çalıştırabilen asistanlar için (Claude Code, Codex, Cursor ve diğerleri). Beceri yüklendikten sonra asistan, dosya oluşturmak, dönüştürmek, okumak ve düzenlemek için genoffice komut satırını kendisi çağırır; siz hiç komut yazmazsınız.',
+      'Terminal komutları çalıştırabilen asistanlar için (Claude Code, Codex, Cursor ve diğerleri). Beceri yüklendikten sonra asistan, dosya oluşturmak, dönüştürmek, okumak ve düzenlemek için soffice komut satırını kendisi çağırır; siz hiç komut yazmazsınız.',
     intgMcpPartTitle: 'MCP',
     intgMcpPartDesc:
       'MCP, AI asistanlarının harici araçları çağırmak için kullandığı ortak protokoldür. Asistanınız komut çalıştıramıyorsa (örneğin Claude Desktop) ya da Softty Office penceresini doğrudan yönetmesini istiyorsanız kullanın. Aşağıdaki iki yoldan birini seçin.',
@@ -1950,10 +1950,10 @@ export const strings = {
       'Bunu MCP sunucu ayarlarına ekleyin (bir JSON dosyası ya da ayarlarındaki "MCP sunucusu ekle"):',
     intgMcpNote:
       'Beceri ve MCP yan yana kurulabilir; asistan birini seçer. İkisi de tamamen aynı şeyleri yapar.',
-    intgCliTitle: 'Gelişmiş: genoffice komut satırı',
+    intgCliTitle: 'Gelişmiş: soffice komut satırı',
     intgCliReady: 'soffice {v} · terminalinizde hazır ({path})',
     intgCliNotOnPath:
-      'soffice {v} · terminalinizin PATH’inde değil. Asistanlar onu yine de ~/.softty-office/launcher üzerinden bulur, bu yüzden beceri çalışır. genoffice’i kendiniz yazmak için bunu bir kez çalıştırın:',
+      'soffice {v} · terminalinizin PATH’inde değil. Asistanlar onu yine de ~/.softty-office/launcher üzerinden bulur, bu yüzden beceri çalışır. soffice’i kendiniz yazmak için bunu bir kez çalıştırın:',
     intgCliLauncher: 'Başlatıcı klasörü',
     intgStateOutdated: '{v} yüklü, {next} sürümüne güncelleme mevcut',
     intgStateModified: '{v} yüklü (değiştirilmiş)',
@@ -2489,7 +2489,7 @@ export const strings = {
       'アシスタントがコマンドラインまたは MCP 経由で Softty Office を自分で呼び出します。あなたが入力する必要はありません。',
     intgCliPartTitle: 'CLI · コマンドライン + skill',
     intgCliPartDesc:
-      'ターミナルコマンドを実行できるアシスタント（Claude Code、Codex、Cursor など）向け。skill をインストールすると、アシスタントが自分で genoffice コマンドラインを呼び出してファイルを作成・変換・読み取り・編集します。コマンドを入力する必要はありません。',
+      'ターミナルコマンドを実行できるアシスタント（Claude Code、Codex、Cursor など）向け。skill をインストールすると、アシスタントが自分で soffice コマンドラインを呼び出してファイルを作成・変換・読み取り・編集します。コマンドを入力する必要はありません。',
     intgMcpPartTitle: 'MCP',
     intgMcpPartDesc:
       'MCP は AI アシスタントが外部ツールを呼び出すための共通プロトコルです。アシスタントがコマンドを実行できない場合（Claude Desktop など）や、Softty Office のウィンドウを直接操作させたい場合に使います。下の 2 つの方法からどちらか 1 つを選んでください。',
@@ -2507,10 +2507,10 @@ export const strings = {
       'これを MCP サーバー設定（JSON ファイル、または設定の「MCP サーバーを追加」）に追加します：',
     intgMcpNote:
       'スキルと MCP は併用できます。アシスタントがどちらかを選びます。両者の機能はまったく同じです。',
-    intgCliTitle: '上級：コマンドライン genoffice',
+    intgCliTitle: '上級：コマンドライン soffice',
     intgCliReady: 'soffice {v} · ターミナルで使えます（{path}）',
     intgCliNotOnPath:
-      'soffice {v} · ターミナルの PATH にありません。アシスタントは ~/.softty-office/launcher 経由で見つけられるため、スキルは動作します。自分で genoffice を入力したい場合は一度だけ次を実行：',
+      'soffice {v} · ターミナルの PATH にありません。アシスタントは ~/.softty-office/launcher 経由で見つけられるため、スキルは動作します。自分で soffice を入力したい場合は一度だけ次を実行：',
     intgCliLauncher: 'ランチャーフォルダー',
     intgStateOutdated: 'インストール済み {v}、{next} に更新できます',
     intgStateModified: 'インストール済み {v}（変更されています）',
@@ -3035,7 +3035,7 @@ export const strings = {
       '어시스턴트가 명령줄 또는 MCP를 통해 Softty Office를 직접 호출하므로 여러분이 입력할 필요가 없습니다.',
     intgCliPartTitle: 'CLI · 명령줄 + skill',
     intgCliPartDesc:
-      '터미널 명령을 실행할 수 있는 어시스턴트(Claude Code, Codex, Cursor 등)용입니다. skill을 설치하면 어시스턴트가 스스로 genoffice 명령줄을 호출해 파일을 만들고 변환하고 읽고 편집합니다. 명령을 직접 입력할 필요가 없습니다.',
+      '터미널 명령을 실행할 수 있는 어시스턴트(Claude Code, Codex, Cursor 등)용입니다. skill을 설치하면 어시스턴트가 스스로 soffice 명령줄을 호출해 파일을 만들고 변환하고 읽고 편집합니다. 명령을 직접 입력할 필요가 없습니다.',
     intgMcpPartTitle: 'MCP',
     intgMcpPartDesc:
       'MCP는 AI 어시스턴트가 외부 도구를 호출하는 공통 프로토콜입니다. 어시스턴트가 명령을 실행할 수 없거나(예: Claude Desktop) Softty Office 창을 직접 조작하게 하려면 이 방식을 사용하세요. 아래 두 방법 중 하나를 선택하면 됩니다.',
@@ -3053,10 +3053,10 @@ export const strings = {
       '이 내용을 해당 어시스턴트의 MCP 서버 설정(JSON 파일 또는 설정의 "MCP 서버 추가")에 추가하세요:',
     intgMcpNote:
       '스킬과 MCP는 함께 설정할 수 있으며 어시스턴트가 하나를 선택합니다. 두 방식이 하는 일은 완전히 같습니다.',
-    intgCliTitle: '고급: 명령줄 genoffice',
+    intgCliTitle: '고급: 명령줄 soffice',
     intgCliReady: 'soffice {v} · 터미널에서 바로 사용 가능({path})',
     intgCliNotOnPath:
-      'soffice {v} · 터미널 PATH에 없습니다. 어시스턴트는 ~/.softty-office/launcher로 찾을 수 있어 스킬은 정상 작동합니다. 직접 genoffice를 입력하려면 한 번만 실행:',
+      'soffice {v} · 터미널 PATH에 없습니다. 어시스턴트는 ~/.softty-office/launcher로 찾을 수 있어 스킬은 정상 작동합니다. 직접 soffice를 입력하려면 한 번만 실행:',
     intgCliLauncher: '런처 폴더',
     intgStateOutdated: '설치됨 {v}, {next}(으)로 업데이트 가능',
     intgStateModified: '설치됨 {v} (수정됨)',
@@ -3591,7 +3591,7 @@ export const strings = {
       "L'assistant appelle lui-même Softty Office, par la ligne de commande ou MCP ; vous n'avez jamais à saisir de commande.",
     intgCliPartTitle: 'CLI · ligne de commande + skill',
     intgCliPartDesc:
-      'Pour les assistants capables de lancer des commandes dans le terminal (Claude Code, Codex, Cursor, etc.). Une fois le skill installé, l’assistant appelle lui-même la ligne de commande genoffice pour créer, convertir, lire et modifier les fichiers ; vous ne tapez jamais de commande.',
+      'Pour les assistants capables de lancer des commandes dans le terminal (Claude Code, Codex, Cursor, etc.). Une fois le skill installé, l’assistant appelle lui-même la ligne de commande soffice pour créer, convertir, lire et modifier les fichiers ; vous ne tapez jamais de commande.',
     intgMcpPartTitle: 'MCP',
     intgMcpPartDesc:
       'MCP est le protocole commun que les assistants IA utilisent pour appeler des outils externes. Utilisez-le si votre assistant ne peut pas lancer de commandes (Claude Desktop, par exemple) ou si vous voulez qu’il pilote directement la fenêtre Softty Office. Choisissez l’une des deux méthodes ci-dessous.',
@@ -3609,10 +3609,10 @@ export const strings = {
       'Ajoutez ceci à sa configuration de serveurs MCP (un fichier JSON, ou « Ajouter un serveur MCP » dans ses réglages) :',
     intgMcpNote:
       "Le skill et MCP peuvent coexister ; l'assistant choisit l'un des deux. Ils font exactement la même chose.",
-    intgCliTitle: 'Avancé : ligne de commande genoffice',
+    intgCliTitle: 'Avancé : ligne de commande soffice',
     intgCliReady: 'soffice {v} · prêt dans votre terminal ({path})',
     intgCliNotOnPath:
-      'soffice {v} · absent du PATH de votre terminal. Les assistants le trouvent quand même via ~/.softty-office/launcher, le skill fonctionne donc. Pour taper genoffice vous-même, exécutez ceci une fois :',
+      'soffice {v} · absent du PATH de votre terminal. Les assistants le trouvent quand même via ~/.softty-office/launcher, le skill fonctionne donc. Pour taper soffice vous-même, exécutez ceci une fois :',
     intgCliLauncher: 'Dossier du lanceur',
     intgStateOutdated: 'Installé {v}, mise à jour {next} disponible',
     intgStateModified: 'Installé {v} (modifié)',
@@ -4158,7 +4158,7 @@ export const strings = {
       'Der Assistent ruft Softty Office selbst auf – über die Befehlszeile oder MCP; Sie müssen nie einen Befehl eintippen.',
     intgCliPartTitle: 'CLI · Kommandozeile + Skill',
     intgCliPartDesc:
-      'Für Assistenten, die Terminalbefehle ausführen können (Claude Code, Codex, Cursor u. a.). Nach der Installation des Skills ruft der Assistent die genoffice-Kommandozeile selbst auf, um Dateien zu erstellen, zu konvertieren, zu lesen und zu bearbeiten; Sie tippen nie einen Befehl.',
+      'Für Assistenten, die Terminalbefehle ausführen können (Claude Code, Codex, Cursor u. a.). Nach der Installation des Skills ruft der Assistent die soffice-Kommandozeile selbst auf, um Dateien zu erstellen, zu konvertieren, zu lesen und zu bearbeiten; Sie tippen nie einen Befehl.',
     intgMcpPartTitle: 'MCP',
     intgMcpPartDesc:
       'MCP ist das gemeinsame Protokoll, über das KI-Assistenten externe Werkzeuge aufrufen. Nutzen Sie es, wenn der Assistent keine Befehle ausführen kann (z. B. Claude Desktop) oder wenn er das Softty Office-Fenster direkt steuern soll. Wählen Sie einen der beiden Wege unten.',
@@ -4176,10 +4176,10 @@ export const strings = {
       'Fügen Sie dies in seine MCP-Server-Konfiguration ein (eine JSON-Datei oder „MCP-Server hinzufügen“ in den Einstellungen):',
     intgMcpNote:
       'Skill und MCP können nebeneinander eingerichtet sein; der Assistent wählt eines. Beide tun genau dasselbe.',
-    intgCliTitle: 'Erweitert: Befehlszeile genoffice',
+    intgCliTitle: 'Erweitert: Befehlszeile soffice',
     intgCliReady: 'soffice {v} · im Terminal verfügbar ({path})',
     intgCliNotOnPath:
-      'soffice {v} · nicht im PATH Ihres Terminals. Assistenten finden es trotzdem über ~/.softty-office/launcher, der Skill funktioniert also. Um genoffice selbst einzugeben, führen Sie dies einmal aus:',
+      'soffice {v} · nicht im PATH Ihres Terminals. Assistenten finden es trotzdem über ~/.softty-office/launcher, der Skill funktioniert also. Um soffice selbst einzugeben, führen Sie dies einmal aus:',
     intgCliLauncher: 'Launcher-Ordner',
     intgStateOutdated: 'Installiert {v}, Update auf {next} verfügbar',
     intgStateModified: 'Installiert {v} (geändert)',
@@ -4718,7 +4718,7 @@ export const strings = {
       'El asistente llama a Softty Office por sí mismo, mediante la línea de comandos o MCP; nunca tienes que escribir un comando.',
     intgCliPartTitle: 'CLI · línea de comandos + skill',
     intgCliPartDesc:
-      'Para asistentes que pueden ejecutar comandos de terminal (Claude Code, Codex, Cursor y otros). Con el skill instalado, el asistente llama por sí mismo a la línea de comandos genoffice para crear, convertir, leer y editar archivos; nunca escribes un comando.',
+      'Para asistentes que pueden ejecutar comandos de terminal (Claude Code, Codex, Cursor y otros). Con el skill instalado, el asistente llama por sí mismo a la línea de comandos soffice para crear, convertir, leer y editar archivos; nunca escribes un comando.',
     intgMcpPartTitle: 'MCP',
     intgMcpPartDesc:
       'MCP es el protocolo común con el que los asistentes de IA llaman a herramientas externas. Úsalo cuando tu asistente no pueda ejecutar comandos (Claude Desktop, por ejemplo) o cuando quieras que controle directamente la ventana de Softty Office. Elige una de las dos formas de abajo.',
@@ -4736,10 +4736,10 @@ export const strings = {
       'Añade esto a su configuración de servidores MCP (un archivo JSON, o «Añadir servidor MCP» en sus ajustes):',
     intgMcpNote:
       'El skill y MCP pueden convivir; el asistente elige uno. Ambos hacen exactamente lo mismo.',
-    intgCliTitle: 'Avanzado: línea de comandos genoffice',
+    intgCliTitle: 'Avanzado: línea de comandos soffice',
     intgCliReady: 'soffice {v} · listo en tu terminal ({path})',
     intgCliNotOnPath:
-      'soffice {v} · no está en el PATH de tu terminal. Los asistentes lo encuentran igualmente mediante ~/.softty-office/launcher, así que el skill funciona. Para escribir genoffice tú mismo, ejecuta esto una vez:',
+      'soffice {v} · no está en el PATH de tu terminal. Los asistentes lo encuentran igualmente mediante ~/.softty-office/launcher, así que el skill funciona. Para escribir soffice tú mismo, ejecuta esto una vez:',
     intgCliLauncher: 'Carpeta del lanzador',
     intgStateOutdated: 'Instalado {v}, actualización a {next} disponible',
     intgStateModified: 'Instalado {v} (modificado)',
@@ -5282,7 +5282,7 @@ export const strings = {
       'เพิ่มส่วนนี้ลงในการตั้งค่าเซิร์ฟเวอร์ MCP ของผู้ช่วย (ไฟล์ JSON หรือ "เพิ่มเซิร์ฟเวอร์ MCP" ในการตั้งค่า):',
     intgMcpNote:
       'สกิลและ MCP ตั้งค่าไว้พร้อมกันได้ ผู้ช่วยจะเลือกใช้เอง ทั้งสองทำงานเหมือนกันทุกอย่าง',
-    intgCliTitle: 'ขั้นสูง: บรรทัดคำสั่ง genoffice',
+    intgCliTitle: 'ขั้นสูง: บรรทัดคำสั่ง soffice',
     intgCliReady: 'soffice {v} · พร้อมใช้ในเทอร์มินัล ({path})',
     intgCliNotOnPath:
       'soffice {v} · ยังไม่อยู่ใน PATH ของเทอร์มินัล ผู้ช่วยยังหาเจอผ่าน ~/.softty-office/launcher สกิลจึงใช้งานได้ตามปกติ หากต้องการพิมพ์ genoffice เอง ให้รันคำสั่งนี้ครั้งเดียว:',
@@ -5831,7 +5831,7 @@ export const strings = {
       'Tambahkan ini ke pengaturan server MCP miliknya (berkas JSON, atau "Tambah server MCP" di pengaturannya):',
     intgMcpNote:
       'Skill dan MCP bisa dipasang bersamaan; asisten akan memilih salah satu. Keduanya melakukan hal yang sama persis.',
-    intgCliTitle: 'Lanjutan: baris perintah genoffice',
+    intgCliTitle: 'Lanjutan: baris perintah soffice',
     intgCliReady: 'soffice {v} · siap di terminal Anda ({path})',
     intgCliNotOnPath:
       'soffice {v} · belum ada di PATH terminal Anda. Asisten tetap menemukannya lewat ~/.softty-office/launcher, jadi skill tetap berfungsi. Untuk mengetik genoffice sendiri, jalankan ini sekali:',
@@ -6381,7 +6381,7 @@ export const strings = {
       'Добавьте это в его настройки MCP-серверов (JSON-файл или «Добавить MCP-сервер» в настройках):',
     intgMcpNote:
       'Скилл и MCP могут быть настроены одновременно; ассистент выберет один из них. Они делают одно и то же.',
-    intgCliTitle: 'Дополнительно: командная строка genoffice',
+    intgCliTitle: 'Дополнительно: командная строка soffice',
     intgCliReady: 'soffice {v} · доступен в терминале ({path})',
     intgCliNotOnPath:
       'soffice {v} · отсутствует в PATH терминала. Ассистенты всё равно находят его через ~/.softty-office/launcher, так что скилл работает. Чтобы вводить genoffice самостоятельно, выполните один раз:',
@@ -6931,7 +6931,7 @@ export const strings = {
       'أضف هذا إلى إعدادات خوادم MCP لديه (ملف JSON، أو «إضافة خادم MCP» في إعداداته):',
     intgMcpNote:
       'يمكن إعداد المهارة و MCP معاً؛ يختار المساعد أحدهما. كلاهما يقوم بالأشياء نفسها تماماً.',
-    intgCliTitle: 'متقدم: سطر أوامر genoffice',
+    intgCliTitle: 'متقدم: سطر أوامر soffice',
     intgCliReady: 'soffice {v} · جاهز في الطرفية ({path})',
     intgCliNotOnPath:
       'soffice {v} · غير موجود في PATH الطرفية. ما زال المساعدون يجدونه عبر ~/.softty-office/launcher، فالمهارة تعمل. لكتابة genoffice بنفسك، شغّل هذا مرة واحدة:',
@@ -7475,7 +7475,7 @@ export const strings = {
       'Adicione isto à configuração de servidores MCP dele (um arquivo JSON, ou "Adicionar servidor MCP" nas configurações):',
     intgMcpNote:
       'O skill e o MCP podem coexistir; o assistente escolhe um deles. Ambos fazem exatamente as mesmas coisas.',
-    intgCliTitle: 'Avançado: linha de comando genoffice',
+    intgCliTitle: 'Avançado: linha de comando soffice',
     intgCliReady: 'soffice {v} · pronto no seu terminal ({path})',
     intgCliNotOnPath:
       'soffice {v} · não está no PATH do seu terminal. Os assistentes ainda o encontram por ~/.softty-office/launcher, então o skill funciona. Para digitar genoffice você mesmo, execute isto uma vez:',
@@ -8024,7 +8024,7 @@ export const strings = {
       'Aggiungi questo alla sua configurazione dei server MCP (un file JSON, oppure «Aggiungi server MCP» nelle impostazioni):',
     intgMcpNote:
       "Skill e MCP possono convivere; l'assistente ne sceglie uno. Fanno esattamente le stesse cose.",
-    intgCliTitle: 'Avanzato: riga di comando genoffice',
+    intgCliTitle: 'Avanzato: riga di comando soffice',
     intgCliReady: 'soffice {v} · pronto nel terminale ({path})',
     intgCliNotOnPath:
       'soffice {v} · non è nel PATH del terminale. Gli assistenti lo trovano comunque tramite ~/.softty-office/launcher, quindi lo skill funziona. Per digitare genoffice tu stesso, esegui questo una volta:',
@@ -8551,7 +8551,7 @@ export const strings = {
       'Asystent sam wywołuje Softty Office — przez wiersz poleceń lub MCP; nigdy nie musisz wpisywać polecenia.',
     intgCliPartTitle: 'CLI · wiersz poleceń + skill',
     intgCliPartDesc:
-      'Dla asystentów, które potrafią uruchamiać polecenia terminala (Claude Code, Codex, Cursor i inne). Po zainstalowaniu skilla asystent sam wywołuje wiersz poleceń genoffice, aby tworzyć, konwertować, czytać i edytować pliki; nigdy nie wpisujesz polecenia.',
+      'Dla asystentów, które potrafią uruchamiać polecenia terminala (Claude Code, Codex, Cursor i inne). Po zainstalowaniu skilla asystent sam wywołuje wiersz poleceń soffice, aby tworzyć, konwertować, czytać i edytować pliki; nigdy nie wpisujesz polecenia.',
     intgMcpPartTitle: 'MCP',
     intgMcpPartDesc:
       'MCP to wspólny protokół, którym asystenci AI wywołują zewnętrzne narzędzia. Użyj go, gdy asystent nie potrafi uruchamiać poleceń (np. Claude Desktop) lub gdy chcesz, aby bezpośrednio sterował oknem Softty Office. Wybierz jeden z dwóch sposobów poniżej.',
@@ -8569,10 +8569,10 @@ export const strings = {
       'Dodaj to do jego konfiguracji serwerów MCP (plik JSON lub „Dodaj serwer MCP” w ustawieniach):',
     intgMcpNote:
       'Skill i MCP mogą działać obok siebie; asystent wybiera jedno z nich. Oba robią dokładnie to samo.',
-    intgCliTitle: 'Zaawansowane: wiersz poleceń genoffice',
+    intgCliTitle: 'Zaawansowane: wiersz poleceń soffice',
     intgCliReady: 'soffice {v} · gotowy w terminalu ({path})',
     intgCliNotOnPath:
-      'soffice {v} · nie ma go w PATH terminala. Asystenty i tak znajdą go przez ~/.softty-office/launcher, więc skill działa. Aby samodzielnie wpisywać genoffice, uruchom to raz:',
+      'soffice {v} · nie ma go w PATH terminala. Asystenty i tak znajdą go przez ~/.softty-office/launcher, więc skill działa. Aby samodzielnie wpisywać soffice, uruchom to raz:',
     intgCliLauncher: 'Folder programu uruchamiającego',
     intgStateOutdated: 'Zainstalowano {v}, dostępna aktualizacja do {next}',
     intgStateModified: 'Zainstalowano {v} (zmodyfikowano)',
@@ -9045,7 +9045,7 @@ export const strings = {
       'Asistent volá Softty Office sám – přes příkazový řádek nebo MCP; nikdy nemusíte psát žádný příkaz.',
     intgCliPartTitle: 'CLI · příkazový řádek + skill',
     intgCliPartDesc:
-      'Pro asistenty, kteří umí spouštět příkazy terminálu (Claude Code, Codex, Cursor a další). Po instalaci skillu asistent sám volá příkazový řádek genoffice k vytváření, převodu, čtení a úpravám souborů; žádný příkaz nepíšete.',
+      'Pro asistenty, kteří umí spouštět příkazy terminálu (Claude Code, Codex, Cursor a další). Po instalaci skillu asistent sám volá příkazový řádek soffice k vytváření, převodu, čtení a úpravám souborů; žádný příkaz nepíšete.',
     intgMcpPartTitle: 'MCP',
     intgMcpPartDesc:
       'MCP je společný protokol, kterým AI asistenti volají externí nástroje. Použijte ho, když asistent neumí spouštět příkazy (např. Claude Desktop) nebo když chcete, aby přímo ovládal okno Softty Office. Vyberte jeden ze dvou způsobů níže.',
@@ -9063,10 +9063,10 @@ export const strings = {
       'Přidejte toto do jeho nastavení MCP serverů (soubor JSON nebo „Přidat MCP server“ v nastavení):',
     intgMcpNote:
       'Skill a MCP mohou být nastaveny současně; asistent si jeden vybere. Oba dělají přesně to samé.',
-    intgCliTitle: 'Pokročilé: příkazový řádek genoffice',
+    intgCliTitle: 'Pokročilé: příkazový řádek soffice',
     intgCliReady: 'soffice {v} · připraven v terminálu ({path})',
     intgCliNotOnPath:
-      'soffice {v} · není v PATH terminálu. Asistenti ho i tak najdou přes ~/.softty-office/launcher, skill tedy funguje. Chcete-li genoffice psát sami, spusťte jednou:',
+      'soffice {v} · není v PATH terminálu. Asistenti ho i tak najdou přes ~/.softty-office/launcher, skill tedy funguje. Chcete-li soffice psát sami, spusťte jednou:',
     intgCliLauncher: 'Složka spouštěče',
     intgStateOutdated: 'Nainstalováno {v}, k dispozici aktualizace na {next}',
     intgStateModified: 'Nainstalováno {v} (upraveno)',
@@ -9637,7 +9637,7 @@ export const strings = {
       'De assistent roept Softty Office zelf aan, via de opdrachtregel of MCP; u hoeft nooit een opdracht te typen.',
     intgCliPartTitle: 'CLI · opdrachtregel + skill',
     intgCliPartDesc:
-      'Voor assistenten die terminalopdrachten kunnen uitvoeren (Claude Code, Codex, Cursor en andere). Na installatie van de skill roept de assistent zelf de genoffice-opdrachtregel aan om bestanden te maken, converteren, lezen en bewerken; je typt nooit een opdracht.',
+      'Voor assistenten die terminalopdrachten kunnen uitvoeren (Claude Code, Codex, Cursor en andere). Na installatie van de skill roept de assistent zelf de soffice-opdrachtregel aan om bestanden te maken, converteren, lezen en bewerken; je typt nooit een opdracht.',
     intgMcpPartTitle: 'MCP',
     intgMcpPartDesc:
       'MCP is het gemeenschappelijke protocol waarmee AI-assistenten externe tools aanroepen. Gebruik het als je assistent geen opdrachten kan uitvoeren (bijvoorbeeld Claude Desktop) of als je wilt dat hij het Softty Office-venster rechtstreeks bestuurt. Kies een van de twee manieren hieronder.',
@@ -9655,10 +9655,10 @@ export const strings = {
       'Voeg dit toe aan de MCP-serverinstellingen (een JSON-bestand, of "MCP-server toevoegen" in de instellingen):',
     intgMcpNote:
       'De skill en MCP kunnen naast elkaar bestaan; de assistent kiest er een. Ze doen precies hetzelfde.',
-    intgCliTitle: 'Geavanceerd: genoffice-opdrachtregel',
+    intgCliTitle: 'Geavanceerd: soffice-opdrachtregel',
     intgCliReady: 'soffice {v} · klaar in uw terminal ({path})',
     intgCliNotOnPath:
-      'soffice {v} · staat niet in het PATH van uw terminal. Assistenten vinden het toch via ~/.softty-office/launcher, dus de skill werkt. Om zelf genoffice te typen, voert u dit één keer uit:',
+      'soffice {v} · staat niet in het PATH van uw terminal. Assistenten vinden het toch via ~/.softty-office/launcher, dus de skill werkt. Om zelf soffice te typen, voert u dit één keer uit:',
     intgCliLauncher: 'Launcher-map',
     intgStateOutdated: 'Geïnstalleerd {v}, update naar {next} beschikbaar',
     intgStateModified: 'Geïnstalleerd {v} (gewijzigd)',
@@ -10182,7 +10182,7 @@ export const strings = {
       'Pembantu memanggil Softty Office sendiri, melalui baris arahan atau MCP; anda tidak perlu menaip sebarang arahan.',
     intgCliPartTitle: 'CLI · baris arahan + skill',
     intgCliPartDesc:
-      'Untuk pembantu yang boleh menjalankan arahan terminal (Claude Code, Codex, Cursor dan lain-lain). Setelah skill dipasang, pembantu memanggil baris arahan genoffice sendiri untuk mencipta, menukar, membaca dan mengedit fail; anda tidak perlu menaip sebarang arahan.',
+      'Untuk pembantu yang boleh menjalankan arahan terminal (Claude Code, Codex, Cursor dan lain-lain). Setelah skill dipasang, pembantu memanggil baris arahan soffice sendiri untuk mencipta, menukar, membaca dan mengedit fail; anda tidak perlu menaip sebarang arahan.',
     intgMcpPartTitle: 'MCP',
     intgMcpPartDesc:
       'MCP ialah protokol umum yang digunakan pembantu AI untuk memanggil alat luaran. Gunakannya apabila pembantu anda tidak boleh menjalankan arahan (contohnya Claude Desktop) atau apabila anda mahu ia mengawal tetingkap Softty Office secara langsung. Pilih salah satu daripada dua cara di bawah.',
@@ -10200,10 +10200,10 @@ export const strings = {
       'Tambahkan ini pada tetapan pelayan MCP pembantu tersebut (fail JSON, atau "Tambah pelayan MCP" dalam tetapannya):',
     intgMcpNote:
       'Skill dan MCP boleh dipasang serentak; pembantu akan memilih satu. Kedua-duanya melakukan perkara yang sama.',
-    intgCliTitle: 'Lanjutan: baris arahan genoffice',
+    intgCliTitle: 'Lanjutan: baris arahan soffice',
     intgCliReady: 'soffice {v} · sedia dalam terminal anda ({path})',
     intgCliNotOnPath:
-      'soffice {v} · tiada dalam PATH terminal anda. Pembantu masih menemuinya melalui ~/.softty-office/launcher, jadi skill berfungsi. Untuk menaip genoffice sendiri, jalankan ini sekali:',
+      'soffice {v} · tiada dalam PATH terminal anda. Pembantu masih menemuinya melalui ~/.softty-office/launcher, jadi skill berfungsi. Untuk menaip soffice sendiri, jalankan ini sekali:',
     intgCliLauncher: 'Folder pelancar',
     intgStateOutdated: 'Dipasang {v}, kemas kini ke {next} tersedia',
     intgStateModified: 'Dipasang {v} (diubah suai)',
@@ -10720,7 +10720,7 @@ export const strings = {
       'העוזר קורא ל-Softty Office בעצמו, דרך שורת הפקודה או MCP; לעולם לא תצטרכו להקליד פקודה.',
     intgCliPartTitle: 'CLI · שורת פקודה + skill',
     intgCliPartDesc:
-      'לעוזרים שיכולים להריץ פקודות טרמינל (Claude Code‏, Codex‏, Cursor ואחרים). לאחר התקנת ה‑skill העוזר קורא בעצמו לשורת הפקודה genoffice כדי ליצור, להמיר, לקרוא ולערוך קבצים; אתם לא מקלידים שום פקודה.',
+      'לעוזרים שיכולים להריץ פקודות טרמינל (Claude Code‏, Codex‏, Cursor ואחרים). לאחר התקנת ה‑skill העוזר קורא בעצמו לשורת הפקודה soffice כדי ליצור, להמיר, לקרוא ולערוך קבצים; אתם לא מקלידים שום פקודה.',
     intgMcpPartTitle: 'MCP',
     intgMcpPartDesc:
       'MCP הוא הפרוטוקול המשותף שבו עוזרי AI קוראים לכלים חיצוניים. השתמשו בו כשהעוזר אינו יכול להריץ פקודות (למשל Claude Desktop) או כשאתם רוצים שהוא ישלוט ישירות בחלון Softty Office. בחרו אחת משתי הדרכים למטה.',
@@ -10737,10 +10737,10 @@ export const strings = {
     intgMcpOtherDesc: 'הוסיפו זאת להגדרות שרתי ה-MCP שלו (קובץ JSON, או "הוספת שרת MCP" בהגדרות):',
     intgMcpNote:
       'הסקיל ו-MCP יכולים להיות מוגדרים יחד; העוזר יבחר אחד מהם. שניהם עושים בדיוק את אותם הדברים.',
-    intgCliTitle: 'מתקדם: שורת הפקודה genoffice',
+    intgCliTitle: 'מתקדם: שורת הפקודה soffice',
     intgCliReady: 'soffice {v} · מוכן בטרמינל ({path})',
     intgCliNotOnPath:
-      'soffice {v} · לא נמצא ב-PATH של הטרמינל. העוזרים עדיין מוצאים אותו דרך ~/.softty-office/launcher, ולכן ה-skill עובד. כדי להקליד genoffice בעצמכם, הריצו זאת פעם אחת:',
+      'soffice {v} · לא נמצא ב-PATH של הטרמינל. העוזרים עדיין מוצאים אותו דרך ~/.softty-office/launcher, ולכן ה-skill עובד. כדי להקליד soffice בעצמכם, הריצו זאת פעם אחת:',
     intgCliLauncher: 'תיקיית המשגר',
     intgStateOutdated: 'מותקן {v}, זמין עדכון ל-{next}',
     intgStateModified: 'מותקן {v} (שונה)',
@@ -11256,7 +11256,7 @@ export const strings = {
       'असिस्टेंट Softty Office को कमांड लाइन या MCP के ज़रिए खुद कॉल करता है; आपको कभी कोई कमांड टाइप नहीं करनी पड़ती।',
     intgCliPartTitle: 'CLI · कमांड लाइन + skill',
     intgCliPartDesc:
-      'उन सहायकों के लिए जो टर्मिनल कमांड चला सकते हैं (Claude Code, Codex, Cursor आदि)। skill इंस्टॉल होने के बाद सहायक फ़ाइलें बनाने, बदलने, पढ़ने और संपादित करने के लिए खुद genoffice कमांड लाइन चलाता है; आपको कोई कमांड टाइप नहीं करना पड़ता।',
+      'उन सहायकों के लिए जो टर्मिनल कमांड चला सकते हैं (Claude Code, Codex, Cursor आदि)। skill इंस्टॉल होने के बाद सहायक फ़ाइलें बनाने, बदलने, पढ़ने और संपादित करने के लिए खुद soffice कमांड लाइन चलाता है; आपको कोई कमांड टाइप नहीं करना पड़ता।',
     intgMcpPartTitle: 'MCP',
     intgMcpPartDesc:
       'MCP वह साझा प्रोटोकॉल है जिससे AI सहायक बाहरी टूल बुलाते हैं। इसे तब चुनें जब सहायक कमांड न चला सके (जैसे Claude Desktop) या आप चाहें कि वह Softty Office की विंडो को सीधे चलाए। नीचे दिए दो तरीकों में से कोई एक चुनें।',
@@ -11274,10 +11274,10 @@ export const strings = {
       'इसे उसकी MCP सर्वर सेटिंग्स में जोड़ें (एक JSON फ़ाइल, या सेटिंग्स में "MCP सर्वर जोड़ें"):',
     intgMcpNote:
       'स्किल और MCP एक साथ सेट किए जा सकते हैं; असिस्टेंट एक को चुन लेता है। दोनों बिल्कुल एक जैसे काम करते हैं।',
-    intgCliTitle: 'उन्नत: genoffice कमांड लाइन',
+    intgCliTitle: 'उन्नत: soffice कमांड लाइन',
     intgCliReady: 'soffice {v} · टर्मिनल में तैयार ({path})',
     intgCliNotOnPath:
-      'soffice {v} · टर्मिनल के PATH में नहीं है। असिस्टेंट इसे ~/.softty-office/launcher से फिर भी ढूँढ लेते हैं, इसलिए skill काम करता है। खुद genoffice टाइप करने के लिए यह एक बार चलाएँ:',
+      'soffice {v} · टर्मिनल के PATH में नहीं है। असिस्टेंट इसे ~/.softty-office/launcher से फिर भी ढूँढ लेते हैं, इसलिए skill काम करता है। खुद soffice टाइप करने के लिए यह एक बार चलाएँ:',
     intgCliLauncher: 'लॉन्चर फ़ोल्डर',
     intgStateOutdated: 'इंस्टॉल {v}, {next} पर अपडेट उपलब्ध',
     intgStateModified: 'इंस्टॉल {v} (बदला गया)',
@@ -11782,7 +11782,7 @@ export const strings = {
     intgStep2Note: '助理會透過命令列或 MCP 自行呼叫 Softty Office，你不需要輸入任何指令。',
     intgCliPartTitle: 'CLI · 命令列 + skill',
     intgCliPartDesc:
-      '適合能執行終端機指令的助理（Claude Code、Codex、Cursor 等）。安裝 skill 後，助理會自己呼叫 genoffice 命令列建立、轉換、讀取和編輯檔案，你不需要輸入任何指令。',
+      '適合能執行終端機指令的助理（Claude Code、Codex、Cursor 等）。安裝 skill 後，助理會自己呼叫 soffice 命令列建立、轉換、讀取和編輯檔案，你不需要輸入任何指令。',
     intgMcpPartTitle: 'MCP',
     intgMcpPartDesc:
       'MCP 是 AI 助理呼叫外部工具的通用協定。助理不能執行指令（如 Claude Desktop），或你想讓它直接操作 Softty Office 視窗時用這條路。下面兩種接法任選一種。',
@@ -11799,10 +11799,10 @@ export const strings = {
     intgMcpOtherDesc:
       '把這段加進它的 MCP 伺服器設定（一個 JSON 檔，或設定裡的「新增 MCP 伺服器」）：',
     intgMcpNote: 'skill 和 MCP 可以同時存在，助理會自行選用；兩者做的事完全相同。',
-    intgCliTitle: '進階：命令列 genoffice',
+    intgCliTitle: '進階：命令列 soffice',
     intgCliReady: 'soffice {v} · 已可在終端機直接使用（{path}）',
     intgCliNotOnPath:
-      'soffice {v} · 尚未加入終端機 PATH。助理仍能透過 ~/.softty-office/launcher 找到它，skill 不受影響。若想自己在終端機輸入 genoffice，執行一次：',
+      'soffice {v} · 尚未加入終端機 PATH。助理仍能透過 ~/.softty-office/launcher 找到它，skill 不受影響。若想自己在終端機輸入 soffice，執行一次：',
     intgCliLauncher: '啟動器資料夾',
     intgStateOutdated: '已安裝 {v}，可更新至 {next}',
     intgStateModified: '已安裝 {v}（已被修改）',

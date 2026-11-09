@@ -955,6 +955,61 @@ const config = {
   dmg: {
     sign: true,
   },
+  afterPack: async (context) => {
+    if (context.electronPlatformName === 'darwin') {
+      const plist = require('plist')
+      const { writeFileSync } = require('node:fs')
+      const appName = context.packager.appInfo.productFilename || 'Softty Office'
+      const plistPath = join(context.appOutDir, `${appName}.app/Contents/Info.plist`)
+      if (existsSync(plistPath)) {
+        const parsed = plist.parse(readFileSync(plistPath, 'utf8'))
+        const utiMap = {
+          docx: ['org.openxmlformats.wordprocessingml.document', 'com.microsoft.word.openxmlformats.wordprocessingml.document'],
+          doc: ['com.microsoft.word.doc'],
+          dot: ['com.microsoft.word.dot'],
+          xlsx: ['org.openxmlformats.spreadsheetml.sheet', 'com.microsoft.excel.openxmlformats.spreadsheetml.sheet'],
+          xlsm: ['org.openxmlformats.spreadsheetml.sheet.macroenabled'],
+          xls: ['com.microsoft.excel.xls'],
+          pptx: ['org.openxmlformats.presentationml.presentation', 'com.microsoft.powerpoint.openxmlformats.presentationml.presentation'],
+          ppt: ['com.microsoft.powerpoint.ppt'],
+          pdf: ['com.adobe.pdf'],
+          csv: ['public.comma-separated-values-text', 'public.csv'],
+          tsv: ['public.tab-separated-values-text'],
+          txt: ['public.plain-text'],
+          md: ['net.daringfireball.markdown'],
+          markdown: ['net.daringfireball.markdown'],
+          html: ['public.html'],
+          htm: ['public.html'],
+          json: ['public.json'],
+          odt: ['org.oasis-open.opendocument.text'],
+          ods: ['org.oasis-open.opendocument.spreadsheet'],
+          odp: ['org.oasis-open.opendocument.presentation'],
+          hwp: ['kr.hancom.hwp'],
+          hwpx: ['kr.hancom.hwpx'],
+        }
+        if (Array.isArray(parsed.CFBundleDocumentTypes)) {
+          for (const dt of parsed.CFBundleDocumentTypes) {
+            if (Array.isArray(dt.CFBundleTypeExtensions)) {
+              const allUtis = []
+              for (const ext of dt.CFBundleTypeExtensions) {
+                const mapped = utiMap[ext]
+                if (mapped) {
+                  for (const u of mapped) {
+                    if (!allUtis.includes(u)) allUtis.push(u)
+                  }
+                }
+              }
+              if (allUtis.length > 0) {
+                dt.LSItemContentTypes = allUtis
+                dt.LSHandlerRank = 'Default'
+              }
+            }
+          }
+        }
+        writeFileSync(plistPath, plist.build(parsed), 'utf8')
+      }
+    }
+  },
   afterSign: 'build/afterSign.cjs',
   afterAllArtifactBuild: 'build/notarize-dmg.js',
 }
@@ -1004,7 +1059,7 @@ config.publish = updateUrl
       {
         provider: 'github',
         owner: 'softtyos',
-        repo: 'genoffice',
+        repo: 'softty-office',
         releaseType: 'release',
       },
     ]

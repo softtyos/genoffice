@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://genoffice.ai/">
+  <a href="https://office.softty.net">
     <picture>
       <source srcset="../assets/readme/hero-dark.webp" media="(prefers-color-scheme: dark)">
       <img src="../assets/readme/hero.webp" alt="GenOffice —— 开源 AI 办公套件：Docs、Sheets、Slides、PDF、Markdown 和 HTML，内置 AI 面板" width="100%">
@@ -13,10 +13,10 @@
 Word、Excel、PowerPoint 和 PDF 文件，由你与你的 AI 共同编辑，并以原生格式保存。</p>
 
 <p align="center">
-  <a href="../../LICENSE"><img src="https://img.shields.io/github/license/genspark-ai/genoffice" alt="许可证：Apache-2.0"></a>
-  <a href="https://github.com/genspark-ai/genoffice/releases/latest"><img src="https://img.shields.io/github/v/release/genspark-ai/genoffice" alt="最新版本"></a>
-  <a href="https://github.com/genspark-ai/genoffice/releases"><img src="https://img.shields.io/github/downloads/genspark-ai/genoffice/total" alt="下载量"></a>
-  <a href="https://github.com/genspark-ai/genoffice/stargazers"><img src="https://img.shields.io/github/stars/genspark-ai/genoffice?style=flat" alt="GitHub Star 数"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/github/license/softtyos/softty-office" alt="许可证：Apache-2.0"></a>
+  <a href="https://github.com/softtyos/softty-office/releases/latest"><img src="https://img.shields.io/github/v/release/softtyos/softty-office" alt="最新版本"></a>
+  <a href="https://github.com/softtyos/softty-office/releases"><img src="https://img.shields.io/github/downloads/softtyos/softty-office/total" alt="下载量"></a>
+  <a href="https://github.com/softtyos/softty-office/stargazers"><img src="https://img.shields.io/github/stars/softtyos/softty-office?style=flat" alt="GitHub Star 数"></a>
 </p>
 
 <p align="center"><a href="../../README.md">English</a> · <a href="README.es.md">Español</a> · <a href="README.pt-BR.md">Português</a> · <a href="README.de.md">Deutsch</a> · <a href="README.fr.md">Français</a> · <b>简体中文</b> · <a href="README.zh-TW.md">繁體中文</a> · <a href="README.ko.md">한국어</a> · <a href="README.ja.md">日本語</a> · <a href="README.ar.md">العربية</a> · <a href="README.ru.md">Русский</a> · <a href="README.it.md">Italiano</a> · <a href="README.nl.md">Nederlands</a> · <a href="README.pl.md">Polski</a> · <a href="README.cs.md">Čeština</a> · <a href="README.id.md">Bahasa Indonesia</a> · <a href="README.ms.md">Bahasa Melayu</a> · <a href="README.th.md">ไทย</a> · <a href="README.hi.md">हिन्दी</a> · <a href="README.he.md">עברית</a> · <a href="README.vi.md">Tiếng Việt</a> · <a href="README.tr.md">Türkçe</a></p>
@@ -26,8 +26,8 @@ Word、Excel、PowerPoint 和 PDF 文件，由你与你的 AI 共同编辑，并
   <a href="#skills"><b>Skills</b></a> ·
   <a href="#command-line-and-agent-skill"><b>CLI</b></a> ·
   <a href="#mcp-server"><b>MCP</b></a> ·
-  <a href="https://genoffice.ai/"><b>官网</b></a> ·
-  <a href="https://genoffice.ai/join"><b>社区</b></a> ·
+  <a href="https://office.softty.net"><b>官网</b></a> ·
+  <a href="https://softty.net"><b>社区</b></a> ·
   <a href="../../PRIVACY.md"><b>隐私</b></a>
 </p>
 
@@ -58,9 +58,9 @@ OOXML 副本形式打开；这类导入是「仅打开」式的 —— 保存时
   的 agent skill，让编程智能体无需打开任何窗口，就能在你的电脑上创建、转换、
   读取和编辑真正的 Office 文件。
 
-**获取：** [macOS](https://github.com/genspark-ai/genoffice/releases/latest)（Apple Silicon 和 Intel）·
-[Windows](https://github.com/genspark-ai/genoffice/releases/latest)（x64 和 Arm）·
-[Linux](https://github.com/genspark-ai/genoffice/releases/latest)（deb、rpm、AppImage）——
+**获取：** [macOS](https://github.com/softtyos/softty-office/releases/latest)（Apple Silicon 和 Intel）·
+[Windows](https://github.com/softtyos/softty-office/releases/latest)（x64 和 Arm）·
+[Linux](https://github.com/softtyos/softty-office/releases/latest)（deb、rpm、AppImage）——
 详情与系统要求见[下载](#download)。
 
 ## 演示
@@ -183,7 +183,7 @@ Claude Code、Codex、Cursor、Gemini CLI、GitHub Copilot、OpenCode 或 Windsu
 </tr>
 <tr>
 <td><b>给智能体一句提示词</b> —— “制作一份关于太阳系的八页演示文稿。”智能体读取 skill，依次写出样式表、大纲和每页一份的页面规格，用 <code>genoffice image</code> 生成两张图片，再由 <code>genoffice slides check</code> 拦下所有溢出或重叠的内容，最后由 <code>genoffice create</code> 组装出 <code>.pptx</code>，并用 <code>slides render</code> 为每一页交回一张 PNG 供查看。</td>
-<td><b>在设置 → 集成中一次安装</b> —— GenOffice 会列出在这台电脑上找到的编程智能体，并把 skill 写入你选中的每一个。也可以把 skill 下载为 zip 压缩包，或运行 <code>npx skills add genspark-ai/genoffice</code>。命令和完整工作流见<a href="#command-line-and-agent-skill">命令行与 agent skill</a>。</td>
+<td><b>在设置 → 集成中一次安装</b> —— GenOffice 会列出在这台电脑上找到的编程智能体，并把 skill 写入你选中的每一个。也可以把 skill 下载为 zip 压缩包，或运行 <code>npx skills add softtyos/softty-office</code>。命令和完整工作流见<a href="#command-line-and-agent-skill">命令行与 agent skill</a>。</td>
 </tr>
 </table>
 
@@ -277,7 +277,7 @@ GenOffice 内置了一批，也接受你自己的，格式与编程智能体所�
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | 应用内的 **设置 → 集成**               | 列出在这台电脑上找到的智能体；一键即可把 skill 写入你选中的每一个。当 GenOffice 新版本附带更新的 skill 时，会出现**更新**按钮。 |
 | 同一页面上的 **下载为 zip**            | claude.ai、Claude 桌面应用及其他助手可作为上传 skill 接受的目录结构。                                                           |
-| `npx skills add genspark-ai/genoffice` | 从本仓库安装到任何兼容 skills 的智能体。                                                                                        |
+| `npx skills add softtyos/softty-office` | 从本仓库安装到任何兼容 skills 的智能体。                                                                                        |
 
 然后开启一个新对话，让它帮你做一份文档。这份 skill 会教智能体何时该用
 `genoffice`、编辑前如何先读取文件，以及如何检查自己的成果。
@@ -380,16 +380,16 @@ deck_replace(dir, n, page) ×3 · slides_render(file, out)
 
 | 平台                                  | 系统要求                                               | 下载                                                                                   |
 | ------------------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| **macOS** —— Apple Silicon (arm64)    | macOS 11+                                              | [最新 `.dmg`（arm64）](https://github.com/genspark-ai/genoffice/releases/latest)       |
-| **macOS** —— Intel (x64)              | macOS 11+                                              | [最新 `.dmg`（x64）](https://github.com/genspark-ai/genoffice/releases/latest)         |
-| **Windows**（x64，大多数 PC）         | Windows 10+，Intel/AMD                                 | [最新 `-x64.exe` 安装程序](https://github.com/genspark-ai/genoffice/releases/latest)   |
-| **Windows** on Arm（ARM64）           | Windows 11 on Arm（Snapdragon X 及同类芯片）           | [最新 `-arm64.exe` 安装程序](https://github.com/genspark-ai/genoffice/releases/latest) |
-| **Linux** —— Debian / Ubuntu          | x86_64，glibc 2.34+（Ubuntu 22.04 或更新）             | [最新 `.deb`](https://github.com/genspark-ai/genoffice/releases/latest)                |
-| **Linux** —— Fedora / RHEL / openSUSE | x86_64，glibc 2.34+（Fedora 35+、RHEL 9+、Leap 15.6+） | [最新 `.rpm`](https://github.com/genspark-ai/genoffice/releases/latest)                |
-| **Linux** —— 其他发行版               | x86_64，glibc 2.34+，FUSE 2                            | [最新 `.AppImage`](https://github.com/genspark-ai/genoffice/releases/latest)           |
+| **macOS** —— Apple Silicon (arm64)    | macOS 11+                                              | [最新 `.dmg`（arm64）](https://github.com/softtyos/softty-office/releases/latest)       |
+| **macOS** —— Intel (x64)              | macOS 11+                                              | [最新 `.dmg`（x64）](https://github.com/softtyos/softty-office/releases/latest)         |
+| **Windows**（x64，大多数 PC）         | Windows 10+，Intel/AMD                                 | [最新 `-x64.exe` 安装程序](https://github.com/softtyos/softty-office/releases/latest)   |
+| **Windows** on Arm（ARM64）           | Windows 11 on Arm（Snapdragon X 及同类芯片）           | [最新 `-arm64.exe` 安装程序](https://github.com/softtyos/softty-office/releases/latest) |
+| **Linux** —— Debian / Ubuntu          | x86_64，glibc 2.34+（Ubuntu 22.04 或更新）             | [最新 `.deb`](https://github.com/softtyos/softty-office/releases/latest)                |
+| **Linux** —— Fedora / RHEL / openSUSE | x86_64，glibc 2.34+（Fedora 35+、RHEL 9+、Leap 15.6+） | [最新 `.rpm`](https://github.com/softtyos/softty-office/releases/latest)                |
+| **Linux** —— 其他发行版               | x86_64，glibc 2.34+，FUSE 2                            | [最新 `.AppImage`](https://github.com/softtyos/softty-office/releases/latest)           |
 
 所有构建均来自 `main` 分支；macOS 和 Windows 安装程序均已签名。
-历史版本见 [Releases](https://github.com/genspark-ai/genoffice/releases) 页面。
+历史版本见 [Releases](https://github.com/softtyos/softty-office/releases) 页面。
 
 <details>
 <summary><b>在 Linux 上安装</b></summary>
@@ -462,9 +462,9 @@ Sheets 应用的 xlsx sidecar 还需要 Rust 工具链（`cargo` 在 PATH 中）
 GenOffice 正在积极开发中，你的反馈决定它的走向。
 
 - **报告 bug 或提出功能需求**，请到
-  [GitHub Issues](https://github.com/genspark-ai/genoffice/issues)。
+  [GitHub Issues](https://github.com/softtyos/softty-office/issues)。
 - **加入 GenOffice 群聊**，在
-  [GenTeam](https://genoffice.ai/join) 上与团队和其他用户交流。
+  [GenTeam](https://softty.net) 上与团队和其他用户交流。
 - **给仓库点个 Star** —— 如果 GenOffice 对你有用，这是支持项目最好的方式。
 
 ## 常见问题

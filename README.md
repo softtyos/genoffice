@@ -26,13 +26,13 @@ Word, Excel, PowerPoint and PDF files, edited by you and your AI, saved back in 
   <a href="#skills"><b>Skills</b></a> ·
   <a href="#command-line-and-agent-skill"><b>CLI</b></a> ·
   <a href="#mcp-server"><b>MCP</b></a> ·
-  <a href="https://genoffice.ai/"><b>Website</b></a> ·
-  <a href="https://genoffice.ai/join"><b>Community</b></a> ·
+  <a href="https://office.softty.net"><b>Website</b></a> ·
+  <a href="https://softty.net"><b>Community</b></a> ·
   <a href="https://x.com/merrickbuilds"><b>X</b></a> ·
   <a href="PRIVACY.md"><b>Privacy</b></a>
 </p>
 
-GenOffice is a free, open-source alternative to Microsoft Office for macOS,
+Softty Office is a free, open-source alternative to Microsoft Office for macOS,
 Windows and Linux. It opens and saves native `.docx`, `.xlsx` and `.pptx`
 files, edits PDF, Markdown and HTML, and puts an AI agent next to every
 document — not a chat box bolted on the side, but an editor that reads the
@@ -72,9 +72,9 @@ never the source format.
   and Windsurf, so a coding agent can create, convert, read and edit real
   Office files on your machine without opening a window.
 
-**Get it:** [macOS](https://github.com/genspark-ai/genoffice/releases/latest) (Apple Silicon and Intel) ·
-[Windows](https://github.com/genspark-ai/genoffice/releases/latest) (x64 and Arm) ·
-[Linux](https://github.com/genspark-ai/genoffice/releases/latest) (deb, rpm, AppImage) —
+**Get it:** [macOS](https://github.com/softtyos/softty-office/releases/latest) (Apple Silicon and Intel) ·
+[Windows](https://github.com/softtyos/softty-office/releases/latest) (x64 and Arm) ·
+[Linux](https://github.com/softtyos/softty-office/releases/latest) (deb, rpm, AppImage) —
 details and requirements in [Download](#download).
 
 ## Demo
@@ -89,8 +89,8 @@ can read in the panel.
 
 <table>
 <tr>
-<td width="50%"><img src="docs/assets/readme/docs-report.webp" alt="GenOffice Docs rendering a two-column annual-report page with a full-width cover image, shaded KPI table, header and footer, at 80% zoom with the AI panel collapsed"></td>
-<td width="50%"><img src="docs/assets/readme/docs-ai.webp" alt="GenOffice Docs: a company overview with a banner image; the AI tightened the Overview and inserted a new bulleted section, and the panel offers a one-click roll back"></td>
+<td width="50%"><img src="docs/assets/readme/docs-report.webp" alt="Softty Office Docs rendering a two-column annual-report page with a full-width cover image, shaded KPI table, header and footer, at 80% zoom with the AI panel collapsed"></td>
+<td width="50%"><img src="docs/assets/readme/docs-ai.webp" alt="Softty Office Docs: a company overview with a banner image; the AI tightened the Overview and inserted a new bulleted section, and the panel offers a one-click roll back"></td>
 </tr>
 <tr>
 <td><b>Opens the file as Word lays it out</b> — two-column sections, full-bleed images, shaded tables, headers and footers, pagination on Word's line metrics. Styles, comments, tracked changes, equations, ink and content controls round-trip untouched. A <b>Mailings</b> tab turns the document into a merge template: pick a <code>.xlsx</code> or <code>.csv</code> recipient list, insert real <code>MERGEFIELD</code>s, preview record by record, and merge to one document or one <code>.docx</code> per record.</td>
@@ -102,8 +102,8 @@ can read in the panel.
 
 <table>
 <tr>
-<td width="50%"><img src="docs/assets/readme/sheets-ai.webp" alt="GenOffice Sheets: the AI added a Summary sheet with revenue by region and category using SUMIF formulas, plus a column chart, and reports 43 applied changes with an Undo button"></td>
-<td width="50%"><img src="docs/assets/readme/sheets-qa.webp" alt="GenOffice Sheets: asked which region led Q2 revenue, the AI answers Europe with the category breakdown and cites the cells it used as links, next to the Orders sheet"></td>
+<td width="50%"><img src="docs/assets/readme/sheets-ai.webp" alt="Softty Office Sheets: the AI added a Summary sheet with revenue by region and category using SUMIF formulas, plus a column chart, and reports 43 applied changes with an Undo button"></td>
+<td width="50%"><img src="docs/assets/readme/sheets-qa.webp" alt="Softty Office Sheets: asked which region led Q2 revenue, the AI answers Europe with the category breakdown and cites the cells it used as links, next to the Orders sheet"></td>
 </tr>
 <tr>
 <td><b>Build it</b> — from one sentence the agent adds a Summary sheet with real <code>SUMIF</code>s by region and category, inserts a column chart, and applies the 43 changes as a single undoable batch.</td>
@@ -113,15 +113,15 @@ can read in the panel.
 
 ### 3 · Slides — from a prompt to a `.pptx` deck
 
-<img src="docs/assets/readme/slides-generate.webp" alt="Time-lapse of GenOffice Slides generating the Aurora Home investor deck: the AI plans the storyline in the panel, slides appear on the canvas one after another, and the finished deck ends on the closing ask" width="100%">
+<img src="docs/assets/readme/slides-generate.webp" alt="Time-lapse of Softty Office Slides generating the Aurora Home investor deck: the AI plans the storyline in the panel, slides appear on the canvas one after another, and the finished deck ends on the closing ask" width="100%">
 
 <table>
 <tr>
-<td width="50%"><img src="docs/assets/readme/slides-cover.webp" alt="GenOffice Slides: the cover slide of an AI-generated Aurora Home investor deck on the canvas, with the original one-line prompt and the AI's summary of what it built in the panel"></td>
-<td width="50%"><img src="docs/assets/readme/slides-ai.webp" alt="GenOffice Slides: the designed closing slide of the same 11-slide deck, with the thumbnail strip on the left and the AI panel summarizing the storyline"></td>
+<td width="50%"><img src="docs/assets/readme/slides-cover.webp" alt="Softty Office Slides: the cover slide of an AI-generated Aurora Home investor deck on the canvas, with the original one-line prompt and the AI's summary of what it built in the panel"></td>
+<td width="50%"><img src="docs/assets/readme/slides-ai.webp" alt="Softty Office Slides: the designed closing slide of the same 11-slide deck, with the thumbnail strip on the left and the AI panel summarizing the storyline"></td>
 </tr>
 <tr>
-<td><b>One line in</b> — "Create a 10-slide investor pitch deck for Aurora Home…". GenOffice plans the storyline, researches the numbers, and drafts every slide onto the canvas as a real <code>.pptx</code>.</td>
+<td><b>One line in</b> — "Create a 10-slide investor pitch deck for Aurora Home…". Softty Office plans the storyline, researches the numbers, and drafts every slide onto the canvas as a real <code>.pptx</code>.</td>
 <td><b>A finished deck out</b> — eleven designed slides with consistent typography, imagery and a closing call to action; keep editing with masters, layouts, smart guides and non-destructive cropping, or ask the panel to restyle, rewrite and reorder. Insert a <code>.glb</code> and it is a real 3D model: turn it by dragging in the editor, stored the way PowerPoint stores 3D, still 3D in PowerPoint.</td>
 </tr>
 </table>
@@ -134,8 +134,8 @@ the `.pptx`, and PowerPoint plays them back the same way.
 
 <table>
 <tr>
-<td width="50%"><img src="docs/assets/readme/pdf-edit.webp" alt="GenOffice PDF: Edit text mode outlines every text block on the page for in-place editing while the AI panel answers a question about the report with page citations"></td>
-<td width="50%"><img src="docs/assets/readme/pdf-convert.webp" alt="GenOffice Docs showing a Word document converted locally from the Helios quarterly review PDF, opened in a second tab beside the original PDF"></td>
+<td width="50%"><img src="docs/assets/readme/pdf-edit.webp" alt="Softty Office PDF: Edit text mode outlines every text block on the page for in-place editing while the AI panel answers a question about the report with page citations"></td>
+<td width="50%"><img src="docs/assets/readme/pdf-convert.webp" alt="Softty Office Docs showing a Word document converted locally from the Helios quarterly review PDF, opened in a second tab beside the original PDF"></td>
 </tr>
 <tr>
 <td><b>Edit inside the page</b> — Edit text mode outlines every text block for in-place retyping; the content stream is rewritten through PDFium with the original fonts, not a cover-up annotation. Ask the AI about a long report and get answers with page citations.</td>
@@ -149,11 +149,11 @@ Say what the page is for and who it is for. The AI proposes a **design brief**
 first — hook, palette, typography and style directions — then builds a single
 self-contained `.html` file against those tokens.
 
-<img src="docs/assets/readme/html-restyle-motion.webp" alt="Time-lapse of GenOffice HTML restyling the Lumen landing page: one Restyle request in the panel turns the dark Midnight Studio page into the warm Solar Daybreak version while every section and all copy stay in place" width="100%">
+<img src="docs/assets/readme/html-restyle-motion.webp" alt="Time-lapse of Softty Office HTML restyling the Lumen landing page: one Restyle request in the panel turns the dark Midnight Studio page into the warm Solar Daybreak version while every section and all copy stay in place" width="100%">
 
 <table>
 <tr>
-<td width="50%"><img src="docs/assets/readme/html-ai.webp" alt="GenOffice HTML: a generated landing page for a solar desk lamp in the dark Midnight Studio direction, shown in the live preview with the AI panel summarizing the page it just built"></td>
+<td width="50%"><img src="docs/assets/readme/html-ai.webp" alt="Softty Office HTML: a generated landing page for a solar desk lamp in the dark Midnight Studio direction, shown in the live preview with the AI panel summarizing the page it just built"></td>
 <td width="50%"><img src="docs/assets/readme/html-restyle.webp" alt="The same Lumen landing page restyled by the AI into the warm Solar Daybreak direction: paper background, serif headlines and an orange accent, with every section and all copy kept"></td>
 </tr>
 <tr>
@@ -163,8 +163,8 @@ self-contained `.html` file against those tokens.
 </table>
 <table>
 <tr>
-<td width="50%"><img src="docs/assets/readme/html-dashboard.webp" alt="GenOffice HTML: a generated personal dashboard UI for a freelance designer in a warm linen style, with a left rail, serif greeting and four metric cards"></td>
-<td width="50%"><img src="docs/assets/readme/html-report.webp" alt="GenOffice HTML: a generated EV-market data report in a broadsheet style, with a serif masthead, a 17.3 million headline figure and a stat row"></td>
+<td width="50%"><img src="docs/assets/readme/html-dashboard.webp" alt="Softty Office HTML: a generated personal dashboard UI for a freelance designer in a warm linen style, with a left rail, serif greeting and four metric cards"></td>
+<td width="50%"><img src="docs/assets/readme/html-report.webp" alt="Softty Office HTML: a generated EV-market data report in a broadsheet style, with a serif masthead, a 17.3 million headline figure and a stat row"></td>
 </tr>
 <tr>
 <td><b>UI mockups</b> — the "personal dashboard" starter turns a persona into a working layout: left rail, greeting, billable-hours sparkline, invoice and utilization cards, all real HTML you can hand to a developer.</td>
@@ -176,8 +176,8 @@ self-contained `.html` file against those tokens.
 
 <table>
 <tr>
-<td width="50%"><img src="docs/assets/readme/markdown-ai.webp" alt="GenOffice Markdown: a selected paragraph shows an Ask AI popover with a typed instruction and suggestion chips such as Polish, Make more concise, Expand and Fix grammar, plus Send now and Add to queue buttons"></td>
-<td width="50%"><img src="docs/assets/readme/markdown-render.webp" alt="GenOffice Markdown rendering a launch-notes document with a table, a Mermaid flowchart and a task list, with the AI panel's starter prompts on the left"></td>
+<td width="50%"><img src="docs/assets/readme/markdown-ai.webp" alt="Softty Office Markdown: a selected paragraph shows an Ask AI popover with a typed instruction and suggestion chips such as Polish, Make more concise, Expand and Fix grammar, plus Send now and Add to queue buttons"></td>
+<td width="50%"><img src="docs/assets/readme/markdown-render.webp" alt="Softty Office Markdown rendering a launch-notes document with a table, a Mermaid flowchart and a task list, with the AI panel's starter prompts on the left"></td>
 </tr>
 <tr>
 <td><b>Ask AI about a selection</b> — select any passage and an <b>Ask AI</b> chip appears: type an instruction or pick a suggestion, send it now, or queue several anchored edits and run them in one pass. The same entry exists in every app.</td>
@@ -242,7 +242,7 @@ skill and Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode or
 Windsurf can create, convert, read and edit real Office files through the
 same engines as the apps, without opening a window.
 
-<img src="docs/assets/readme/cli-deck-in-app.webp" alt="GenOffice Slides showing an eight-slide Solar System deck that a coding agent built through the genoffice command line: the cover slide on the canvas, eight thumbnails on the left and the AI panel open" width="100%">
+<img src="docs/assets/readme/cli-deck-in-app.webp" alt="Softty Office Slides showing an eight-slide Solar System deck that a coding agent built through the genoffice command line: the cover slide on the canvas, eight thumbnails on the left and the AI panel open" width="100%">
 
 <table>
 <tr>
@@ -251,7 +251,7 @@ same engines as the apps, without opening a window.
 </tr>
 <tr>
 <td><b>One prompt to your agent</b> — "Build an eight-slide deck about the Solar System." The agent reads the skill, writes a style sheet, an outline and one page spec per slide, generates the two photos with <code>genoffice image</code>, and lets <code>genoffice slides check</code> reject anything that overflows or overlaps before <code>genoffice create</code> assembles the <code>.pptx</code> and <code>slides render</code> hands back a PNG per slide to look at.</td>
-<td><b>Install once, from Settings → Integrations</b> — GenOffice lists the coding agents it finds on this computer and writes the skill into each one you pick. Or download the skill as a zip, or run <code>npx skills add genspark-ai/genoffice</code>. Commands and the full workflow are in <a href="#command-line-and-agent-skill">Command line and agent skill</a>.</td>
+<td><b>Install once, from Settings → Integrations</b> — GenOffice lists the coding agents it finds on this computer and writes the skill into each one you pick. Or download the skill as a zip, or run <code>npx skills add softtyos/softty-office</code>. Commands and the full workflow are in <a href="#command-line-and-agent-skill">Command line and agent skill</a>.</td>
 </tr>
 </table>
 
@@ -263,11 +263,11 @@ skill to install and no window open, and get 29 tools plus the op references
 as resources. A second, HTTP server inside the app lets an agent build a Word
 document in a visible editor tab while you watch.
 
-<img src="docs/assets/readme/mcp-deck-motion.webp" alt="Time-lapse of Claude Code building an eight-slide renewable-energy investor briefing through the genoffice MCP server: it searches for figures and photos, checks each candidate picture with media, deck_start writes the style sheet and outline, deck_page adds one checked page at a time, deck_build assembles the .pptx and slides_render returns a picture of every slide; the finished deck then opens in GenOffice Slides" width="100%">
+<img src="docs/assets/readme/mcp-deck-motion.webp" alt="Time-lapse of Claude Code building an eight-slide renewable-energy investor briefing through the genoffice MCP server: it searches for figures and photos, checks each candidate picture with media, deck_start writes the style sheet and outline, deck_page adds one checked page at a time, deck_build assembles the .pptx and slides_render returns a picture of every slide; the finished deck then opens in Softty Office Slides" width="100%">
 
 <table>
 <tr>
-<td width="50%"><img src="docs/assets/readme/mcp-deck-in-app.webp" alt="GenOffice Slides showing the eight-slide Renewable Energy 2026 deck that Claude Code built through the genoffice MCP server: the cover slide with a wind-farm photograph on the canvas and eight thumbnails on the left"></td>
+<td width="50%"><img src="docs/assets/readme/mcp-deck-in-app.webp" alt="Softty Office Slides showing the eight-slide Renewable Energy 2026 deck that Claude Code built through the genoffice MCP server: the cover slide with a wind-farm photograph on the canvas and eight thumbnails on the left"></td>
 <td width="50%"><img src="docs/assets/readme/mcp-integrations.webp" alt="GenOffice Settings, Integrations page, MCP part: the one-line claude mcp add command for Claude Code, the JSON block for Cursor, Claude Desktop and other MCP clients, and the local HTTP server option below"></td>
 </tr>
 <tr>
@@ -371,7 +371,7 @@ through the [MCP server](#mcp-server), Claude Desktop and every MCP client.
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Settings → Integrations** in the app | Lists the agents found on this computer; one click writes the skill into each one you choose. An **Update** button appears when a GenOffice release ships a newer skill. |
 | **Download as zip** on the same page   | The layout claude.ai, the Claude desktop apps and other assistants accept as an uploaded skill.                                                                          |
-| `npx skills add genspark-ai/genoffice` | Installs from this repository into any skills-compatible agent.                                                                                                          |
+| `npx skills add softtyos/softty-office` | Installs from this repository into any skills-compatible agent.                                                                                                          |
 
 Then start a new chat and ask for a document. The skill teaches the agent when
 to reach for `genoffice`, how to read a file before editing it, and how to
@@ -458,7 +458,7 @@ Over HTTP every session gets a private scratch folder, relative paths and deck
 folders resolve inside it, `open` is not offered, and with
 `GENOFFICE_ALLOWED_ROOTS` unset the tools cannot leave the server's own file
 store. `render`, `convert` to PDF and `create_pdf` still start a hidden
-GenOffice process, so a headless host needs the app installed and a virtual
+Softty Office process, so a headless host needs the app installed and a virtual
 display (`xvfb-run`).
 
 `genoffice` here is the CLI shipped inside the app (on macOS
@@ -498,16 +498,16 @@ the provider configured in GenOffice.
 
 | Platform                             | Requirements                                          | Download                                                                                  |
 | ------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| **macOS** — Apple Silicon (arm64)    | macOS 11+                                             | [Latest `.dmg` (arm64)](https://github.com/genspark-ai/genoffice/releases/latest)         |
-| **macOS** — Intel (x64)              | macOS 11+                                             | [Latest `.dmg` (x64)](https://github.com/genspark-ai/genoffice/releases/latest)           |
-| **Windows** (x64, most PCs)          | Windows 10+, Intel/AMD                                | [Latest `-x64.exe` installer](https://github.com/genspark-ai/genoffice/releases/latest)   |
-| **Windows** on Arm (ARM64)           | Windows 11 on Arm (Snapdragon X and similar)          | [Latest `-arm64.exe` installer](https://github.com/genspark-ai/genoffice/releases/latest) |
-| **Linux** — Debian / Ubuntu          | x86_64, glibc 2.34+ (Ubuntu 22.04 or newer)           | [Latest `.deb`](https://github.com/genspark-ai/genoffice/releases/latest)                 |
-| **Linux** — Fedora / RHEL / openSUSE | x86_64, glibc 2.34+ (Fedora 35+, RHEL 9+, Leap 15.6+) | [Latest `.rpm`](https://github.com/genspark-ai/genoffice/releases/latest)                 |
-| **Linux** — other distributions      | x86_64, glibc 2.34+, FUSE 2                           | [Latest `.AppImage`](https://github.com/genspark-ai/genoffice/releases/latest)            |
+| **macOS** — Apple Silicon (arm64)    | macOS 11+                                             | [Latest `.dmg` (arm64)](https://github.com/softtyos/softty-office/releases/latest)         |
+| **macOS** — Intel (x64)              | macOS 11+                                             | [Latest `.dmg` (x64)](https://github.com/softtyos/softty-office/releases/latest)           |
+| **Windows** (x64, most PCs)          | Windows 10+, Intel/AMD                                | [Latest `-x64.exe` installer](https://github.com/softtyos/softty-office/releases/latest)   |
+| **Windows** on Arm (ARM64)           | Windows 11 on Arm (Snapdragon X and similar)          | [Latest `-arm64.exe` installer](https://github.com/softtyos/softty-office/releases/latest) |
+| **Linux** — Debian / Ubuntu          | x86_64, glibc 2.34+ (Ubuntu 22.04 or newer)           | [Latest `.deb`](https://github.com/softtyos/softty-office/releases/latest)                 |
+| **Linux** — Fedora / RHEL / openSUSE | x86_64, glibc 2.34+ (Fedora 35+, RHEL 9+, Leap 15.6+) | [Latest `.rpm`](https://github.com/softtyos/softty-office/releases/latest)                 |
+| **Linux** — other distributions      | x86_64, glibc 2.34+, FUSE 2                           | [Latest `.AppImage`](https://github.com/softtyos/softty-office/releases/latest)            |
 
 All builds come from `main`; the macOS and Windows installers are signed.
-Older versions are on the [Releases](https://github.com/genspark-ai/genoffice/releases) page.
+Older versions are on the [Releases](https://github.com/softtyos/softty-office/releases) page.
 
 <details>
 <summary><b>Installing on Linux</b></summary>
@@ -516,19 +516,19 @@ The deb installs with apt — it pulls in the dependencies and adds GenOffice
 to the applications menu:
 
 ```bash
-sudo apt install ./genoffice_<version>_amd64.deb
+sudo apt install ./softty_office_<version>_amd64.deb
 ```
 
 On Fedora / RHEL-family / openSUSE, install the rpm instead:
 
 ```bash
-sudo dnf install ./genoffice-<version>.x86_64.rpm     # Fedora / RHEL family
-sudo zypper install ./genoffice-<version>.x86_64.rpm  # openSUSE
+sudo dnf install ./softty-office-<version>.x86_64.rpm     # Fedora / RHEL family
+sudo zypper install ./softty-office-<version>.x86_64.rpm  # openSUSE
 ```
 
 The deb and rpm also add blank templates for KDE Plasma's Dolphin: right-click
-in a folder → **Create New** lists _GenOffice Document_, _GenOffice Spreadsheet_
-and _GenOffice Presentation_. They live in `/usr/share/templates` and are
+in a folder → **Create New** lists _Softty Office Document_, _Softty Office Spreadsheet_
+and _Softty Office Presentation_. They live in `/usr/share/templates` and are
 removed with the package.
 
 The AppImage runs in place: install the FUSE 2 runtime
@@ -536,8 +536,8 @@ The AppImage runs in place: install the FUSE 2 runtime
 make the file executable, then run it:
 
 ```bash
-chmod +x GenOffice-<version>.AppImage
-./GenOffice-<version>.AppImage
+chmod +x Softty-Office-<version>.AppImage
+./Softty-Office-<version>.AppImage
 ```
 
 On a Chromebook, the same packages run inside the Linux environment
@@ -608,12 +608,12 @@ change must pass and how pull requests land.
 
 ## Community
 
-GenOffice is in active development and your feedback shapes it.
+Softty Office is in active development and your feedback shapes it.
 
 - **Report a bug or request a feature** in
-  [GitHub Issues](https://github.com/genspark-ai/genoffice/issues).
-- **Join the GenOffice group chat** on
-  [GenTeam](https://genoffice.ai/join) to talk to the team and other users.
+  [GitHub Issues](https://github.com/softtyos/softty-office/issues).
+- **Join the Softty Office community** on
+  [GenTeam](https://softty.net) to talk to the team and other users.
 - **Follow [@merrickbuilds](https://x.com/merrickbuilds) on X** for release
   notes, demos and what is being built next.
 - **Star the repo** if GenOffice is useful to you — it is the best way to
@@ -622,7 +622,7 @@ GenOffice is in active development and your feedback shapes it.
 ## FAQ
 
 <details>
-<summary><b>Is GenOffice free?</b></summary>
+<summary><b>Is Softty Office free?</b></summary>
 
 Yes. GenOffice is free and open-source under the Apache-2.0 license — no
 trial, no paid tier for the apps themselves.
@@ -630,9 +630,9 @@ trial, no paid tier for the apps themselves.
 </details>
 
 <details>
-<summary><b>Can GenOffice open Microsoft Word, Excel and PowerPoint files?</b></summary>
+<summary><b>Can Softty Office open Microsoft Word, Excel and PowerPoint files?</b></summary>
 
-Yes. GenOffice opens and saves native `.docx`, `.xlsx` and `.pptx` files.
+Yes. Softty Office opens and saves native `.docx`, `.xlsx` and `.pptx` files.
 Saving is byte-preserving: parts of the file you didn't touch are written
 back byte-for-byte, so documents keep working in Microsoft Office.
 Legacy `.doc`/`.dot`, `.xls` and `.ppt` files open too, as converted
@@ -642,7 +642,7 @@ copies](#legacy-and-odf-files-open-as-converted-copies).
 </details>
 
 <details>
-<summary><b>Does GenOffice work offline?</b></summary>
+<summary><b>Does Softty Office work offline?</b></summary>
 
 Document editing is fully local — files never leave your machine to be
 opened, edited, saved or converted. The AI features (agents, search, image
@@ -652,7 +652,7 @@ model API key.
 </details>
 
 <details>
-<summary><b>Can GenOffice edit PDF files?</b></summary>
+<summary><b>Can Softty Office edit PDF files?</b></summary>
 
 Yes — real PDF text and image editing that rewrites the page content stream
 with the original fonts preserved, not cover-up annotations.
@@ -660,7 +660,7 @@ with the original fonts preserved, not cover-up annotations.
 </details>
 
 <details>
-<summary><b>Can GenOffice convert PDF to Word, Excel or PowerPoint?</b></summary>
+<summary><b>Can Softty Office convert PDF to Word, Excel or PowerPoint?</b></summary>
 
 Yes — entirely on-device: PDFium character-level extraction plus
 geometry-based layout analysis, no cloud service, no upload. Scanned pages
@@ -691,7 +691,7 @@ that document, and closing it returns to hidden.
 </details>
 
 <details>
-<summary><b>Can GenOffice convert HTML to Word?</b></summary>
+<summary><b>Can Softty Office convert HTML to Word?</b></summary>
 
 Yes — Export as Word in the HTML app produces a native, editable `.docx`
 entirely on-device. The page is rendered in the built-in Chromium and reduced
@@ -702,9 +702,9 @@ form fields and page backgrounds; only visuals with no Word counterpart
 </details>
 
 <details>
-<summary><b>Can I drive GenOffice from Claude Code, Codex, Cursor or a script?</b></summary>
+<summary><b>Can I drive Softty Office from Claude Code, Codex, Cursor or a script?</b></summary>
 
-Yes. GenOffice installs a `genoffice` command line that runs the same engines
+Yes. Softty Office installs a `genoffice` command line that runs the same engines
 headless: inspect, convert, create, read and edit documents from a terminal or
 a script, with `--json` output for programs. The bundled agent skill teaches
 Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode and Windsurf
@@ -714,12 +714,12 @@ to use it; install it from **Settings → Integrations**. See
 </details>
 
 <details>
-<summary><b>Does GenOffice collect any data?</b></summary>
+<summary><b>Does Softty Office collect any data?</b></summary>
 
 Official packaged builds send limited usage analytics by default, and you can
 disable reporting at any time under Settings → General. Analytics never sends
 document content, file names, file paths, account identity or email
-addresses. See [GenOffice Privacy](PRIVACY.md) for the complete event and
+addresses. See [Softty Office Privacy](PRIVACY.md) for the complete event and
 data disclosures.
 
 </details>
@@ -732,7 +732,7 @@ AI-generated content.
 
 ## Acknowledgements
 
-GenOffice would not be possible without these open-source projects:
+Softty Office would not be possible without these open-source projects:
 
 - [Electron](https://www.electronjs.org/) — the desktop runtime for every app.
 - [Univer](https://github.com/dream-num/univer) (Apache-2.0) — the spreadsheet
@@ -780,7 +780,7 @@ MIT/Apache-2.0/BSD-3-Clause/OFL.
 
 ## License
 
-GenOffice is licensed under the [Apache License 2.0](LICENSE), with one
+Softty Office is licensed under the [Apache License 2.0](LICENSE), with one
 exception: the `ee/` directory is reserved for future enterprise modules and
 is covered by the [GenOffice Enterprise License](ee/LICENSE).
 
