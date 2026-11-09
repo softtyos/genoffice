@@ -53,7 +53,15 @@
     "licenses": "node tools/check-licenses.mjs",
     "dist:mac": "npm run notices && npm run build:all && npm run native:build:universal -w @softty/sheets && npm run dist:mac -w softty-office",
     "dist:win": "npm run notices && npm run build:all && npm run dist:win -w softty-office",
-    "dist:linux": "npm run notices && npm run build:all && npm run dist:linux -w softty-office"
+    "dist:linux": "npm run notices && npm run build:all && npm run dist:linux -w softty-office",
+    "build:mobile": "pnpm --filter @softty/mobile release",
+    "release:mobile": "pnpm --filter @softty/mobile release",
+    "release:mobile:android": "pnpm --filter @softty/mobile build:aab",
+    "release:mobile:apk": "pnpm --filter @softty/mobile build:apk",
+    "release:mobile:ios": "pnpm --filter @softty/mobile build:ios",
+    "release:mobile:local": "pnpm --filter @softty/mobile build:local:aab && pnpm --filter @softty/mobile build:local:ios",
+    "release:mobile:local:ios": "pnpm --filter @softty/mobile build:local:ios",
+    "release:mobile:local:apk": "pnpm --filter @softty/mobile build:local:apk"
   },
   "dependencies": {
     "@rhwp/core": "0.8.7",
