@@ -1,6 +1,6 @@
 # Softty Office'i yükleme
 
-Her derleme [Sürümler sayfasında](https://github.com/softtyos/genoffice/releases/latest) yayımlanır. Hepsi `main` dalından gelir; macOS ve Windows yükleyicileri imzalıdır.
+Her derleme [Sürümler sayfasında](https://github.com/softtyos/softty-office/releases/latest) yayımlanır. Hepsi `main` dalından gelir; macOS ve Windows yükleyicileri imzalıdır.
 
 ## Makineniz için doğru dosyayı seçin
 

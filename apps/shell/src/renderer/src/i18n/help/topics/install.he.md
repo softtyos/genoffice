@@ -1,6 +1,6 @@
 # התקנת Softty Office
 
-כל גרסה מתפרסמת ב[עמוד ההפצות](https://github.com/softtyos/genoffice/releases/latest). כולן מגיעות מ-`main`; ומתקיני macOS ו-Windows חתומים.
+כל גרסה מתפרסמת ב[עמוד ההפצות](https://github.com/softtyos/softty-office/releases/latest). כולן מגיעות מ-`main`; ומתקיני macOS ו-Windows חתומים.
 
 ## בחירת הקובץ למחשב שלך
 

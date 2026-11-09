@@ -166,7 +166,7 @@ describe('Settings → Integrations', () => {
     expect(examples).toHaveLength(3)
     expect(examples.every((row) => row.querySelector('button'))).toBe(true)
     expect(host.textContent).toContain('through the command line or MCP')
-    expect(host.textContent).toContain('npx skills add softtyos/genoffice')
+    expect(host.textContent).toContain('npx skills add softtyos/softty-office')
     // MCP block: the launcher itself while genoffice is not on the PATH, as a command and as JSON
     const mcp = [...host.querySelectorAll('.set-intg-mcp code')].map((c) => c.textContent)
     expect(mcp[0]).toBe(

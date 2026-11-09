@@ -1,6 +1,6 @@
 # 安装 Softty Office
 
-每个构建都发布在 [Releases 页面](https://github.com/softtyos/genoffice/releases/latest)。它们全部出自 `main`；macOS 与 Windows 的安装包已签名。
+每个构建都发布在 [Releases 页面](https://github.com/softtyos/softty-office/releases/latest)。它们全部出自 `main`；macOS 与 Windows 的安装包已签名。
 
 ## 选择适合你机器的文件
 
