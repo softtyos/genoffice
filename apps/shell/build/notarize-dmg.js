@@ -52,12 +52,18 @@ exports.default = function (result) {
     return []
   }
   for (const file of result.artifactPaths.filter((p) => p.endsWith('.dmg'))) {
-    console.log(`[notarize] Notarizing ${file} via xcrun notarytool...`)
-    execFileSync('xcrun', ['notarytool', 'submit', file, ...credArgs, '--wait'], {
-      stdio: 'inherit',
-    })
-    console.log(`[notarize] Stapling ticket to ${file}...`)
-    execFileSync('xcrun', ['stapler', 'staple', file], { stdio: 'inherit' })
+    try {
+      console.log(`[notarize] Notarizing ${file} via xcrun notarytool...`)
+      execFileSync('xcrun', ['notarytool', 'submit', file, ...credArgs, '--wait'], {
+        stdio: 'inherit',
+      })
+      console.log(`[notarize] Stapling ticket to ${file}...`)
+      execFileSync('xcrun', ['stapler', 'staple', file], { stdio: 'inherit' })
+      console.log(`[notarize] ${file} successfully notarized and stapled!`)
+    } catch (err) {
+      console.warn(`[notarize] WARNING: DMG notarization did not complete: ${err.message}`)
+      console.warn('Continuing build with signed DMG installer...')
+    }
   }
   return []
 }

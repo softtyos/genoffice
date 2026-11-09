@@ -737,7 +737,7 @@ const config = {
       NSMicrophoneUsageDescription:
         'Softty Office records your narration when you record a slide show.',
     },
-    notarize: true,
+    notarize: false,
     extraResources: [
       {
         from: '../sheets/native/xlsx-engine/target/release/xlsx-sidecar',
@@ -854,6 +854,7 @@ const config = {
   dmg: {
     sign: true,
   },
+  afterSign: 'build/afterSign.cjs',
   afterAllArtifactBuild: 'build/notarize-dmg.js',
 }
 
