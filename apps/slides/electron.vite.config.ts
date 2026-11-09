@@ -1,14 +1,21 @@
+import { createRequire } from 'node:module'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import react from '@vitejs/plugin-react'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 
 const here = dirname(fileURLToPath(import.meta.url))
+const require = createRequire(import.meta.url)
+const harfbuzzDist = dirname(require.resolve('harfbuzzjs'))
 
 // Pin resolution to this repo's workspace sources (matches tsconfig paths;
 // avoids bundling stale implementations when node_modules links point elsewhere)
 const workspaceAlias = {
   // Subpath before the bare name: string aliases are prefix replacements
+  'harfbuzzjs/dist/harfbuzz.js': resolve(harfbuzzDist, 'harfbuzz.js'),
+  'harfbuzzjs/dist/harfbuzz.wasm': resolve(harfbuzzDist, 'harfbuzz.wasm'),
+  '../../../../node_modules/harfbuzzjs/dist/harfbuzz.js': resolve(harfbuzzDist, 'harfbuzz.js'),
+  '../../../../node_modules/harfbuzzjs/dist/harfbuzz.wasm': resolve(harfbuzzDist, 'harfbuzz.wasm'),
   '@softty/pptx-engine/table-grid': resolve(
     here,
     '../../packages/pptx-engine/src/table-grid.ts',
