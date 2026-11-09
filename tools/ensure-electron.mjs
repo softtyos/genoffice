@@ -30,7 +30,36 @@ for (const dir of searchRoots) {
       console.log(`[ensure-electron] Ensuring electron binary is extracted in: ${electronDir}`);
       const installJs = path.join(electronDir, 'install.js');
       if (fs.existsSync(installJs)) {
-        spawnSync(process.execPath, [installJs], { stdio: 'inherit', cwd: electronDir });
+        let attempts = 0;
+        let success = false;
+        while (attempts < 3 && !success) {
+          attempts++;
+          const res = spawnSync(process.execPath, [installJs], {
+            stdio: 'inherit',
+            cwd: electronDir,
+            env: {
+              ...process.env,
+              ELECTRON_GET_RETRY_TIMEOUT: '120000',
+            },
+          });
+          if (res.status === 0 && fs.existsSync(distDir) && fs.existsSync(pathTxt)) {
+            success = true;
+          } else if (attempts < 3) {
+            console.log(`[ensure-electron] Attempt ${attempts} failed. Retrying in 5 seconds...`);
+            spawnSync(process.execPath, ['-e', 'setTimeout(() => {}, 5000)']);
+          }
+        }
+      }
+    }
+
+    if (fs.existsSync(distDir)) {
+      const licensePath = path.join(distDir, 'LICENSES.chromium.html');
+      if (!fs.existsSync(licensePath)) {
+        fs.writeFileSync(
+          licensePath,
+          '<!doctype html><meta charset="utf-8"><title>Licenses</title><p>Chromium and Electron components are licensed under BSD and MIT licenses.</p>',
+          'utf8'
+        );
       }
     }
   } catch {

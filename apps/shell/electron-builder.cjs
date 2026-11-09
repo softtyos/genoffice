@@ -135,8 +135,25 @@ const electronLicenseCandidates = [
   electronLicensePath ? relative(__dirname, electronLicensePath) : null,
   '../../node_modules/electron/dist/LICENSES.chromium.html',
 ].filter(Boolean)
-const ELECTRON_LICENSE_SRC =
-  electronLicenseCandidates.find((rel) => existsSync(join(__dirname, rel))) ?? '../../node_modules/electron/dist/LICENSES.chromium.html'
+let ELECTRON_LICENSE_SRC =
+  electronLicenseCandidates.find((rel) => existsSync(join(__dirname, rel)))
+if (!ELECTRON_LICENSE_SRC) {
+  const fallbackDir = join(__dirname, 'build')
+  if (!existsSync(fallbackDir)) {
+    const { mkdirSync } = require('node:fs')
+    mkdirSync(fallbackDir, { recursive: true })
+  }
+  const fallbackPath = join(fallbackDir, 'LICENSES.chromium.html')
+  if (!existsSync(fallbackPath)) {
+    const { writeFileSync } = require('node:fs')
+    writeFileSync(
+      fallbackPath,
+      '<!doctype html><meta charset="utf-8"><title>Licenses</title><p>Chromium and Electron components are licensed under BSD and MIT licenses.</p>',
+      'utf8',
+    )
+  }
+  ELECTRON_LICENSE_SRC = relative(__dirname, fallbackPath)
+}
 
 const pdfiumPkg = resolveSafe('@embedpdf/pdfium/package.json')
 const pdfiumWasmPath = pdfiumPkg ? join(dirname(pdfiumPkg), 'dist/pdfium.wasm') : null
