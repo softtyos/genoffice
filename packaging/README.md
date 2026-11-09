@@ -32,7 +32,7 @@ Notes:
 - File type associations, the icon set and the desktop entry come from the repo
   (`apps/shell/build/icons`); the deb's payload only provides the app itself.
 - The bundled `genoffice` command line works inside the sandbox, e.g.:
-  `flatpak run --command=/app/extra/app/opt/GenOffice/resources/cli/genoffice com.genoffice.app --help`
+  `flatpak run --command=/app/extra/app/opt/Softty Office/resources/cli/genoffice com.genoffice.app --help`
 - The deb carries an in-app updater feed baked for the native install layout;
   under Flatpak `/app` is read-only, so updates must go through Flatpak, not
   the app's update dialog.
