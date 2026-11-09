@@ -3,7 +3,7 @@
     "name": "Softty Office",
     "slug": "softty-office",
     "scheme": "softty-office",
-    "version": "1.0.5",
+    "version": "1.0.7",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "platforms": [
@@ -76,11 +76,11 @@
           }
         ]
       },
-      "buildNumber": "5"
+      "buildNumber": "7"
     },
     "android": {
       "package": "net.softty.office.mobile",
-      "versionCode": 5,
+      "versionCode": 7,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#090d16"

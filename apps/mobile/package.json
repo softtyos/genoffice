@@ -1,6 +1,6 @@
 {
   "name": "@softty/mobile",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "private": true,
   "description": "Softty Office Mobile Companion App (Softty Drop & Document Scanner)",
   "main": "index.ts",
@@ -10,16 +10,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "typecheck": "tsc --noEmit",
-    "release": "npm run build:aab && npm run build:ios",
-    "release:android": "npm run build:aab",
-    "release:ios": "npm run build:ios",
-    "release:apk": "npm run build:apk",
-    "build:apk": "npx eas-cli build -p android --profile preview",
-    "build:aab": "npx eas-cli build -p android --profile production",
-    "build:ios": "npx eas-cli build -p ios --profile production",
-    "build:local:apk": "npx eas-cli build -p android --profile preview --local",
-    "build:local:aab": "npx eas-cli build -p android --profile production --local",
-    "build:local:ios": "npx eas-cli build -p ios --profile production --local"
+    "release": "node ../../tools/build-mobile.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
