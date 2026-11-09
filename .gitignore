@@ -26,7 +26,13 @@ apps/landing/AGENTS.md
 *.apk
 *.aab
 *.ipa
-.gradle/
+*.keystore
+*.jks
+*.p12
+*.p8
+*.mobileprovision
+credentials.json
+/apps/mobile/credentials/
 /apps/mobile/android/
 /apps/mobile/ios/
 

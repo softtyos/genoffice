@@ -890,15 +890,22 @@ if (winSignMode) {
   }
 }
 
-if (updateUrl) {
-  config.publish = [
-    {
-      provider: 'generic',
-      url: updateUrl.replace(/\/+$/, ''),
-      channel: 'latest',
-    },
-  ]
-}
+config.publish = updateUrl
+  ? [
+      {
+        provider: 'generic',
+        url: updateUrl.replace(/\/+$/, ''),
+        channel: 'latest',
+      },
+    ]
+  : [
+      {
+        provider: 'github',
+        owner: 'softtyos',
+        repo: 'genoffice',
+        releaseType: 'release',
+      },
+    ]
 
 // CI's "-c.extraMetadata.version=..." CLI override deep-merges with this block,
 // so the version and all injected feature settings survive together.

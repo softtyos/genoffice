@@ -2,7 +2,7 @@
   "name": "softty-office",
   "productName": "Softty Office",
   "appId": "net.softty.office",
-  "version": "0.12.0",
+  "version": "1.0.0",
   "license": "Apache-2.0",
   "homepage": "https://office.softty.net",
   "private": true,
