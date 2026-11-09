@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@rhwp/core": "0.8.7",
+    "commander": "^12.1.0",
     "harfbuzzjs": "^1.4.0",
     "jsdom": "^28.0.0",
     "undici": "^6.29.1",
