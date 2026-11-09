@@ -180,6 +180,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
+          name: Softty Office ${{ github.event.inputs.release_tag || github.ref_name }}
+          generate_release_notes: true
           files: |
             apps/shell/release/*.dmg
             apps/shell/release/*.zip
