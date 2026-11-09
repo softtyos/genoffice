@@ -12,11 +12,12 @@ import { DocumentsScreen } from './src/screens/DocumentsScreen'
 import { DropScreen } from './src/screens/DropScreen'
 import { ScannerScreen } from './src/screens/ScannerScreen'
 import { ProfileScreen } from './src/screens/ProfileScreen'
+import { DocumentViewerModal } from './src/screens/DocumentViewerModal'
 
 type TabKey = 'documents' | 'drop' | 'scanner' | 'profile'
 
 function MainTabs() {
-  const { theme, t } = useApp()
+  const { theme, t, activeDocument, closeDocument } = useApp()
   const [activeTab, setActiveTab] = useState<TabKey>('documents')
 
   return (
@@ -33,6 +34,15 @@ function MainTabs() {
         {activeTab === 'scanner' && <ScannerScreen />}
         {activeTab === 'profile' && <ProfileScreen />}
       </View>
+
+      {/* Global Document Viewer Modal */}
+      {activeDocument && (
+        <DocumentViewerModal
+          document={activeDocument}
+          visible={!!activeDocument}
+          onClose={closeDocument}
+        />
+      )}
 
       {/* Bottom Tab Bar */}
       <View

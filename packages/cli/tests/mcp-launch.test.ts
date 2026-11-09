@@ -1,7 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { isGenofficeLauncher, mcpSnippet, readMcpEntry, writeMcpEntry } from '../src/agent-mcp'
+import { MCP_SERVER_NAME, isGenofficeLauncher, mcpSnippet, readMcpEntry, writeMcpEntry } from '../src/agent-mcp'
 import { mcpLaunch, mcpLaunchFromLauncher, type McpLaunch } from '../src/mcp-launch'
 import { tempDir } from './helpers'
 
@@ -77,23 +77,23 @@ describe('mcp launch entry', () => {
       mkdirSync(join(home, d))
     const cursor = join(home, '.cursor', 'mcp.json')
     writeMcpEntry('cursor', cursor, WIN_APP)
-    expect(JSON.parse(readFileSync(cursor, 'utf-8')).mcpServers.genoffice).toEqual({
+    expect(JSON.parse(readFileSync(cursor, 'utf-8')).mcpServers[MCP_SERVER_NAME]).toEqual({
       type: 'stdio',
       ...WIN_APP,
     })
     const gemini = join(home, '.gemini', 'settings.json')
     writeMcpEntry('gemini', gemini, WIN_APP)
-    expect(JSON.parse(readFileSync(gemini, 'utf-8')).mcpServers.genoffice).toEqual(WIN_APP)
+    expect(JSON.parse(readFileSync(gemini, 'utf-8')).mcpServers[MCP_SERVER_NAME]).toEqual(WIN_APP)
     const copilot = join(home, '.copilot', 'mcp-config.json')
     writeMcpEntry('copilot', copilot, WIN_APP)
-    expect(JSON.parse(readFileSync(copilot, 'utf-8')).mcpServers.genoffice).toEqual({
+    expect(JSON.parse(readFileSync(copilot, 'utf-8')).mcpServers[MCP_SERVER_NAME]).toEqual({
       type: 'local',
       ...WIN_APP,
       tools: ['*'],
     })
     const opencode = join(home, 'opencode', 'opencode.json')
     writeMcpEntry('opencode', opencode, WIN_APP)
-    expect(JSON.parse(readFileSync(opencode, 'utf-8')).mcp.genoffice).toEqual({
+    expect(JSON.parse(readFileSync(opencode, 'utf-8')).mcp[MCP_SERVER_NAME]).toEqual({
       type: 'local',
       command: [WIN_APP.command, ...WIN_APP.args],
       enabled: true,
@@ -104,8 +104,8 @@ describe('mcp launch entry', () => {
     writeMcpEntry('codex', codex, WIN_APP)
     expect(readFileSync(codex, 'utf-8')).toBe(
       '[mcp_servers.other]\ncommand = "npx"\n\n' +
-        `[mcp_servers.genoffice]\ncommand = ${JSON.stringify(WIN_APP.command)}\nargs = ${JSON.stringify(WIN_APP.args)}\n\n` +
-        '[mcp_servers.genoffice.env]\nELECTRON_RUN_AS_NODE = "1"\n',
+        `[mcp_servers.${MCP_SERVER_NAME}]\ncommand = ${JSON.stringify(WIN_APP.command)}\nargs = ${JSON.stringify(WIN_APP.args)}\n\n` +
+        `[mcp_servers.${MCP_SERVER_NAME}.env]\nELECTRON_RUN_AS_NODE = "1"\n`,
     )
     for (const [id, file] of [
       ['cursor', cursor],
@@ -120,7 +120,7 @@ describe('mcp launch entry', () => {
         id,
       ).toBe('stale')
     }
-    expect(mcpSnippet('codex', WIN_APP)).toContain('[mcp_servers.genoffice.env]')
+    expect(mcpSnippet('codex', WIN_APP)).toContain(`[mcp_servers.${MCP_SERVER_NAME}.env]`)
   })
 
   it('treats the app snippet entry (GenOffice.exe on genoffice.cjs) as ours, not occupied', () => {
@@ -142,7 +142,7 @@ describe('mcp launch entry', () => {
     const toml = join(home, 'config.toml')
     writeFileSync(
       toml,
-      `[mcp_servers.genoffice]\ncommand = ${JSON.stringify(WIN_APP.command)}\nargs = ${JSON.stringify(WIN_APP.args)}\n[mcp_servers.genoffice.env]\nELECTRON_RUN_AS_NODE = "1"\n`,
+      `[mcp_servers.${MCP_SERVER_NAME}]\ncommand = ${JSON.stringify(WIN_APP.command)}\nargs = ${JSON.stringify(WIN_APP.args)}\n[mcp_servers.${MCP_SERVER_NAME}.env]\nELECTRON_RUN_AS_NODE = "1"\n`,
     )
     expect(readMcpEntry('codex', toml, posix).status).toBe('stale')
     expect(readMcpEntry('codex', toml, WIN_APP).status).toBe('registered')

@@ -193,6 +193,24 @@ export function ProfileScreen() {
           </View>
         </View>
 
+        {/* Default App & File Associations */}
+        <View style={[styles.sectionCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
+          <Text style={[styles.sectionCardTitle, { color: theme.cyan }]}>
+            {t.profile.defaultAppSection.toUpperCase()}
+          </Text>
+          <Text style={[styles.storageDesc, { color: theme.textSecondary }]}>
+            {t.profile.defaultAppDesc}
+          </Text>
+          <TouchableOpacity
+            onPress={() => Linking.openSettings()}
+            style={[styles.cacheBtn, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
+          >
+            <Text style={[styles.cacheBtnText, { color: theme.textPrimary }]}>
+              ⚙️ {t.profile.defaultAppBtn}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         {/* Local Storage & Cache */}
         <View style={[styles.sectionCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
           <Text style={[styles.sectionCardTitle, { color: theme.textMuted }]}>

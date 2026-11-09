@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { useColorScheme, Alert } from 'react-native'
+import { useColorScheme, Alert, Linking } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as DocumentPicker from 'expo-document-picker'
-import * as FileSystem from 'expo-file-system'
+import * as FileSystem from 'expo-file-system/legacy'
 import { AppTheme, darkTheme, lightTheme } from '../theme'
 import { translations, Language } from '../i18n'
 import { OfficeDocument, OfficeDocType, DesktopPeer } from '../types'
@@ -24,6 +24,7 @@ interface AppContextType {
   closeDocument: () => void
   saveActiveDocument: (doc: OfficeDocument) => Promise<void>
   pickAndOpenDocument: () => Promise<void>
+  importAndOpenUri: (uri: string, customName?: string, providedSize?: number) => Promise<OfficeDocument | null>
   createNewDocument: (type: OfficeDocType, name?: string) => Promise<OfficeDocument>
   deleteDocument: (id: string) => Promise<void>
   refreshDocuments: () => Promise<void>
@@ -118,26 +119,99 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     return newDoc
   }
 
-  const pickAndOpenDocument = async () => {
-    try {
-      const res = await DocumentPicker.getDocumentAsync({
-        type: '*/*',
-        copyToCacheDirectory: true,
-      })
+  // Listen for incoming deep links and file intents from external apps (Zalo, Mail, Telegram, Files)
+  useEffect(() => {
+    const handleIncomingUrl = async (url: string | null) => {
+      if (!url) return
 
-      if (res.canceled || !res.assets || res.assets.length === 0) {
+      // Auth callbacks are handled by SofttyAuthService
+      if (url.startsWith('softty-office://auth/callback')) {
         return
       }
 
-      const file = res.assets[0]
-      const detectedType = DocumentStoreService.detectDocType(file.name)
-      let textContent = ''
+      // Check if URL is a file or document
+      const isFileLike =
+        url.startsWith('file://') ||
+        url.startsWith('content://') ||
+        /\.(pdf|docx|doc|xlsx|xls|csv|tsv|pptx|ppt|txt|md|html|htm)($|\?)/i.test(url)
 
-      // Attempt to read text content if text, md, or html
+      if (isFileLike) {
+        await importAndOpenUri(url)
+      }
+    }
+
+    // Check cold-start launch URL
+    Linking.getInitialURL().then(handleIncomingUrl).catch(console.error)
+
+    // Listen for runtime URL events (while app is in background or foreground)
+    const sub = Linking.addEventListener('url', (event) => {
+      handleIncomingUrl(event.url)
+    })
+
+    return () => {
+      sub.remove()
+    }
+  }, [])
+
+  const importAndOpenUri = async (
+    uri: string,
+    customName?: string,
+    providedSize?: number
+  ): Promise<OfficeDocument | null> => {
+    try {
+      if (!uri) return null
+
+      // Resolve file name
+      let fileName = customName || ''
+      if (!fileName) {
+        try {
+          const decoded = decodeURIComponent(uri)
+          const segments = decoded.split('/')
+          const lastPart = segments[segments.length - 1]?.split('?')[0] || ''
+          if (lastPart && lastPart.includes('.')) {
+            fileName = lastPart
+          }
+        } catch {
+          // ignore
+        }
+      }
+
+      if (!fileName) {
+        fileName = `Tai_lieu_${Date.now()}.docx`
+      }
+
+      const detectedType = DocumentStoreService.detectDocType(fileName)
+      let targetUri = uri
+      let fileSize = providedSize || 1024
+
+      // Inspect file info and cache/copy locally for persistent offline access
+      try {
+        const info = await FileSystem.getInfoAsync(uri)
+        if (info.exists && typeof info.size === 'number') {
+          fileSize = info.size
+        }
+
+        if (FileSystem.documentDirectory) {
+          const safeName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_')
+          const dest = `${FileSystem.documentDirectory}${Date.now()}_${safeName}`
+          await FileSystem.copyAsync({ from: uri, to: dest })
+          targetUri = dest
+        }
+      } catch (copyErr) {
+        console.warn('Could not copy file locally, using original URI:', copyErr)
+      }
+
+      let textContent = ''
       if (detectedType === 'docs' || detectedType === 'markdown' || detectedType === 'html') {
         try {
-          if (file.uri && (file.name.endsWith('.txt') || file.name.endsWith('.md') || file.name.endsWith('.html') || file.name.endsWith('.htm'))) {
-            textContent = await FileSystem.readAsStringAsync(file.uri, {
+          if (
+            targetUri &&
+            (fileName.endsWith('.txt') ||
+              fileName.endsWith('.md') ||
+              fileName.endsWith('.html') ||
+              fileName.endsWith('.htm'))
+          ) {
+            textContent = await FileSystem.readAsStringAsync(targetUri, {
               encoding: 'utf8',
             })
           }
@@ -145,27 +219,30 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           // ignore
         }
         if (!textContent) {
-          textContent = `Tài liệu văn bản: ${file.name}\nĐịnh dạng: ${detectedType.toUpperCase()}\nDung lượng: ${((file.size || 0) / 1024).toFixed(1)} KB\n\nNội dung tài liệu đã được nạp an toàn vào bộ nhớ cục bộ Softty Office. Bạn có thể chuyển sang tab Soạn Thảo để bổ sung ghi chú, lưu lại ngoại tuyến hoặc bấm "Bắn Desktop" để chuyển sang máy tính ngay lập tức.`
+          textContent = `Tài liệu văn bản: ${fileName}\nĐịnh dạng: ${detectedType.toUpperCase()}\nDung lượng: ${(
+            (fileSize || 0) / 1024
+          ).toFixed(1)} KB\n\nNội dung tài liệu đã được nạp an toàn vào bộ nhớ cục bộ Softty Office. Bạn có thể chuyển sang tab Soạn Thảo để bổ sung ghi chú, lưu lại ngoại tuyến hoặc bấm "Bắn Desktop" để chuyển sang máy tính ngay lập tức.`
         }
       }
 
-      // Parse CSV / TSV directly into spreadsheet rows
       let sheetHeaders = ['Cột A', 'Cột B', 'Cột C', 'Cột D']
       let sheetRows = [
         ['Dòng 1', '100', '200', '300'],
         ['Dòng 2', '400', '500', '600'],
       ]
       if (detectedType === 'sheets') {
-        const lowerName = file.name.toLowerCase()
+        const lowerName = fileName.toLowerCase()
         if (lowerName.endsWith('.csv') || lowerName.endsWith('.tsv')) {
           try {
             const delimiter = lowerName.endsWith('.tsv') ? '\t' : ','
-            const raw = await FileSystem.readAsStringAsync(file.uri, { encoding: 'utf8' })
+            const raw = await FileSystem.readAsStringAsync(targetUri, { encoding: 'utf8' })
             const lines = raw.split(/\r?\n/).filter((l) => l.trim() !== '')
             if (lines.length > 0) {
               sheetHeaders = lines[0].split(delimiter).map((c) => c.replace(/^["']|["']$/g, '').trim())
               if (lines.length > 1) {
-                sheetRows = lines.slice(1).map((l) => l.split(delimiter).map((c) => c.replace(/^["']|["']$/g, '').trim()))
+                sheetRows = lines.slice(1).map((l) =>
+                  l.split(delimiter).map((c) => c.replace(/^["']|["']$/g, '').trim())
+                )
               }
             }
           } catch {
@@ -176,9 +253,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
       const importedDoc: OfficeDocument = {
         id: `imported-${Date.now()}`,
-        name: file.name,
-        uri: file.uri,
-        size: file.size || 1024,
+        name: fileName,
+        uri: targetUri,
+        size: fileSize,
         type: detectedType,
         modifiedAt: Date.now(),
         textContent: textContent || undefined,
@@ -196,13 +273,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         slideData:
           detectedType === 'slides'
             ? {
-                deckTitle: file.name.replace(/\.[^/.]+$/, ''),
+                deckTitle: fileName.replace(/\.[^/.]+$/, ''),
                 slides: [
                   {
                     id: 1,
-                    title: file.name.replace(/\.[^/.]+$/, ''),
+                    title: fileName.replace(/\.[^/.]+$/, ''),
                     subtitle: 'Bản trình chiếu đã nạp từ thiết bị',
-                    bullets: ['Nội dung trang trình chiếu đã nhập thành công', 'Sẵn sàng trình chiếu và đồng bộ máy tính'],
+                    bullets: [
+                      'Nội dung trang trình chiếu đã nhập thành công',
+                      'Sẵn sàng trình chiếu và đồng bộ máy tính',
+                    ],
                   },
                 ],
               }
@@ -213,7 +293,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
                 totalPages: 3,
                 signed: false,
                 contentSummary: [
-                  `Trang 1: Tệp PDF "${file.name}" nạp từ bộ nhớ thiết bị.`,
+                  `Trang 1: Tệp PDF "${fileName}" nạp từ ứng dụng ngoài.`,
                   `Trang 2: Nội dung tài liệu số hóa bảo mật cao trên thiết bị di động.`,
                   `Trang 3: Chứng thực chữ ký điện tử và điều khoản pháp lý đính kèm.`,
                 ],
@@ -224,6 +304,27 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const updatedList = await DocumentStoreService.saveDocument(importedDoc)
       setDocuments(updatedList)
       setActiveDocument(importedDoc)
+      return importedDoc
+    } catch (err: any) {
+      console.error('Error importing URI:', err)
+      Alert.alert(t.common.error, `Không thể mở tệp: ${err.message || err}`)
+      return null
+    }
+  }
+
+  const pickAndOpenDocument = async () => {
+    try {
+      const res = await DocumentPicker.getDocumentAsync({
+        type: '*/*',
+        copyToCacheDirectory: true,
+      })
+
+      if (res.canceled || !res.assets || res.assets.length === 0) {
+        return
+      }
+
+      const file = res.assets[0]
+      await importAndOpenUri(file.uri, file.name, file.size)
     } catch (err: any) {
       Alert.alert(t.common.error, `Không thể mở tệp: ${err.message || err}`)
     }
@@ -280,6 +381,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         closeDocument,
         saveActiveDocument,
         pickAndOpenDocument,
+        importAndOpenUri,
         createNewDocument,
         deleteDocument,
         refreshDocuments,

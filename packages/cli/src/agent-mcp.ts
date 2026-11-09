@@ -193,7 +193,7 @@ export function readMcpEntry(id: AgentId, file: string, launch: McpLaunch): McpE
   const map = doc[def.shape.key]
   if (map === undefined) return { status: 'absent', command: null }
   if (!isRecord(map)) return { status: 'manual', command: null }
-  const entry = map[MCP_SERVER_NAME]
+  const entry = map[MCP_SERVER_NAME] ?? map['genoffice']
   if (entry === undefined) return { status: 'absent', command: null }
   const { command, args } = def.shape.launchOf(entry)
   if (JSON.stringify(entry) === JSON.stringify(def.shape.entry(launch))) {
@@ -219,7 +219,8 @@ export function writeMcpEntry(id: AgentId, file: string, launch: McpLaunch): voi
   const doc = text.trim() ? parseJsonObject(text) : {}
   if (!doc) throw new Error(`${file} is not a JSON object`)
   const map = isRecord(doc[def.shape.key]) ? (doc[def.shape.key] as Record<string, unknown>) : {}
-  doc[def.shape.key] = { ...map, [MCP_SERVER_NAME]: def.shape.entry(launch) }
+  const { genoffice: _legacy, ...cleanMap } = map
+  doc[def.shape.key] = { ...cleanMap, [MCP_SERVER_NAME]: def.shape.entry(launch) }
   save(file, `${JSON.stringify(doc, null, 2)}\n`)
 }
 
@@ -244,8 +245,10 @@ export function removeMcpEntry(id: AgentId, file: string): boolean {
   const doc = parseJsonObject(text)
   if (!doc) throw new Error(`${file} is not a JSON object`)
   const map = doc[def.shape.key]
-  if (!isRecord(map) || !(MCP_SERVER_NAME in map)) return false
-  const { [MCP_SERVER_NAME]: _dropped, ...rest } = map
+  if (!isRecord(map)) return false
+  const serverKey = MCP_SERVER_NAME in map ? MCP_SERVER_NAME : ('genoffice' in map ? 'genoffice' : null)
+  if (!serverKey) return false
+  const { [serverKey]: _dropped, ...rest } = map
   doc[def.shape.key] = rest
   save(file, `${JSON.stringify(doc, null, 2)}\n`)
   return true

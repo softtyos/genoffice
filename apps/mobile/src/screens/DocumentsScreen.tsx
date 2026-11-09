@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 import { useApp } from '../context/AppContext'
 import { OfficeDocument, OfficeDocType } from '../types'
-import { DocumentViewerModal } from './DocumentViewerModal'
 
 export function DocumentsScreen() {
   const {
@@ -329,15 +328,6 @@ export function DocumentsScreen() {
 
         <View style={{ height: 40 }} />
       </ScrollView>
-
-      {/* Document Viewer Modal */}
-      {activeDocument && (
-        <DocumentViewerModal
-          document={activeDocument}
-          visible={!!activeDocument}
-          onClose={closeDocument}
-        />
-      )}
     </View>
   )
 }
