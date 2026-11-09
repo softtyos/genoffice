@@ -44,15 +44,16 @@ async function click(selector: string): Promise<void> {
   })
 }
 
-describe('analytics consent in onboarding', () => {
-  it('explains default-on analytics without an onboarding control', () => {
+describe('Softty Office onboarding', () => {
+  it('renders brand feature highlights on the final slide', () => {
     renderOnboarding(vi.fn(async () => true))
-    expect(host.querySelector('[role="switch"]')).toBeNull()
-    expect(host.textContent).toContain('Enabled by default')
-    expect(host.textContent).toContain('Settings → General')
+    expect(host.querySelector('.onb-brand-features')).not.toBeNull()
+    expect(host.textContent).toContain('Local-First')
+    expect(host.textContent).toContain('100% Private')
+    expect(host.textContent).toContain('Smart AI')
   })
 
-  it('lets Skip and Escape finish without changing analytics', async () => {
+  it('lets Skip and Escape finish onboarding cleanly', async () => {
     const onDone = vi.fn(async () => true)
     renderOnboarding(onDone)
 
@@ -67,7 +68,7 @@ describe('analytics consent in onboarding', () => {
     expect(onDone).toHaveBeenLastCalledWith()
   })
 
-  it('finishes the final slide without an analytics choice', async () => {
+  it('finishes onboarding after navigating through all slides', async () => {
     const onDone = vi.fn(async () => true)
     renderOnboarding(onDone)
 

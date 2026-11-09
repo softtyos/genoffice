@@ -124,6 +124,10 @@
 
 /* each glyph carries different padding inside its canvas; pull it out so the
  * visible left edge of the artwork sits on the text axis below */
+.onb-art-sync {
+  margin-left: -4px;
+}
+
 .onb-art-gift {
   margin-left: -6px;
 }
@@ -193,6 +197,36 @@
   color: var(--onb-text-secondary);
   font-size: 12px;
   line-height: 1.4;
+}
+
+.onb-brand-features {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin-top: 14px;
+}
+
+.onb-feature-pill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 6px;
+  border-radius: 12px;
+  background: var(--onb-bg-subtle);
+  border: 1px solid var(--onb-border-default);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--onb-text-primary);
+  letter-spacing: -0.2px;
+}
+
+.onb-feature-pill svg {
+  color: var(--onb-brand);
+  flex-shrink: 0;
 }
 
 /* slide 3's star ask: same panel treatment as the offer, but low-key — a

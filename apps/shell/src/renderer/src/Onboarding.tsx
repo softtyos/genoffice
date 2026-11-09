@@ -15,27 +15,23 @@ interface Slide {
   subtitleKey: StringKey
   /** 16px muted paragraph below the title block */
   bodyKey?: StringKey
-  /** render the body in the dimmer footnote gray (slide 3's credits disclaimer) */
+  /** render the body in the dimmer footnote gray */
   bodyDim?: boolean
-  /** community slide shows the credits offer panel with the "Join GenTeam" call-to-action */
+  /** community slide shows the brand panel with the "Explore Softty" call-to-action */
   showOffer?: boolean
-  /** closing slide shows the "star us on GitHub" hint */
-  showStar?: boolean
-  /** closing slide explains default-on analytics and how to disable it */
-  showAnalyticsNotice?: boolean
-  art: 'logo' | 'gift' | 'check'
+  /** closing slide shows brand feature pills */
+  showBrandFeatures?: boolean
+  art: 'logo' | 'sync' | 'check'
 }
 
 const SLIDES: readonly Slide[] = [
   { titleKey: 'onbTitle1', subtitleKey: 'onbSubtitle1', bodyKey: 'onbBody1', art: 'logo' },
-  { titleKey: 'onbTitle2', subtitleKey: 'onbBody2', showOffer: true, art: 'gift' },
+  { titleKey: 'onbTitle2', subtitleKey: 'onbBody2', showOffer: true, art: 'sync' },
   {
     titleKey: 'onbTitle3',
     subtitleKey: 'onbBody3',
     bodyKey: 'onbNote3',
-    bodyDim: true,
-    showStar: true,
-    showAnalyticsNotice: true,
+    showBrandFeatures: true,
     art: 'check',
   },
 ]
@@ -53,11 +49,9 @@ function SlideArt({ kind }: { kind: Slide['art'] }) {
   if (kind === 'logo') {
     return <img className="onb-art onb-art-logo" src={appIcon} alt="" />
   }
-  if (kind === 'gift') {
-    // hand-drawn gift kept over the spec vector deliberately; 48 canvas at
-    // strokeWidth 3.2 renders the same 4px strokes at 60px as the check icon
+  if (kind === 'sync') {
     return (
-      <span className="onb-art onb-art-badge onb-art-gift" aria-hidden="true">
+      <span className="onb-art onb-art-badge onb-art-sync" aria-hidden="true">
         <svg
           viewBox="0 0 48 48"
           fill="none"
@@ -66,11 +60,11 @@ function SlideArt({ kind }: { kind: Slide['art'] }) {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <rect x="6" y="14" width="36" height="9" rx="2" />
-          <path d="M9.5 23v15a4 4 0 0 0 4 4h21a4 4 0 0 0 4-4V23" />
-          <path d="M24 14v28" />
-          <path d="M24 14c-7 0-10.5-2.6-10.5-6 0-2.5 2-4.5 4.5-4.5 4.2 0 6 5.3 6 10.5Z" />
-          <path d="M24 14c7 0 10.5-2.6 10.5-6 0-2.5-2-4.5-4.5-4.5-4.2 0-6 5.3-6 10.5Z" />
+          <rect x="5" y="8" width="23" height="17" rx="3" />
+          <path d="M11 25v4m-4 0h14" />
+          <rect x="25" y="16" width="18" height="25" rx="3" />
+          <circle cx="34" cy="36.5" r="1.5" fill="currentColor" />
+          <path d="M29 22h10" />
         </svg>
       </span>
     )
@@ -192,34 +186,6 @@ export function Onboarding({ onDone }: OnboardingProps) {
               {s.bodyKey && (
                 <p className={`onb-body${s.bodyDim ? ' onb-body-dim' : ''}`}>{t(s.bodyKey)}</p>
               )}
-              {s.showStar && (
-                <div className="onb-star">
-                  <p className="onb-star-hint">{t('onbStarHint')}</p>
-                  <button
-                    className="onb-star-btn"
-                    onClick={() => void window.aiOffice.openGitHubRepo()}
-                  >
-                    <svg
-                      width="13"
-                      height="13"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5L2.6 9.3l6.5-.9L12 2.5z" />
-                    </svg>
-                    {t('starOnGitHub')}
-                  </button>
-                </div>
-              )}
-              {s.showAnalyticsNotice && (
-                <div className="onb-consent">
-                  <span className="onb-consent-copy">
-                    <span className="onb-consent-title">{t('setAnalytics')}</span>
-                    <span className="onb-consent-desc">{t('setAnalyticsDesc')}</span>
-                  </span>
-                </div>
-              )}
               {s.showOffer && (
                 <div className="onb-offer">
                   <p className="onb-credits">{renderEmphasis(t('onbCredits'))}</p>
@@ -235,6 +201,56 @@ export function Onboarding({ onDone }: OnboardingProps) {
                       />
                     </svg>
                   </button>
+                </div>
+              )}
+              {s.showBrandFeatures && (
+                <div className="onb-brand-features">
+                  <div className="onb-feature-pill">
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    <span>Local-First</span>
+                  </div>
+                  <div className="onb-feature-pill">
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    <span>100% Private</span>
+                  </div>
+                  <div className="onb-feature-pill">
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                    </svg>
+                    <span>Smart AI</span>
+                  </div>
                 </div>
               )}
             </div>
