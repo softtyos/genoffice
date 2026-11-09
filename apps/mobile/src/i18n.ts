@@ -4,7 +4,7 @@ export const translations = {
   vi: {
     tabs: {
       documents: 'Tài Liệu',
-      drop: 'Softty Drop',
+      drop: 'Drop',
       scanner: 'Quét PDF',
       profile: 'Tài Khoản',
     },
@@ -60,8 +60,8 @@ export const translations = {
       readingSettings: 'Cỡ chữ:',
     },
     drop: {
-      title: 'Softty Drop',
-      subtitle: 'Truyền File Tức Thì LAN P2P',
+      title: 'Drop',
+      subtitle: 'Truyền Tệp P2P Mạng LAN (Không Qua Server)',
       searching: 'Đang quét máy tính trong mạng Wi-Fi...',
       refresh: 'Quét Lại Mạng Wi-Fi',
       noPeers: 'Chưa tìm thấy máy tính nào',
@@ -116,7 +116,7 @@ export const translations = {
   en: {
     tabs: {
       documents: 'Documents',
-      drop: 'Softty Drop',
+      drop: 'Drop',
       scanner: 'Scan PDF',
       profile: 'Account',
     },
@@ -172,8 +172,8 @@ export const translations = {
       readingSettings: 'Font size:',
     },
     drop: {
-      title: 'Softty Drop',
-      subtitle: 'Instant LAN P2P File Beam',
+      title: 'Drop',
+      subtitle: 'Instant LAN P2P Transfer (Direct Device-to-Device)',
       searching: 'Scanning nearby desktops over Wi-Fi...',
       refresh: 'Rescan Local Network',
       noPeers: 'No desktops found',

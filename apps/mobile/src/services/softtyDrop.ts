@@ -1,4 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { DesktopPeer } from '../types'
+
+const CUSTOM_PEERS_KEY = '@softty_drop_custom_peers_v1'
 
 export class SofttyDropService {
   /**
@@ -6,11 +9,31 @@ export class SofttyDropService {
    */
   static async scanNearbyDesktops(): Promise<DesktopPeer[]> {
     const peers: DesktopPeer[] = []
+    const probedIps = new Set<string>()
 
-    // Probing localhost/loopback for simulator/local dev
-    const candidates = ['127.0.0.1', 'localhost', '10.0.2.2']
+    // Load any saved custom paired computers
+    let savedPeers: DesktopPeer[] = []
+    try {
+      const stored = await AsyncStorage.getItem(CUSTOM_PEERS_KEY)
+      if (stored) {
+        savedPeers = JSON.parse(stored)
+      }
+    } catch {
+      // ignore
+    }
+
+    // Probing localhost/loopback for simulator/local dev and saved IPs
+    const candidates = [
+      '127.0.0.1',
+      'localhost',
+      '10.0.2.2',
+      ...savedPeers.map((p) => p.ip),
+    ]
 
     for (const ip of candidates) {
+      if (probedIps.has(ip)) continue
+      probedIps.add(ip)
+
       try {
         const controller = new AbortController()
         const timeoutId = setTimeout(() => controller.abort(), 1200)
@@ -30,10 +53,13 @@ export class SofttyDropService {
             deviceType: data.platform === 'win32' ? 'windows' : 'mac',
             lastSeen: Date.now(),
           })
-          break
         }
       } catch {
-        // Continue searching
+        // If it was a previously saved peer, keep it in the list as available target
+        const saved = savedPeers.find((p) => p.ip === ip)
+        if (saved && !peers.some((p) => p.ip === ip)) {
+          peers.push(saved)
+        }
       }
     }
 
@@ -41,7 +67,7 @@ export class SofttyDropService {
     if (peers.length === 0) {
       peers.push({
         id: 'desktop-manual-1',
-        name: 'Máy tính cá nhân (Softty Office)',
+        name: 'Máy tính cá nhân (Mạng LAN)',
         ip: '192.168.1.100',
         port: 54321,
         deviceType: 'mac',
@@ -50,6 +76,54 @@ export class SofttyDropService {
     }
 
     return peers
+  }
+
+  /**
+   * Add a custom desktop IP on LAN
+   */
+  static async addCustomPeer(ip: string, port = 54321): Promise<DesktopPeer> {
+    const cleanIp = ip.trim().replace(/^https?:\/\//, '').replace(/:.*$/, '')
+    let peerName = `Máy tính (${cleanIp})`
+    let platform: 'mac' | 'windows' | 'linux' = 'mac'
+
+    try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 1500)
+      const res = await fetch(`http://${cleanIp}:${port}/api/softty-drop/ping`, {
+        signal: controller.signal,
+      })
+      clearTimeout(timeoutId)
+
+      if (res.ok) {
+        const data = await res.json()
+        if (data.name) peerName = data.name
+        if (data.platform === 'win32') platform = 'windows'
+        if (data.platform === 'linux') platform = 'linux'
+      }
+    } catch {
+      // offline or desktop not yet open
+    }
+
+    const newPeer: DesktopPeer = {
+      id: `custom-peer-${cleanIp}`,
+      name: peerName,
+      ip: cleanIp,
+      port,
+      deviceType: platform,
+      lastSeen: Date.now(),
+    }
+
+    try {
+      const stored = await AsyncStorage.getItem(CUSTOM_PEERS_KEY)
+      const list: DesktopPeer[] = stored ? JSON.parse(stored) : []
+      const filtered = list.filter((p) => p.ip !== cleanIp)
+      filtered.unshift(newPeer)
+      await AsyncStorage.setItem(CUSTOM_PEERS_KEY, JSON.stringify(filtered))
+    } catch {
+      // ignore
+    }
+
+    return newPeer
   }
 
   /**

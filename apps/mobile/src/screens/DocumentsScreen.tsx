@@ -132,9 +132,7 @@ export function DocumentsScreen() {
             <Text style={styles.brandLogoIcon}>S</Text>
           </View>
           <View>
-            <Text style={[styles.brandTitle, { color: theme.textPrimary }]}>
-              Softty <Text style={{ color: theme.cyan }}>Office</Text>
-            </Text>
+            <Text style={[styles.brandTitle, { color: theme.textPrimary }]}>Office</Text>
             <Text style={[styles.brandSubtitle, { color: theme.textMuted }]}>{t.home.subtitle}</Text>
           </View>
         </View>

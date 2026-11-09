@@ -484,7 +484,7 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                 {/* Slide Card Canvas */}
                 <View style={[styles.slideCanvas, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
                   <View style={styles.slideHeader}>
-                    <Text style={[styles.slideBrandTag, { color: theme.amber }]}>SOFTTY SLIDES PRESENTATION</Text>
+                    <Text style={[styles.slideBrandTag, { color: theme.amber }]}>SLIDES PRESENTATION</Text>
                     <Text style={[styles.slideNumberBadge, { backgroundColor: theme.bgElevated, color: theme.textMuted }]}>
                       {t.viewer.slideOf(activeSlideIndex + 1, document.slideData.slides.length)}
                     </Text>
@@ -685,7 +685,7 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
         <Modal visible={presentationMode} animationType="fade" presentationStyle="fullScreen">
           <View style={[styles.presentationContainer, { backgroundColor: '#090d16' }]}>
             <View style={styles.presentationHeader}>
-              <Text style={styles.presentationBrand}>SOFTTY SLIDES • TRÌNH CHIẾU</Text>
+              <Text style={styles.presentationBrand}>SLIDES • TRÌNH CHIẾU</Text>
               <TouchableOpacity
                 onPress={() => setPresentationMode(false)}
                 style={styles.presentationCloseBtn}

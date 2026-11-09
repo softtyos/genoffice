@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
+import * as Print from 'expo-print'
 import { ScannedPage, OfficeDocument } from '../types'
 import { SofttyDropService } from '../services/softtyDrop'
 import { useApp } from '../context/AppContext'
@@ -103,33 +104,78 @@ export function ScannerScreen() {
     }
   }
 
+  const generateRealPdfFromPages = async (scannedPages: ScannedPage[]): Promise<string> => {
+    const pagesHtml = scannedPages
+      .map(
+        (p, idx) => `
+        <div style="page-break-after: ${idx === scannedPages.length - 1 ? 'avoid' : 'always'}; width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; padding: 20px; position: relative;">
+          <img src="${p.uri}" style="max-width: 95%; max-height: 90vh; object-fit: contain; box-shadow: 0 4px 14px rgba(0,0,0,0.12); border-radius: 4px;" />
+          <div style="position: absolute; bottom: 15px; right: 25px; font-family: -apple-system, sans-serif; font-size: 11px; color: #64748b;">
+            Trang ${idx + 1} / ${scannedPages.length} • Softty PDF Scanner
+          </div>
+        </div>
+      `
+      )
+      .join('')
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <style>
+            @page { size: A4 portrait; margin: 0; }
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { margin: 0; padding: 0; background-color: #ffffff; }
+          </style>
+        </head>
+        <body>
+          ${pagesHtml}
+        </body>
+      </html>
+    `
+
+    const file = await Print.printToFileAsync({ html })
+    return file.uri
+  }
+
   const handleExportAndOpen = async () => {
     if (pages.length === 0) {
       Alert.alert(t.common.error, 'Vui lòng quét ít nhất một trang tài liệu.')
       return
     }
 
-    const docId = `scan-pdf-${Date.now()}`
-    const fileName = `Tai_lieu_scan_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '_')}.pdf`
+    setProcessing(true)
+    try {
+      const docId = `scan-pdf-${Date.now()}`
+      const fileName = `Tai_lieu_scan_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '_')}.pdf`
 
-    const newPdfDoc: OfficeDocument = {
-      id: docId,
-      name: fileName,
-      uri: pages[0].uri,
-      size: pages.length * 350000,
-      type: 'pdf',
-      modifiedAt: Date.now(),
-      pdfData: {
-        totalPages: pages.length,
-        signed: false,
-        contentSummary: pages.map(
-          (_, idx) => `Trang ${idx + 1}: Văn bản hợp đồng được quét chất lượng cao bởi Softty Scanner.`
-        ),
-      },
+      // Generate real multi-page PDF from all scanned pages!
+      const realPdfUri = await generateRealPdfFromPages(pages)
+
+      const newPdfDoc: OfficeDocument = {
+        id: docId,
+        name: fileName,
+        uri: realPdfUri,
+        size: pages.length * 280000,
+        type: 'pdf',
+        modifiedAt: Date.now(),
+        pdfData: {
+          totalPages: pages.length,
+          signed: false,
+          contentSummary: pages.map(
+            (_, idx) => `Trang ${idx + 1}: Hình ảnh tài liệu quét chất lượng cao (${idx + 1}/${pages.length}).`
+          ),
+        },
+      }
+
+      await saveActiveDocument(newPdfDoc)
+      openDocument(newPdfDoc)
+    } catch (err: any) {
+      Alert.alert(t.common.error, `Không thể xuất PDF: ${err.message || err}`)
+    } finally {
+      setProcessing(false)
     }
-
-    await saveActiveDocument(newPdfDoc)
-    openDocument(newPdfDoc)
   }
 
   const handleSendToDesktop = async () => {
@@ -149,9 +195,12 @@ export function ScannerScreen() {
       const desktop = peers[0]
       const fileName = `Scan_TaiLieu_${new Date().toISOString().slice(0, 10)}.pdf`
 
+      // Generate real PDF file
+      const realPdfUri = await generateRealPdfFromPages(pages)
+
       const res = await SofttyDropService.sendFileToDesktop(
         desktop,
-        pages[0].uri,
+        realPdfUri,
         fileName,
         'application/pdf',
       )
@@ -165,6 +214,8 @@ export function ScannerScreen() {
       } else {
         Alert.alert(t.common.error, res.message)
       }
+    } catch (err: any) {
+      Alert.alert(t.common.error, `Lỗi gửi file: ${err.message || err}`)
     } finally {
       setProcessing(false)
     }
@@ -179,8 +230,8 @@ export function ScannerScreen() {
             <Text style={styles.scannerLogoIcon}>📸</Text>
           </View>
           <View>
-            <Text style={[styles.title, { color: theme.textPrimary }]}>{t.scanner.title}</Text>
-            <Text style={[styles.subtitle, { color: theme.textMuted }]}>{t.scanner.subtitle}</Text>
+            <Text style={[styles.title, { color: theme.textPrimary }]}>Quét PDF</Text>
+            <Text style={[styles.subtitle, { color: theme.textMuted }]}>Chụp ảnh & Xuất tài liệu PDF đa trang</Text>
           </View>
         </View>
       </View>

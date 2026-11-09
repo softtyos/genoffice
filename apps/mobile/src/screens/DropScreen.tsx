@@ -34,6 +34,25 @@ export function DropScreen() {
     }
   }
 
+  const handleManualAddIp = () => {
+    Alert.prompt
+      ? Alert.prompt(
+          'Kết Nối Máy Tính (LAN P2P)',
+          'Nhập địa chỉ IP máy tính trong mạng Wi-Fi (ví dụ: 192.168.1.15 hoặc 127.0.0.1):',
+          async (ip) => {
+            if (ip && ip.trim()) {
+              const peer = await SofttyDropService.addCustomPeer(ip.trim())
+              setPeers((prev) => [peer, ...prev.filter((p) => p.ip !== peer.ip)])
+              setSelectedPeer(peer)
+              Alert.alert(t.common.success, `Đã kết nối mục tiêu: ${peer.name} (${peer.ip})`)
+            }
+          },
+          'plain-text',
+          '192.168.88.175'
+        )
+      : Alert.alert('Thêm IP', 'Vui lòng nhập IP máy tính.')
+  }
+
   useEffect(() => {
     scan()
   }, [])
@@ -97,11 +116,16 @@ export function DropScreen() {
       <View style={styles.content}>
         <View style={styles.sectionHeader}>
           <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>{t.drop.selectPeer}</Text>
-          <TouchableOpacity onPress={scan} disabled={scanning}>
-            <Text style={[styles.refreshText, { color: theme.primary }]}>
-              {scanning ? t.common.loading : t.drop.refresh}
-            </Text>
-          </TouchableOpacity>
+          <View style={{ flexDirection: 'row', gap: 14, alignItems: 'center' }}>
+            <TouchableOpacity onPress={handleManualAddIp} activeOpacity={0.7}>
+              <Text style={[styles.refreshText, { color: theme.cyan }]}>+ Thêm IP</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={scan} disabled={scanning} activeOpacity={0.7}>
+              <Text style={[styles.refreshText, { color: theme.primary }]}>
+                {scanning ? t.common.loading : t.drop.refresh}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {scanning ? (
