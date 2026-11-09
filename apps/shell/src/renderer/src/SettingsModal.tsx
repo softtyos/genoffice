@@ -1579,7 +1579,7 @@ function AiMediaPane({
     search.provider === 'genspark' ? (searchCatalog[0]?.id ?? 'serper') : search.provider
   const searchMeta =
     searchCatalog.find((m) => m.id === activeSearchProvider) ?? searchCatalog[0]
-  const searchKey = search.providers[activeSearchProvider]?.apiKey ?? ''
+  const searchKey = (search.providers as Record<string, { apiKey: string }>)[activeSearchProvider]?.apiKey ?? ''
 
   return (
     <>

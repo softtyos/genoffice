@@ -303,6 +303,7 @@ import type {
   FileSearchQuery,
   FileSearchRerank,
   FileSearchSettings,
+  AccountStatus,
 } from '../shared/home-api'
 import { HOME_CHANNELS } from '../shared/home-api'
 import {
