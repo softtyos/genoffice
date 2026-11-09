@@ -19,6 +19,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "net.softty.office.mobile",
+      "appleTeamId": "79J42YA54H",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "NSCameraUsageDescription": "Softty Office cần quyền truy cập camera để quét tài liệu, hóa đơn chuyển thành file PDF.",
