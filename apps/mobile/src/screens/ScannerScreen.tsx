@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import * as Print from 'expo-print'
 import { ScannedPage, OfficeDocument } from '../types'
@@ -226,11 +227,11 @@ export function ScannerScreen() {
       {/* Header */}
       <View style={[styles.header, { backgroundColor: theme.bgSurface, borderBottomColor: theme.border }]}>
         <View style={styles.brandRow}>
-          <View style={[styles.scannerLogo, { backgroundColor: `${theme.rose}20` }]}>
-            <Text style={styles.scannerLogoIcon}>📸</Text>
+          <View style={[styles.scannerLogo, { backgroundColor: theme.bgElevated, borderColor: theme.border, borderWidth: 1 }]}>
+            <Ionicons name="camera-outline" size={22} color={theme.primary} />
           </View>
           <View>
-            <Text style={[styles.title, { color: theme.textPrimary }]}>Quét PDF</Text>
+            <Text style={[styles.title, { color: theme.textPrimary }]}>Quét tài liệu</Text>
             <Text style={[styles.subtitle, { color: theme.textMuted }]}>Chụp ảnh & Xuất tài liệu PDF đa trang</Text>
           </View>
         </View>
@@ -244,7 +245,7 @@ export function ScannerScreen() {
             onPress={handleCapturePage}
             activeOpacity={0.8}
           >
-            <Text style={styles.actionBtnIcon}>📸</Text>
+            <Ionicons name="camera-outline" size={18} color="#ffffff" style={{ marginRight: 6 }} />
             <Text style={styles.actionBtnText}>{t.scanner.takePhoto}</Text>
           </TouchableOpacity>
 
@@ -256,7 +257,7 @@ export function ScannerScreen() {
             onPress={handlePickFromGallery}
             activeOpacity={0.8}
           >
-            <Text style={styles.actionBtnIcon}>🖼️</Text>
+            <Ionicons name="images-outline" size={18} color={theme.textPrimary} style={{ marginRight: 6 }} />
             <Text style={[styles.actionBtnText, { color: theme.textPrimary }]}>{t.scanner.fromGallery}</Text>
           </TouchableOpacity>
         </View>
@@ -276,7 +277,7 @@ export function ScannerScreen() {
 
           {pages.length === 0 ? (
             <View style={[styles.emptyCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
-              <Text style={styles.emptyIcon}>📄</Text>
+              <Ionicons name="document-text-outline" size={38} color={theme.textMuted} style={{ marginBottom: 8 }} />
               <Text style={[styles.emptyText, { color: theme.textPrimary }]}>{t.scanner.emptyPages}</Text>
               <Text style={[styles.emptySubText, { color: theme.textMuted }]}>{t.scanner.emptySub}</Text>
             </View>
@@ -302,7 +303,8 @@ export function ScannerScreen() {
               onPress={handleExportAndOpen}
               activeOpacity={0.8}
             >
-              <Text style={styles.exportBtnText}>📄 {t.scanner.exportPdf} & {t.common.view}</Text>
+              <Ionicons name="document-attach-outline" size={18} color="#ffffff" style={{ marginRight: 6 }} />
+              <Text style={styles.exportBtnText}>{t.scanner.exportPdf} & {t.common.view}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -314,9 +316,12 @@ export function ScannerScreen() {
               {processing ? (
                 <ActivityIndicator color="#ffffff" />
               ) : (
-                <Text style={styles.desktopSendBtnText}>
-                  ⚡ {t.scanner.beamDirect} ({pages.length})
-                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="send" size={16} color="#ffffff" style={{ marginRight: 6 }} />
+                  <Text style={styles.desktopSendBtnText}>
+                    {t.scanner.beamDirect} ({pages.length})
+                  </Text>
+                </View>
               )}
             </TouchableOpacity>
           </View>
@@ -467,6 +472,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
   },
   exportBtnText: {
     color: '#ffffff',
@@ -478,6 +484,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
   },
   desktopSendBtnText: {
     color: '#ffffff',

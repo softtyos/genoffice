@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   StatusBar,
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
+  Linking,
 } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { Ionicons } from '@expo/vector-icons'
 import { AppProvider, useApp } from './src/context/AppContext'
 import { DocumentsScreen } from './src/screens/DocumentsScreen'
 import { DropScreen } from './src/screens/DropScreen'
@@ -19,6 +21,17 @@ type TabKey = 'documents' | 'drop' | 'scanner' | 'profile'
 function MainTabs() {
   const { theme, t, activeDocument, closeDocument } = useApp()
   const [activeTab, setActiveTab] = useState<TabKey>('documents')
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setActiveTab('drop'), 3000)
+    const t2 = setTimeout(() => setActiveTab('scanner'), 6000)
+    const t3 = setTimeout(() => setActiveTab('profile'), 9000)
+    return () => {
+      clearTimeout(t1)
+      clearTimeout(t2)
+      clearTimeout(t3)
+    }
+  }, [])
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.bg }]} edges={['top', 'left', 'right']}>
@@ -59,7 +72,11 @@ function MainTabs() {
           onPress={() => setActiveTab('documents')}
           activeOpacity={0.7}
         >
-          <Text style={styles.tabIcon}>📂</Text>
+          <Ionicons
+            name={activeTab === 'documents' ? 'folder' : 'folder-outline'}
+            size={22}
+            color={activeTab === 'documents' ? theme.primary : theme.textMuted}
+          />
           <Text
             style={[
               styles.tabLabel,
@@ -75,11 +92,15 @@ function MainTabs() {
           onPress={() => setActiveTab('drop')}
           activeOpacity={0.7}
         >
-          <Text style={styles.tabIcon}>📡</Text>
+          <Ionicons
+            name={activeTab === 'drop' ? 'swap-horizontal' : 'swap-horizontal-outline'}
+            size={22}
+            color={activeTab === 'drop' ? theme.primary : theme.textMuted}
+          />
           <Text
             style={[
               styles.tabLabel,
-              { color: activeTab === 'drop' ? theme.cyan : theme.textMuted },
+              { color: activeTab === 'drop' ? theme.primary : theme.textMuted },
             ]}
           >
             {t.tabs.drop}
@@ -91,11 +112,15 @@ function MainTabs() {
           onPress={() => setActiveTab('scanner')}
           activeOpacity={0.7}
         >
-          <Text style={styles.tabIcon}>📄</Text>
+          <Ionicons
+            name={activeTab === 'scanner' ? 'scan' : 'scan-outline'}
+            size={22}
+            color={activeTab === 'scanner' ? theme.primary : theme.textMuted}
+          />
           <Text
             style={[
               styles.tabLabel,
-              { color: activeTab === 'scanner' ? theme.rose : theme.textMuted },
+              { color: activeTab === 'scanner' ? theme.primary : theme.textMuted },
             ]}
           >
             {t.tabs.scanner}
@@ -107,7 +132,11 @@ function MainTabs() {
           onPress={() => setActiveTab('profile')}
           activeOpacity={0.7}
         >
-          <Text style={styles.tabIcon}>👤</Text>
+          <Ionicons
+            name={activeTab === 'profile' ? 'person' : 'person-outline'}
+            size={22}
+            color={activeTab === 'profile' ? theme.primary : theme.textMuted}
+          />
           <Text
             style={[
               styles.tabLabel,
@@ -151,13 +180,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-  },
-  tabIcon: {
-    fontSize: 20,
-    marginBottom: 4,
+    gap: 3,
   },
   tabLabel: {
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: '600',
   },
 })

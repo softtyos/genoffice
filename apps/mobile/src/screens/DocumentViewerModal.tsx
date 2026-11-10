@@ -10,6 +10,7 @@ import {
   Alert,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Ionicons } from '@expo/vector-icons'
 import * as Sharing from 'expo-sharing'
 import { Paths, File } from 'expo-file-system'
 import { useApp } from '../context/AppContext'
@@ -198,7 +199,7 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
         <View style={[styles.appBar, { backgroundColor: theme.bgSurface, borderBottomColor: theme.border }]}>
           <View style={styles.appBarLeft}>
             <TouchableOpacity onPress={onClose} style={styles.closeBtn} activeOpacity={0.7}>
-              <Text style={[styles.closeIcon, { color: theme.textPrimary }]}>←</Text>
+              <Ionicons name="arrow-back" size={22} color={theme.textPrimary} />
             </TouchableOpacity>
 
             <View style={[styles.typeBadge, { backgroundColor: `${getBadgeColor()}25`, borderColor: getBadgeColor() }]}>
@@ -225,12 +226,12 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
               style={[styles.beamBtn, { backgroundColor: theme.primary }]}
               activeOpacity={0.8}
             >
-              <Text style={styles.beamBtnIcon}>📡</Text>
-              <Text style={styles.beamBtnText}>{sendingDrop ? '...' : 'Bắn Desktop'}</Text>
+              <Ionicons name="send" size={13} color="#ffffff" style={{ marginRight: 5 }} />
+              <Text style={styles.beamBtnText}>{sendingDrop ? '...' : 'Gửi Desktop'}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={handleShare} style={[styles.iconBtn, { backgroundColor: theme.bgElevated }]} activeOpacity={0.7}>
-              <Text style={[styles.iconBtnText, { color: theme.textPrimary }]}>📤</Text>
+              <Ionicons name="share-outline" size={18} color={theme.textPrimary} />
             </TouchableOpacity>
           </View>
         </View>
@@ -408,7 +409,7 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                   style={[styles.saveCellBtn, { backgroundColor: theme.emerald }]}
                   activeOpacity={0.8}
                 >
-                  <Text style={styles.saveCellBtnText}>✓</Text>
+                  <Ionicons name="checkmark" size={16} color="#ffffff" />
                 </TouchableOpacity>
               )}
             </View>
@@ -535,7 +536,8 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                       activeSlideIndex === 0 && { opacity: 0.4 },
                     ]}
                   >
-                    <Text style={[styles.slideNavText, { color: theme.textPrimary }]}>◀ {t.viewer.prevSlide}</Text>
+                    <Ionicons name="chevron-back" size={14} color={theme.textPrimary} style={{ marginRight: 4 }} />
+                    <Text style={[styles.slideNavText, { color: theme.textPrimary }]}>{t.viewer.prevSlide}</Text>
                   </TouchableOpacity>
 
                   {/* Thumbnail Pills */}
@@ -566,7 +568,8 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                       (!document.slideData || activeSlideIndex === document.slideData.slides.length - 1) && { opacity: 0.4 },
                     ]}
                   >
-                    <Text style={[styles.slideNavText, { color: theme.textPrimary }]}>{t.viewer.nextSlide} ▶</Text>
+                    <Text style={[styles.slideNavText, { color: theme.textPrimary }]}>{t.viewer.nextSlide}</Text>
+                    <Ionicons name="chevron-forward" size={14} color={theme.textPrimary} style={{ marginLeft: 4 }} />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -588,7 +591,8 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                   activePdfPage <= 1 && { opacity: 0.4 },
                 ]}
               >
-                <Text style={[styles.pdfNavBtnText, { color: theme.textPrimary }]}>◀ Trang trước</Text>
+                <Ionicons name="chevron-back" size={14} color={theme.textPrimary} style={{ marginRight: 4 }} />
+                <Text style={[styles.pdfNavBtnText, { color: theme.textPrimary }]}>Trang trước</Text>
               </TouchableOpacity>
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pdfPillsRow}>
@@ -624,7 +628,8 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                   activePdfPage >= (document.pdfData?.totalPages || 1) && { opacity: 0.4 },
                 ]}
               >
-                <Text style={[styles.pdfNavBtnText, { color: theme.textPrimary }]}>Trang tiếp ▶</Text>
+                <Text style={[styles.pdfNavBtnText, { color: theme.textPrimary }]}>Trang tiếp</Text>
+                <Ionicons name="chevron-forward" size={14} color={theme.textPrimary} style={{ marginLeft: 4 }} />
               </TouchableOpacity>
             </View>
 
@@ -659,7 +664,7 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                 {/* E-Signature Box */}
                 {isSigned ? (
                   <View style={[styles.signedBox, { backgroundColor: `${theme.emerald}15`, borderColor: theme.emerald }]}>
-                    <Text style={styles.signedCheckIcon}>✓</Text>
+                    <Ionicons name="checkmark-circle" size={24} color={theme.emerald} />
                     <View style={styles.signedTextBox}>
                       <Text style={[styles.signedTitle, { color: theme.emerald }]}>{t.viewer.signedBadge}</Text>
                       <Text style={[styles.signedSubtitle, { color: theme.textSecondary }]}>
@@ -676,7 +681,10 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                     style={[styles.signPdfBtn, { backgroundColor: theme.primary }]}
                     activeOpacity={0.8}
                   >
-                    <Text style={styles.signPdfBtnText}>✍️ {t.viewer.signPdf}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <Ionicons name="create-outline" size={18} color="#ffffff" style={{ marginRight: 6 }} />
+                      <Text style={styles.signPdfBtnText}>{t.viewer.signPdf}</Text>
+                    </View>
                   </TouchableOpacity>
                 )}
               </View>
@@ -693,9 +701,10 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
               <Text style={styles.presentationBrand}>SLIDES • TRÌNH CHIẾU</Text>
               <TouchableOpacity
                 onPress={() => setPresentationMode(false)}
-                style={styles.presentationCloseBtn}
+                style={[styles.presentationCloseBtn, { flexDirection: 'row', alignItems: 'center' }]}
               >
-                <Text style={styles.presentationCloseText}>✕ Thoát</Text>
+                <Ionicons name="close" size={16} color="#ffffff" style={{ marginRight: 4 }} />
+                <Text style={styles.presentationCloseText}>Thoát</Text>
               </TouchableOpacity>
             </View>
 
@@ -725,9 +734,10 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
               <TouchableOpacity
                 disabled={activeSlideIndex <= 0}
                 onPress={() => setActiveSlideIndex((i) => Math.max(0, i - 1))}
-                style={[styles.presentationNavBtn, activeSlideIndex <= 0 && { opacity: 0.3 }]}
+                style={[styles.presentationNavBtn, activeSlideIndex <= 0 && { opacity: 0.3 }, { flexDirection: 'row', alignItems: 'center' }]}
               >
-                <Text style={styles.presentationNavText}>◀ Slide trước</Text>
+                <Ionicons name="chevron-back" size={14} color="#ffffff" style={{ marginRight: 4 }} />
+                <Text style={styles.presentationNavText}>Slide trước</Text>
               </TouchableOpacity>
 
               <Text style={styles.presentationProgressText}>
@@ -744,9 +754,11 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                 style={[
                   styles.presentationNavBtn,
                   (!document.slideData || activeSlideIndex >= document.slideData.slides.length - 1) && { opacity: 0.3 },
+                  { flexDirection: 'row', alignItems: 'center' },
                 ]}
               >
-                <Text style={styles.presentationNavText}>Slide tiếp ▶</Text>
+                <Text style={styles.presentationNavText}>Slide tiếp</Text>
+                <Ionicons name="chevron-forward" size={14} color="#ffffff" style={{ marginLeft: 4 }} />
               </TouchableOpacity>
             </View>
           </View>

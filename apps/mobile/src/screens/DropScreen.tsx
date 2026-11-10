@@ -11,6 +11,7 @@ import {
   ScrollView,
   Modal,
 } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import * as DocumentPicker from 'expo-document-picker'
 import * as ImagePicker from 'expo-image-picker'
 import { DesktopPeer } from '../types'
@@ -84,7 +85,7 @@ export function DropScreen() {
           if (result && result.success && result.localUri) {
             setIncomingStatus(`Đã nhận: ${result.fileName}`)
             Alert.alert(
-              '🎉 Đã nhận tệp mới!',
+              'Đã nhận tệp mới',
               `Tài liệu "${result.fileName}" đã được chuyển sang điện thoại. Bạn có muốn mở xem ngay?`,
               [
                 {
@@ -266,13 +267,13 @@ export function DropScreen() {
       {/* Header */}
       <View style={[styles.header, { backgroundColor: theme.bgSurface, borderBottomColor: theme.border }]}>
         <View style={styles.brandRow}>
-          <View style={[styles.dropLogo, { backgroundColor: `${theme.cyan}20` }]}>
-            <Text style={styles.dropLogoIcon}>📡</Text>
+          <View style={[styles.dropLogo, { backgroundColor: theme.bgElevated, borderColor: theme.border, borderWidth: 1 }]}>
+            <Ionicons name="swap-horizontal-outline" size={22} color={theme.primary} />
           </View>
           <View>
-            <Text style={[styles.title, { color: theme.textPrimary }]}>Softty Drop 2.0</Text>
+            <Text style={[styles.title, { color: theme.textPrimary }]}>Chuyển file</Text>
             <Text style={[styles.subtitle, { color: theme.textMuted }]}>
-              Chuyển tệp đa chiều: Mobile ⇄ Desktop ⇄ Mobile
+              Chuyển tệp không dây trực tiếp giữa điện thoại và máy tính
             </Text>
           </View>
         </View>
@@ -283,16 +284,28 @@ export function DropScreen() {
             style={[styles.segmentBtn, activeTab === 'send' && { backgroundColor: theme.primary }]}
             onPress={() => setActiveTab('send')}
           >
+            <Ionicons
+              name="arrow-up-circle-outline"
+              size={16}
+              color={activeTab === 'send' ? '#ffffff' : theme.textMuted}
+              style={{ marginRight: 6 }}
+            />
             <Text style={[styles.segmentText, { color: activeTab === 'send' ? '#fff' : theme.textMuted }]}>
-              📤 Gửi Tệp
+              Gửi tệp
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.segmentBtn, activeTab === 'receive' && { backgroundColor: theme.primary }]}
             onPress={() => setActiveTab('receive')}
           >
+            <Ionicons
+              name="arrow-down-circle-outline"
+              size={16}
+              color={activeTab === 'receive' ? '#ffffff' : theme.textMuted}
+              style={{ marginRight: 6 }}
+            />
             <Text style={[styles.segmentText, { color: activeTab === 'receive' ? '#fff' : theme.textMuted }]}>
-              📥 Nhận Tệp
+              Nhận tệp
             </Text>
           </TouchableOpacity>
         </View>
@@ -302,92 +315,24 @@ export function DropScreen() {
         {/* ================= TAB 1: GỬI TỆP ================= */}
         {activeTab === 'send' && (
           <View style={styles.tabContent}>
-            {/* Radar Animation Card */}
+            {/* 1-Touch Clean Device Action Card */}
             <View style={[styles.radarCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
-              <View style={[styles.radarOuterRing, { borderColor: `${theme.cyan}25` }]}>
-                <View style={[styles.radarMiddleRing, { borderColor: `${theme.cyan}45` }]}>
-                  <View style={[styles.radarCenterCircle, { backgroundColor: theme.cyan }]}>
-                    <Text style={styles.radarIcon}>📡</Text>
-                  </View>
-                </View>
+              <View style={[styles.deviceIconCircle, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}>
+                <Ionicons name="desktop-outline" size={36} color={theme.primary} />
               </View>
 
               <Text style={[styles.radarHeadline, { color: theme.textPrimary }]}>
-                {scanning ? 'Đang dò tìm thiết bị lân cận...' : 'Sẵn sàng chuyển tệp P2P'}
+                {scanning ? 'Đang dò tìm máy tính...' : (selectedPeer?.name || 'Máy tính của bạn')}
               </Text>
-              <Text style={[styles.radarDescription, { color: theme.textMuted }]}>
-                Quét mã QR, nhập mã PIN 6 số hoặc bấm vào máy tính bên dưới
+              <Text style={[styles.radarDescription, { color: '#10b981', fontWeight: '600' }]}>
+                {scanning ? 'Đang quét mạng Wi-Fi...' : 'Đã kết nối tự động • Sẵn sàng chuyển tệp 1-Chạm'}
               </Text>
 
-              {/* Action Buttons Row */}
-              <View style={styles.actionButtonsRow}>
-                <TouchableOpacity
-                  style={[styles.actionBtn, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
-                  onPress={() => setPinModalVisible(true)}
-                >
-                  <Text style={styles.actionBtnIcon}>🔢</Text>
-                  <Text style={[styles.actionBtnText, { color: theme.textPrimary }]}>Nhập mã PIN</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={[styles.actionBtn, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
-                  onPress={handleScanQrFromCamera}
-                >
-                  <Text style={styles.actionBtnIcon}>📷</Text>
-                  <Text style={[styles.actionBtnText, { color: theme.textPrimary }]}>Quét mã QR</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={[styles.actionBtn, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
-                  onPress={scan}
-                  disabled={scanning}
-                >
-                  <Text style={styles.actionBtnIcon}>🔄</Text>
-                  <Text style={[styles.actionBtnText, { color: theme.textPrimary }]}>Quét lại LAN</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {/* Peer List Card */}
-            <View style={[styles.sectionCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
-              <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>MÁY TÍNH TRONG MẠNG WI-FI</Text>
-              <FlatList
-                data={peers}
-                keyExtractor={(item) => item.id}
-                scrollEnabled={false}
-                renderItem={({ item }) => {
-                  const isSelected = selectedPeer?.id === item.id
-                  return (
-                    <TouchableOpacity
-                      onPress={() => setSelectedPeer(item)}
-                      style={[
-                        styles.peerItem,
-                        {
-                          backgroundColor: isSelected ? `${theme.primary}15` : theme.bgElevated,
-                          borderColor: isSelected ? theme.primary : theme.border,
-                        },
-                      ]}
-                    >
-                      <View style={[styles.peerIconBox, { backgroundColor: `${theme.primary}20` }]}>
-                        <Text style={styles.peerIcon}>{item.deviceType === 'windows' ? '💻' : '🖥️'}</Text>
-                      </View>
-                      <View style={styles.peerInfo}>
-                        <Text style={[styles.peerName, { color: theme.textPrimary }]}>{item.name}</Text>
-                        <Text style={[styles.peerSub, { color: theme.textMuted }]}>
-                          IP: {item.ip}:{item.port} • Sẵn sàng
-                        </Text>
-                      </View>
-                      {isSelected && <Text style={{ color: theme.primary, fontWeight: '700' }}>✓ Chọn</Text>}
-                    </TouchableOpacity>
-                  )
-                }}
-              />
-
-              {/* Big Send Button */}
+              {/* Big 1-Touch Button */}
               <TouchableOpacity
                 style={[
                   styles.sendButton,
-                  { backgroundColor: theme.primary },
+                  { backgroundColor: theme.primary, width: '100%', marginTop: 12 },
                   transferring && { opacity: 0.6 },
                 ]}
                 onPress={handlePickAndSendToPeer}
@@ -397,12 +342,44 @@ export function DropScreen() {
                   <View style={styles.sendingRow}>
                     <ActivityIndicator color="#ffffff" size="small" />
                     <Text style={styles.sendButtonText}>
-                      Đang bắn tệp... {Math.round(progress * 100)}%
+                      Đang chuyển tệp... {Math.round(progress * 100)}%
                     </Text>
                   </View>
                 ) : (
-                  <Text style={styles.sendButtonText}>🚀 Chọn tệp & Bắn sang Máy tính</Text>
+                  <View style={styles.sendingRow}>
+                    <Ionicons name="send" size={16} color="#ffffff" style={{ marginRight: 6 }} />
+                    <Text style={styles.sendButtonText}>Chọn tệp & Gửi sang Máy tính (1-Chạm)</Text>
+                  </View>
                 )}
+              </TouchableOpacity>
+
+              {/* Secondary Options */}
+              <View style={[styles.actionButtonsRow, { marginTop: 14 }]}>
+                <TouchableOpacity
+                  style={[styles.actionBtn, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
+                  onPress={handleScanQrFromCamera}
+                >
+                  <Ionicons name="qr-code-outline" size={18} color={theme.textPrimary} style={{ marginRight: 6 }} />
+                  <Text style={[styles.actionBtnText, { color: theme.textPrimary }]}>Quét mã QR</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.actionBtn, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
+                  onPress={scan}
+                  disabled={scanning}
+                >
+                  <Ionicons name="refresh-outline" size={18} color={theme.textPrimary} style={{ marginRight: 6 }} />
+                  <Text style={[styles.actionBtnText, { color: theme.textPrimary }]}>Dò tìm lại Wi-Fi</Text>
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                onPress={() => setPinModalVisible(true)}
+                style={{ marginTop: 12 }}
+              >
+                <Text style={{ fontSize: 11, color: theme.textMuted, textDecorationLine: 'underline' }}>
+                  Hoặc kết nối từ xa bằng mã PIN (nếu không cùng Wi-Fi)
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -436,7 +413,10 @@ export function DropScreen() {
                 style={[styles.refreshPinBtn, { borderColor: theme.border, backgroundColor: theme.bgElevated }]}
                 onPress={initReceiveSession}
               >
-                <Text style={[styles.refreshPinText, { color: theme.textPrimary }]}>🔄 Đổi mã PIN mới</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="refresh-outline" size={14} color={theme.textPrimary} style={{ marginRight: 6 }} />
+                  <Text style={[styles.refreshPinText, { color: theme.textPrimary }]}>Đổi mã PIN mới</Text>
+                </View>
               </TouchableOpacity>
 
               {/* Status Indicator */}
@@ -542,6 +522,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 8,
     alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
     borderRadius: 8,
   },
   segmentText: {
@@ -561,36 +543,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: 'center',
   },
-  radarOuterRing: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    borderWidth: 1.5,
+  deviceIconCircle: {
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  radarMiddleRing: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    borderWidth: 1.5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  radarCenterCircle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  radarIcon: {
-    fontSize: 24,
+    marginBottom: 4,
   },
   radarHeadline: {
     fontSize: 16,
     fontWeight: '700',
-    marginTop: 14,
+    marginTop: 10,
   },
   radarDescription: {
     fontSize: 12,
@@ -606,18 +571,16 @@ const styles = StyleSheet.create({
   actionBtn: {
     flex: 1,
     paddingVertical: 10,
-    paddingHorizontal: 6,
+    paddingHorizontal: 8,
     borderRadius: 10,
     borderWidth: 1,
     alignItems: 'center',
-    gap: 4,
-  },
-  actionBtnIcon: {
-    fontSize: 18,
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
   actionBtnText: {
-    fontSize: 11,
-    fontWeight: '700',
+    fontSize: 12,
+    fontWeight: '600',
   },
   sectionCard: {
     padding: 16,
@@ -698,10 +661,8 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: '#ffffff',
     borderRadius: 14,
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
   },
   qrContainer: {
     backgroundColor: '#ffffff',

@@ -318,6 +318,17 @@ export class SofttyDropServer {
           return
         }
 
+        // Get all active peers (Mobile devices discovered on LAN)
+        if (req.method === 'GET' && pathname === '/api/softty-drop/peers') {
+          const now = Date.now()
+          const activePeers = Array.from(this.registeredPeers.values()).filter(
+            (p) => now - p.lastSeen < 15 * 60 * 1000,
+          )
+          res.writeHead(200, { 'Content-Type': 'application/json' })
+          res.end(JSON.stringify({ success: true, peers: activePeers }))
+          return
+        }
+
         // Direct receive file stream on Desktop
         if (req.method === 'POST' && pathname === '/api/softty-drop/receive') {
           try {
@@ -328,9 +339,9 @@ export class SofttyDropServer {
               const buffer = Buffer.concat(chunks)
               let saveDir = '/tmp'
               try {
-                saveDir = path.join(app.getPath('downloads'), 'Softty Drop')
+                saveDir = path.join(app.getPath('downloads'), 'Softty Office')
               } catch {
-                saveDir = path.join(os.homedir(), 'Downloads', 'Softty Drop')
+                saveDir = path.join(os.homedir(), 'Downloads', 'Softty Office')
               }
 
               if (!fs.existsSync(saveDir)) {
@@ -394,9 +405,9 @@ export class SofttyDropServer {
             // If target is Desktop itself, save directly
             const currentPin = this.getOrCreateSession().pin
             if (targetPin === currentPin) {
-              let saveDir = path.join(os.homedir(), 'Downloads', 'Softty Drop')
+              let saveDir = path.join(os.homedir(), 'Downloads', 'Softty Office')
               try {
-                saveDir = path.join(app.getPath('downloads'), 'Softty Drop')
+                saveDir = path.join(app.getPath('downloads'), 'Softty Office')
               } catch {
                 // fallback
               }

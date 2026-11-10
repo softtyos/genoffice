@@ -39,11 +39,8 @@ export class SofttyDropService {
     const candidates = [
       ...(this.cachedHubIp ? [this.cachedHubIp] : []),
       '127.0.0.1',
-      '192.168.88.175',
       'localhost',
       '10.0.2.2',
-      '192.168.1.100',
-      '192.168.1.15',
       ...savedPeers.map((p) => p.ip),
     ]
 
@@ -140,7 +137,6 @@ export class SofttyDropService {
     const candidates = [
       ...(this.cachedHubIp ? [this.cachedHubIp] : []),
       '127.0.0.1',
-      '192.168.88.175',
       '10.0.2.2',
     ]
 
@@ -297,6 +293,8 @@ export class SofttyDropService {
             try {
               const ping = await fetch(`http://${ip}:${data.port || 54321}/api/softty-drop/ping`)
               if (ping.ok) {
+                this.cachedHubIp = ip
+                await AsyncStorage.setItem(KNOWN_HUB_IP_KEY, ip)
                 const directPeer: DesktopPeer = {
                   id: `qr-${ip}`,
                   name: data.name || 'Thiết bị đối ứng',

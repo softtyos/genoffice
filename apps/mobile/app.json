@@ -3,7 +3,7 @@
     "name": "Softty Office",
     "slug": "softty-office",
     "scheme": "softty-office",
-    "version": "1.0.16",
+    "version": "1.0.18",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "platforms": [
@@ -21,6 +21,17 @@
       "bundleIdentifier": "net.softty.office.mobile",
       "appleTeamId": "79J42YA54H",
       "infoPlist": {
+        "UIApplicationSceneManifest": {
+          "UIApplicationSupportsMultipleScenes": false,
+          "UISceneConfigurations": {
+            "UIWindowSceneSessionRoleApplication": [
+              {
+                "UISceneConfigurationName": "Default Configuration",
+                "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate"
+              }
+            ]
+          }
+        },
         "ITSAppUsesNonExemptEncryption": false,
         "NSCameraUsageDescription": "Softty Office cần quyền truy cập camera để quét tài liệu, hóa đơn chuyển thành file PDF.",
         "NSPhotoLibraryUsageDescription": "Softty Office cần quyền truy cập thư viện ảnh để chọn ảnh tài liệu cần gửi sang máy tính.",
@@ -76,11 +87,11 @@
           }
         ]
       },
-      "buildNumber": "16"
+      "buildNumber": "18"
     },
     "android": {
       "package": "net.softty.office.mobile",
-      "versionCode": 16,
+      "versionCode": 18,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

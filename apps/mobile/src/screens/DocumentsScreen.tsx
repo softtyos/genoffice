@@ -10,6 +10,7 @@ import {
   FlatList,
   Alert,
 } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import { useApp } from '../context/AppContext'
 import { OfficeDocument, OfficeDocType } from '../types'
 
@@ -56,20 +57,20 @@ export function DocumentsScreen() {
     }
   }
 
-  const getDocIcon = (type: OfficeDocType) => {
+  const renderDocIcon = (type: OfficeDocType, color: string) => {
     switch (type) {
       case 'docs':
-        return '📝'
+        return <Ionicons name="document-text-outline" size={20} color={color} />
       case 'sheets':
-        return '📊'
+        return <Ionicons name="grid-outline" size={20} color={color} />
       case 'slides':
-        return '📑'
+        return <Ionicons name="easel-outline" size={20} color={color} />
       case 'pdf':
-        return '📕'
+        return <Ionicons name="reader-outline" size={20} color={color} />
       case 'markdown':
-        return '📋'
+        return <Ionicons name="code-slash-outline" size={20} color={color} />
       default:
-        return '📄'
+        return <Ionicons name="document-outline" size={20} color={color} />
     }
   }
 
@@ -140,7 +141,7 @@ export function DocumentsScreen() {
 
         {/* Search Bar */}
         <View style={[styles.searchBox, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}>
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Ionicons name="search-outline" size={17} color={theme.textMuted} style={styles.searchIcon} />
           <TextInput
             style={[styles.searchInput, { color: theme.textPrimary }]}
             placeholder={t.common.search}
@@ -150,7 +151,7 @@ export function DocumentsScreen() {
           />
           {searchQuery !== '' && (
             <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <Text style={[styles.clearSearch, { color: theme.textMuted }]}>✕</Text>
+              <Ionicons name="close-circle" size={16} color={theme.textMuted} />
             </TouchableOpacity>
           )}
         </View>
@@ -168,14 +169,14 @@ export function DocumentsScreen() {
             ]}
             activeOpacity={0.8}
           >
-            <View style={[styles.openFileIconBox, { backgroundColor: `${theme.primary}20` }]}>
-              <Text style={[styles.openFileIcon, { color: theme.primary }]}>📂</Text>
+            <View style={[styles.openFileIconBox, { backgroundColor: theme.bgElevated, borderColor: theme.border, borderWidth: 1 }]}>
+              <Ionicons name="folder-open-outline" size={22} color={theme.primary} />
             </View>
             <View style={styles.openFileTextBox}>
               <Text style={[styles.openFileTitle, { color: theme.textPrimary }]}>{t.home.openFile}</Text>
               <Text style={[styles.openFileDesc, { color: theme.textMuted }]}>{t.home.openFileDesc}</Text>
             </View>
-            <Text style={[styles.arrowRight, { color: theme.textMuted }]}>➔</Text>
+            <Ionicons name="chevron-forward" size={18} color={theme.textMuted} />
           </TouchableOpacity>
 
           {/* New Document Quick Action Buttons */}
@@ -184,8 +185,8 @@ export function DocumentsScreen() {
               onPress={() => handleCreateNew('docs')}
               style={[styles.quickCreateBtn, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}
             >
-              <View style={[styles.quickCreateIconBox, { backgroundColor: `${theme.primary}15` }]}>
-                <Text style={styles.quickCreateIcon}>📝</Text>
+              <View style={[styles.quickCreateIconBox, { backgroundColor: theme.bgElevated, borderColor: theme.border, borderWidth: 1 }]}>
+                <Ionicons name="document-text-outline" size={20} color={theme.primary} />
               </View>
               <Text style={[styles.quickCreateLabel, { color: theme.textPrimary }]}>{t.home.newDoc}</Text>
             </TouchableOpacity>
@@ -194,8 +195,8 @@ export function DocumentsScreen() {
               onPress={() => handleCreateNew('sheets')}
               style={[styles.quickCreateBtn, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}
             >
-              <View style={[styles.quickCreateIconBox, { backgroundColor: `${theme.emerald}15` }]}>
-                <Text style={styles.quickCreateIcon}>📊</Text>
+              <View style={[styles.quickCreateIconBox, { backgroundColor: theme.bgElevated, borderColor: theme.border, borderWidth: 1 }]}>
+                <Ionicons name="grid-outline" size={20} color={theme.emerald} />
               </View>
               <Text style={[styles.quickCreateLabel, { color: theme.textPrimary }]}>{t.home.newSheet}</Text>
             </TouchableOpacity>
@@ -204,8 +205,8 @@ export function DocumentsScreen() {
               onPress={() => handleCreateNew('slides')}
               style={[styles.quickCreateBtn, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}
             >
-              <View style={[styles.quickCreateIconBox, { backgroundColor: `${theme.amber}15` }]}>
-                <Text style={styles.quickCreateIcon}>📑</Text>
+              <View style={[styles.quickCreateIconBox, { backgroundColor: theme.bgElevated, borderColor: theme.border, borderWidth: 1 }]}>
+                <Ionicons name="easel-outline" size={20} color={theme.amber} />
               </View>
               <Text style={[styles.quickCreateLabel, { color: theme.textPrimary }]}>{t.home.newSlide}</Text>
             </TouchableOpacity>
@@ -214,8 +215,8 @@ export function DocumentsScreen() {
               onPress={() => handleCreateNew('markdown')}
               style={[styles.quickCreateBtn, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}
             >
-              <View style={[styles.quickCreateIconBox, { backgroundColor: `${theme.purple}15` }]}>
-                <Text style={styles.quickCreateIcon}>📋</Text>
+              <View style={[styles.quickCreateIconBox, { backgroundColor: theme.bgElevated, borderColor: theme.border, borderWidth: 1 }]}>
+                <Ionicons name="code-slash-outline" size={20} color={theme.purple} />
               </View>
               <Text style={[styles.quickCreateLabel, { color: theme.textPrimary }]}>{t.home.newMd}</Text>
             </TouchableOpacity>
@@ -270,7 +271,7 @@ export function DocumentsScreen() {
         {/* Documents List */}
         {filteredDocs.length === 0 ? (
           <View style={[styles.emptyBox, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
-            <Text style={styles.emptyIcon}>📁</Text>
+            <Ionicons name="folder-outline" size={44} color={theme.textMuted} style={{ marginBottom: 10 }} />
             <Text style={[styles.emptyTitle, { color: theme.textPrimary }]}>{t.common.emptyDocs}</Text>
             <Text style={[styles.emptySubtitle, { color: theme.textMuted }]}>{t.common.emptyDocsSub}</Text>
             <TouchableOpacity
@@ -295,8 +296,8 @@ export function DocumentsScreen() {
                   ]}
                   activeOpacity={0.7}
                 >
-                  <View style={[styles.docCardIconBox, { backgroundColor: `${badgeColor}15` }]}>
-                    <Text style={styles.docCardIcon}>{getDocIcon(item.type)}</Text>
+                  <View style={[styles.docCardIconBox, { backgroundColor: theme.bgElevated, borderColor: theme.border, borderWidth: 1 }]}>
+                    {renderDocIcon(item.type, badgeColor)}
                   </View>
 
                   <View style={styles.docCardDetails}>
@@ -320,7 +321,7 @@ export function DocumentsScreen() {
                     style={styles.moreBtn}
                     hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                   >
-                    <Text style={[styles.moreBtnText, { color: theme.textMuted }]}>⋮</Text>
+                    <Ionicons name="ellipsis-vertical" size={17} color={theme.textMuted} />
                   </TouchableOpacity>
                 </TouchableOpacity>
               )

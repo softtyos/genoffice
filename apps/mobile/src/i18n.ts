@@ -3,10 +3,10 @@ export type Language = 'vi' | 'en'
 export const translations = {
   vi: {
     tabs: {
-      documents: 'Tài Liệu',
-      drop: 'Drop',
-      scanner: 'Quét PDF',
-      profile: 'Tài Khoản',
+      documents: 'Tài liệu',
+      drop: 'Chuyển file',
+      scanner: 'Quét tài liệu',
+      profile: 'Cài đặt',
     },
     common: {
       search: 'Tìm kiếm tài liệu...',
@@ -60,14 +60,14 @@ export const translations = {
       readingSettings: 'Cỡ chữ:',
     },
     drop: {
-      title: 'Drop',
-      subtitle: 'Truyền Tệp P2P Mạng LAN (Không Qua Server)',
+      title: 'Chuyển file',
+      subtitle: 'Chuyển tệp không dây trực tiếp giữa điện thoại và máy tính',
       searching: 'Đang quét máy tính trong mạng Wi-Fi...',
       refresh: 'Quét Lại Mạng Wi-Fi',
       noPeers: 'Chưa tìm thấy máy tính nào',
       noPeersSub: 'Đảm bảo ứng dụng Softty Office trên máy tính đang mở và cùng mạng Wi-Fi.',
       selectPeer: 'Chọn máy tính nhận:',
-      pickAndSend: 'Chọn Tệp & Bắn Sang Máy Tính',
+      pickAndSend: 'Chọn Tệp & Gửi Sang Máy Tính',
       sending: 'Đang gửi tệp...',
       sendSuccess: 'Đã gửi file thành công sang máy tính!',
       listening: 'Chế độ chờ nhận file tự động từ máy tính đang bật.',
@@ -119,9 +119,9 @@ export const translations = {
   en: {
     tabs: {
       documents: 'Documents',
-      drop: 'Drop',
-      scanner: 'Scan PDF',
-      profile: 'Account',
+      drop: 'Transfer',
+      scanner: 'Scan Docs',
+      profile: 'Settings',
     },
     common: {
       search: 'Search documents...',
@@ -175,8 +175,8 @@ export const translations = {
       readingSettings: 'Font size:',
     },
     drop: {
-      title: 'Drop',
-      subtitle: 'Instant LAN P2P Transfer (Direct Device-to-Device)',
+      title: 'File Transfer',
+      subtitle: 'Direct wireless file transfer over local Wi-Fi',
       searching: 'Scanning nearby desktops over Wi-Fi...',
       refresh: 'Rescan Local Network',
       noPeers: 'No desktops found',

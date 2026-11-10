@@ -10,6 +10,7 @@ import {
   ScrollView,
   Modal,
 } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import { SofttyAuthService } from '../services/auth'
 import { useApp, ThemeMode } from '../context/AppContext'
 import { Language } from '../i18n'
@@ -130,10 +131,10 @@ export function ProfileScreen() {
           <View style={styles.pillGroup}>
             {(
               [
-                { mode: 'dark', label: t.profile.themeDark, icon: '🌙' },
-                { mode: 'light', label: t.profile.themeLight, icon: '☀️' },
-                { mode: 'system', label: t.profile.themeSystem, icon: '⚙️' },
-              ] as { mode: ThemeMode; label: string; icon: string }[]
+                { mode: 'dark', label: t.profile.themeDark, iconName: 'moon-outline' },
+                { mode: 'light', label: t.profile.themeLight, iconName: 'sunny-outline' },
+                { mode: 'system', label: t.profile.themeSystem, iconName: 'settings-outline' },
+              ] as { mode: ThemeMode; label: string; iconName: keyof typeof Ionicons.glyphMap }[]
             ).map((item) => {
               const active = themeMode === item.mode
               return (
@@ -148,7 +149,12 @@ export function ProfileScreen() {
                     },
                   ]}
                 >
-                  <Text style={styles.pillIcon}>{item.icon}</Text>
+                  <Ionicons
+                    name={item.iconName}
+                    size={16}
+                    color={active ? '#ffffff' : theme.textPrimary}
+                    style={{ marginRight: 6 }}
+                  />
                   <Text style={[styles.pillText, { color: active ? '#ffffff' : theme.textPrimary }]}>
                     {item.label}
                   </Text>
@@ -167,9 +173,9 @@ export function ProfileScreen() {
           <View style={styles.pillGroup}>
             {(
               [
-                { lang: 'vi', label: 'Tiếng Việt', flag: '🇻🇳' },
-                { lang: 'en', label: 'English', flag: '🇬🇧' },
-              ] as { lang: Language; label: string; flag: string }[]
+                { lang: 'vi', label: 'Tiếng Việt', code: 'VI' },
+                { lang: 'en', label: 'English', code: 'EN' },
+              ] as { lang: Language; label: string; code: string }[]
             ).map((item) => {
               const active = language === item.lang
               return (
@@ -184,7 +190,9 @@ export function ProfileScreen() {
                     },
                   ]}
                 >
-                  <Text style={styles.pillIcon}>{item.flag}</Text>
+                  <Text style={[styles.pillCode, { color: active ? '#ffffff' : theme.primary }]}>
+                    {item.code}
+                  </Text>
                   <Text style={[styles.pillText, { color: active ? '#ffffff' : theme.textPrimary }]}>
                     {item.label}
                   </Text>
@@ -206,8 +214,9 @@ export function ProfileScreen() {
             onPress={() => Linking.openSettings()}
             style={[styles.cacheBtn, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
           >
+            <Ionicons name="settings-outline" size={16} color={theme.textPrimary} style={{ marginRight: 6 }} />
             <Text style={[styles.cacheBtnText, { color: theme.textPrimary }]}>
-              ⚙️ {t.profile.defaultAppBtn}
+              {t.profile.defaultAppBtn}
             </Text>
           </TouchableOpacity>
         </View>
@@ -227,8 +236,9 @@ export function ProfileScreen() {
             }}
             style={[styles.cacheBtn, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
           >
+            <Ionicons name="refresh-outline" size={16} color={theme.textPrimary} style={{ marginRight: 6 }} />
             <Text style={[styles.cacheBtnText, { color: theme.textPrimary }]}>
-              🔄 {t.profile.clearCache}
+              {t.profile.clearCache}
             </Text>
           </TouchableOpacity>
         </View>
@@ -243,32 +253,44 @@ export function ProfileScreen() {
             onPress={() => setLegalModal('terms')}
             style={[styles.legalRow, { borderBottomColor: theme.border }]}
           >
-            <Text style={[styles.legalRowText, { color: theme.textPrimary }]}>📜 {t.profile.termsBtn}</Text>
-            <Text style={[styles.legalRowArrow, { color: theme.textMuted }]}>›</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="document-text-outline" size={18} color={theme.textPrimary} style={{ marginRight: 10 }} />
+              <Text style={[styles.legalRowText, { color: theme.textPrimary }]}>{t.profile.termsBtn}</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={theme.textMuted} />
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => setLegalModal('privacy')}
             style={[styles.legalRow, { borderBottomColor: theme.border }]}
           >
-            <Text style={[styles.legalRowText, { color: theme.textPrimary }]}>🔒 {t.profile.privacyBtn}</Text>
-            <Text style={[styles.legalRowArrow, { color: theme.textMuted }]}>›</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="shield-checkmark-outline" size={18} color={theme.textPrimary} style={{ marginRight: 10 }} />
+              <Text style={[styles.legalRowText, { color: theme.textPrimary }]}>{t.profile.privacyBtn}</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={theme.textMuted} />
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => Linking.openURL('https://www.softty.net')}
             style={[styles.legalRow, { borderBottomColor: theme.border }]}
           >
-            <Text style={[styles.legalRowText, { color: theme.primary }]}>🌐 {t.profile.websiteBtn}</Text>
-            <Text style={[styles.legalRowArrow, { color: theme.textMuted }]}>↗</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="globe-outline" size={18} color={theme.primary} style={{ marginRight: 10 }} />
+              <Text style={[styles.legalRowText, { color: theme.primary }]}>{t.profile.websiteBtn}</Text>
+            </View>
+            <Ionicons name="open-outline" size={14} color={theme.textMuted} />
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => Linking.openURL('https://my.softty.net')}
             style={[styles.legalRow, { borderBottomWidth: 0 }]}
           >
-            <Text style={[styles.legalRowText, { color: theme.primary }]}>💼 {t.profile.portalBtn}</Text>
-            <Text style={[styles.legalRowArrow, { color: theme.textMuted }]}>↗</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="briefcase-outline" size={18} color={theme.primary} style={{ marginRight: 10 }} />
+              <Text style={[styles.legalRowText, { color: theme.primary }]}>{t.profile.portalBtn}</Text>
+            </View>
+            <Ionicons name="open-outline" size={14} color={theme.textMuted} />
           </TouchableOpacity>
         </View>
 
@@ -319,7 +341,7 @@ export function ProfileScreen() {
                 </Text>
 
                 <Text style={[styles.legalSectionHeading, { color: theme.textPrimary }]}>
-                  2. Chuyển tệp Softty Drop
+                  2. Chuyển tệp không dây
                 </Text>
                 <Text style={[styles.legalParagraph, { color: theme.textSecondary }]}>
                   Quá trình bắn tệp qua mạng Wi-Fi cục bộ (LAN) diễn ra trực tiếp ngang hàng (P2P), không lưu trữ qua bất kỳ máy chủ đám mây trung gian nào.
@@ -478,8 +500,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: 6,
   },
-  pillIcon: {
-    fontSize: 14,
+  pillCode: {
+    fontSize: 11,
+    fontWeight: '800',
+    marginRight: 4,
   },
   pillText: {
     fontSize: 11,
@@ -495,6 +519,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
   cacheBtnText: {
     fontSize: 12,
