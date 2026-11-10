@@ -30,6 +30,7 @@ import { useI18n } from './locale'
 import type { I18n, StringKey } from './locale'
 import { SettingsModal } from './SettingsModal'
 import type { SettingsTarget } from './SettingsModal'
+import { SofttyDropModal } from './SofttyDropModal'
 import { skillUpdateDue } from './IntegrationsPane'
 import { onFilesChanged } from './file-events'
 
@@ -1652,6 +1653,7 @@ export function Home() {
   const canMove = roots.some((r) => r.usable)
   const editableAt = (path: string) => rootOf(path, roots)?.usable !== false
   const [panelDrop, setPanelDrop] = useState(false)
+  const [softtyDropOpen, setSofttyDropOpen] = useState(false)
   const [treeState] = useState(readTreeState)
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null)
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(() => new Set(treeState.expanded))
@@ -3619,6 +3621,20 @@ export function Home() {
             </svg>
             <span className="nav-label">{t('navAsk')}</span>
           </button>
+          <button
+            className={`nav-item${softtyDropOpen ? ' active' : ''}`}
+            onClick={() => setSofttyDropOpen(true)}
+            title="Softty Drop 2.0: Chuyển tệp đa chiều"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9" />
+              <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5" />
+              <circle cx="12" cy="12" r="2" />
+              <path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5" />
+              <path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1" />
+            </svg>
+            <span className="nav-label">Softty Drop</span>
+          </button>
           {loggedIn && (
             <button
               className={`nav-item${cloudMode && !selectedFolder ? ' active' : ''}`}
@@ -3815,6 +3831,7 @@ export function Home() {
       )}
 
       <DropToOpenOverlay />
+      <SofttyDropModal isOpen={softtyDropOpen} onClose={() => setSofttyDropOpen(false)} />
     </div>
   )
 }

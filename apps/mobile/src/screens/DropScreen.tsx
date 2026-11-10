@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   View,
   Text,
@@ -7,20 +7,40 @@ import {
   ActivityIndicator,
   FlatList,
   Alert,
+  TextInput,
+  ScrollView,
+  Modal,
 } from 'react-native'
 import * as DocumentPicker from 'expo-document-picker'
+import * as ImagePicker from 'expo-image-picker'
 import { DesktopPeer } from '../types'
 import { SofttyDropService } from '../services/softtyDrop'
 import { useApp } from '../context/AppContext'
+import { getQrModules } from '../utils/qr'
 
 export function DropScreen() {
-  const { theme, t } = useApp()
+  const { theme, t, importAndOpenUri, openDocument } = useApp()
+  const [activeTab, setActiveTab] = useState<'send' | 'receive'>('send')
+
+  // Send State
   const [peers, setPeers] = useState<DesktopPeer[]>([])
   const [scanning, setScanning] = useState(false)
   const [selectedPeer, setSelectedPeer] = useState<DesktopPeer | null>(null)
   const [transferring, setTransferring] = useState(false)
   const [progress, setProgress] = useState(0)
 
+  // PIN Send Modal
+  const [pinModalVisible, setPinModalVisible] = useState(false)
+  const [inputPin, setInputPin] = useState('')
+
+  // Receive State
+  const [myPin, setMyPin] = useState('749218')
+  const [qrMatrix, setQrMatrix] = useState<boolean[][]>([])
+  const [isListening, setIsListening] = useState(false)
+  const [incomingStatus, setIncomingStatus] = useState<string>('')
+  const pullIntervalRef = useRef<NodeJS.Timeout | null>(null)
+
+  // 1. Initial scan & Session setup
   const scan = async () => {
     setScanning(true)
     try {
@@ -34,11 +54,73 @@ export function DropScreen() {
     }
   }
 
+  const initReceiveSession = async () => {
+    try {
+      const session = await SofttyDropService.createReceiveSession()
+      setMyPin(session.pin)
+      const matrix = getQrModules(session.qrPayload)
+      setQrMatrix(matrix)
+      setIsListening(true)
+    } catch {
+      // fallback
+    }
+  }
+
   useEffect(() => {
     scan()
+    initReceiveSession()
+    return () => {
+      if (pullIntervalRef.current) clearInterval(pullIntervalRef.current)
+    }
   }, [])
 
-  const handlePickAndSend = async () => {
+  // 2. Polling for incoming files when in Receive Mode
+  useEffect(() => {
+    if (activeTab === 'receive' && myPin) {
+      setIsListening(true)
+      pullIntervalRef.current = setInterval(async () => {
+        try {
+          const result = await SofttyDropService.pullIncomingFile(myPin)
+          if (result && result.success && result.localUri) {
+            setIncomingStatus(`Đã nhận: ${result.fileName}`)
+            Alert.alert(
+              '🎉 Đã nhận tệp mới!',
+              `Tài liệu "${result.fileName}" đã được chuyển sang điện thoại. Bạn có muốn mở xem ngay?`,
+              [
+                {
+                  text: 'Để sau',
+                  style: 'cancel',
+                },
+                {
+                  text: 'Mở ngay',
+                  onPress: async () => {
+                    const doc = await importAndOpenUri(result.localUri!, result.fileName, result.size)
+                    if (doc) openDocument(doc)
+                  },
+                },
+              ],
+            )
+          }
+        } catch {
+          // ignore
+        }
+      }, 2500)
+    } else {
+      if (pullIntervalRef.current) {
+        clearInterval(pullIntervalRef.current)
+        pullIntervalRef.current = null
+      }
+    }
+    return () => {
+      if (pullIntervalRef.current) {
+        clearInterval(pullIntervalRef.current)
+        pullIntervalRef.current = null
+      }
+    }
+  }, [activeTab, myPin])
+
+  // 3. Send via Selected Peer
+  const handlePickAndSendToPeer = async () => {
     const target = selectedPeer || (peers.length > 0 ? peers[0] : null)
     if (!target) {
       Alert.alert(t.common.error, 'Chưa tìm thấy máy tính trong mạng Wi-Fi.')
@@ -51,9 +133,7 @@ export function DropScreen() {
         copyToCacheDirectory: true,
       })
 
-      if (res.canceled || !res.assets || res.assets.length === 0) {
-        return
-      }
+      if (res.canceled || !res.assets || res.assets.length === 0) return
 
       const file = res.assets[0]
       setTransferring(true)
@@ -80,6 +160,107 @@ export function DropScreen() {
     }
   }
 
+  // 4. Send via PIN
+  const handleSendByPin = async () => {
+    const cleanPin = inputPin.replace(/\D/g, '').trim()
+    if (cleanPin.length !== 6) {
+      Alert.alert('Mã PIN không hợp lệ', 'Vui lòng nhập đủ 6 chữ số.')
+      return
+    }
+
+    try {
+      const res = await DocumentPicker.getDocumentAsync({
+        type: '*/*',
+        copyToCacheDirectory: true,
+      })
+
+      if (res.canceled || !res.assets || res.assets.length === 0) return
+
+      const file = res.assets[0]
+      setPinModalVisible(false)
+      setTransferring(true)
+      setProgress(0.2)
+
+      const result = await SofttyDropService.sendFileByPin(
+        cleanPin,
+        file.uri,
+        file.name,
+        file.mimeType || 'application/octet-stream',
+        (p) => setProgress(p),
+      )
+
+      if (result.success) {
+        Alert.alert(t.common.success, result.message)
+        setInputPin('')
+      } else {
+        Alert.alert(t.common.error, result.message)
+      }
+    } catch (err: any) {
+      Alert.alert(t.common.error, err.message || 'Lỗi khi gửi tệp.')
+    } finally {
+      setTransferring(false)
+      setProgress(0)
+    }
+  }
+
+  // 5. Scan QR via camera fallback
+  const handleScanQrFromCamera = async () => {
+    try {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync()
+      if (status !== 'granted') {
+        Alert.alert('Quyền Camera', 'Ứng dụng cần quyền Camera để quét mã QR.')
+        return
+      }
+
+      Alert.prompt
+        ? Alert.prompt(
+            'Nhập mã kết nối',
+            'Nhập mã PIN 6 số hoặc chuỗi mã QR từ màn hình máy tính:',
+            [
+              { text: 'Hủy', style: 'cancel' },
+              {
+                text: 'Kết nối',
+                onPress: (text?: string) => {
+                  if (text) {
+                    setInputPin(text)
+                    setPinModalVisible(true)
+                  }
+                },
+              },
+            ],
+          )
+        : setPinModalVisible(true)
+    } catch {
+      setPinModalVisible(true)
+    }
+  }
+
+  // Render QR Grid via native React Native Views
+  const renderQrView = () => {
+    if (!qrMatrix || qrMatrix.length === 0) return null
+    const matrixSize = qrMatrix.length
+    const cellSize = Math.floor(180 / matrixSize)
+
+    return (
+      <View style={styles.qrContainer}>
+        {qrMatrix.map((row, rIdx) => (
+          <View key={`r-${rIdx}`} style={{ flexDirection: 'row' }}>
+            {row.map((cell, cIdx) => (
+              <View
+                key={`c-${rIdx}-${cIdx}`}
+                style={{
+                  width: cellSize,
+                  height: cellSize,
+                  backgroundColor: cell ? '#0f172a' : '#ffffff',
+                }}
+              />
+            ))}
+          </View>
+        ))}
+      </View>
+    )
+  }
+
   return (
     <View style={[styles.container, { backgroundColor: theme.bg }]}>
       {/* Header */}
@@ -89,124 +270,230 @@ export function DropScreen() {
             <Text style={styles.dropLogoIcon}>📡</Text>
           </View>
           <View>
-            <Text style={[styles.title, { color: theme.textPrimary }]}>{t.drop.title}</Text>
-            <Text style={[styles.subtitle, { color: theme.textMuted }]}>{t.drop.subtitle}</Text>
+            <Text style={[styles.title, { color: theme.textPrimary }]}>Softty Drop 2.0</Text>
+            <Text style={[styles.subtitle, { color: theme.textMuted }]}>
+              Chuyển tệp đa chiều: Mobile ⇄ Desktop ⇄ Mobile
+            </Text>
           </View>
+        </View>
+
+        {/* Tab switch */}
+        <View style={[styles.tabSegment, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}>
+          <TouchableOpacity
+            style={[styles.segmentBtn, activeTab === 'send' && { backgroundColor: theme.primary }]}
+            onPress={() => setActiveTab('send')}
+          >
+            <Text style={[styles.segmentText, { color: activeTab === 'send' ? '#fff' : theme.textMuted }]}>
+              📤 Gửi Tệp
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.segmentBtn, activeTab === 'receive' && { backgroundColor: theme.primary }]}
+            onPress={() => setActiveTab('receive')}
+          >
+            <Text style={[styles.segmentText, { color: activeTab === 'receive' ? '#fff' : theme.textMuted }]}>
+              📥 Nhận Tệp
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
 
-      <View style={styles.content}>
-        {/* AirDrop Style Radar Animation Card */}
-        <View style={[styles.radarCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
-          <View style={[styles.radarOuterRing, { borderColor: `${theme.cyan}25` }]}>
-            <View style={[styles.radarMiddleRing, { borderColor: `${theme.cyan}45` }]}>
-              <View style={[styles.radarCenterCircle, { backgroundColor: theme.cyan }]}>
-                <Text style={styles.radarIcon}>📡</Text>
+      <ScrollView contentContainerStyle={styles.content}>
+        {/* ================= TAB 1: GỬI TỆP ================= */}
+        {activeTab === 'send' && (
+          <View style={styles.tabContent}>
+            {/* Radar Animation Card */}
+            <View style={[styles.radarCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
+              <View style={[styles.radarOuterRing, { borderColor: `${theme.cyan}25` }]}>
+                <View style={[styles.radarMiddleRing, { borderColor: `${theme.cyan}45` }]}>
+                  <View style={[styles.radarCenterCircle, { backgroundColor: theme.cyan }]}>
+                    <Text style={styles.radarIcon}>📡</Text>
+                  </View>
+                </View>
+              </View>
+
+              <Text style={[styles.radarHeadline, { color: theme.textPrimary }]}>
+                {scanning ? 'Đang dò tìm thiết bị lân cận...' : 'Sẵn sàng chuyển tệp P2P'}
+              </Text>
+              <Text style={[styles.radarDescription, { color: theme.textMuted }]}>
+                Quét mã QR, nhập mã PIN 6 số hoặc bấm vào máy tính bên dưới
+              </Text>
+
+              {/* Action Buttons Row */}
+              <View style={styles.actionButtonsRow}>
+                <TouchableOpacity
+                  style={[styles.actionBtn, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
+                  onPress={() => setPinModalVisible(true)}
+                >
+                  <Text style={styles.actionBtnIcon}>🔢</Text>
+                  <Text style={[styles.actionBtnText, { color: theme.textPrimary }]}>Nhập mã PIN</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.actionBtn, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
+                  onPress={handleScanQrFromCamera}
+                >
+                  <Text style={styles.actionBtnIcon}>📷</Text>
+                  <Text style={[styles.actionBtnText, { color: theme.textPrimary }]}>Quét mã QR</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.actionBtn, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
+                  onPress={scan}
+                  disabled={scanning}
+                >
+                  <Text style={styles.actionBtnIcon}>🔄</Text>
+                  <Text style={[styles.actionBtnText, { color: theme.textPrimary }]}>Quét lại LAN</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Peer List Card */}
+            <View style={[styles.sectionCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
+              <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>MÁY TÍNH TRONG MẠNG WI-FI</Text>
+              <FlatList
+                data={peers}
+                keyExtractor={(item) => item.id}
+                scrollEnabled={false}
+                renderItem={({ item }) => {
+                  const isSelected = selectedPeer?.id === item.id
+                  return (
+                    <TouchableOpacity
+                      onPress={() => setSelectedPeer(item)}
+                      style={[
+                        styles.peerItem,
+                        {
+                          backgroundColor: isSelected ? `${theme.primary}15` : theme.bgElevated,
+                          borderColor: isSelected ? theme.primary : theme.border,
+                        },
+                      ]}
+                    >
+                      <View style={[styles.peerIconBox, { backgroundColor: `${theme.primary}20` }]}>
+                        <Text style={styles.peerIcon}>{item.deviceType === 'windows' ? '💻' : '🖥️'}</Text>
+                      </View>
+                      <View style={styles.peerInfo}>
+                        <Text style={[styles.peerName, { color: theme.textPrimary }]}>{item.name}</Text>
+                        <Text style={[styles.peerSub, { color: theme.textMuted }]}>
+                          IP: {item.ip}:{item.port} • Sẵn sàng
+                        </Text>
+                      </View>
+                      {isSelected && <Text style={{ color: theme.primary, fontWeight: '700' }}>✓ Chọn</Text>}
+                    </TouchableOpacity>
+                  )
+                }}
+              />
+
+              {/* Big Send Button */}
+              <TouchableOpacity
+                style={[
+                  styles.sendButton,
+                  { backgroundColor: theme.primary },
+                  transferring && { opacity: 0.6 },
+                ]}
+                onPress={handlePickAndSendToPeer}
+                disabled={transferring}
+              >
+                {transferring ? (
+                  <View style={styles.sendingRow}>
+                    <ActivityIndicator color="#ffffff" size="small" />
+                    <Text style={styles.sendButtonText}>
+                      Đang bắn tệp... {Math.round(progress * 100)}%
+                    </Text>
+                  </View>
+                ) : (
+                  <Text style={styles.sendButtonText}>🚀 Chọn tệp & Bắn sang Máy tính</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        {/* ================= TAB 2: NHẬN TỆP ================= */}
+        {activeTab === 'receive' && (
+          <View style={styles.tabContent}>
+            <View style={[styles.receiveCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
+              <Text style={[styles.receiveTitle, { color: theme.textPrimary }]}>MÃ KẾT NỐI CỦA BẠN</Text>
+              <Text style={[styles.receiveSub, { color: theme.textMuted }]}>
+                Giữ màn hình này mở. Nhập mã PIN 6 số trên Máy tính hoặc quét mã QR dưới đây.
+              </Text>
+
+              {/* QR Code Container */}
+              <View style={styles.qrWrapper}>{renderQrView()}</View>
+
+              {/* Big 6-Digit PIN Display */}
+              <View style={styles.pinDisplayRow}>
+                {myPin.split('').map((digit, i) => (
+                  <View
+                    key={i}
+                    style={[styles.pinDigitBox, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
+                  >
+                    <Text style={[styles.pinDigitText, { color: theme.primary }]}>{digit}</Text>
+                  </View>
+                ))}
+              </View>
+
+              <TouchableOpacity
+                style={[styles.refreshPinBtn, { borderColor: theme.border, backgroundColor: theme.bgElevated }]}
+                onPress={initReceiveSession}
+              >
+                <Text style={[styles.refreshPinText, { color: theme.textPrimary }]}>🔄 Đổi mã PIN mới</Text>
+              </TouchableOpacity>
+
+              {/* Status Indicator */}
+              <View style={styles.listeningBadge}>
+                <View style={styles.pulseDot} />
+                <Text style={styles.listeningText}>
+                  {incomingStatus || 'Đang sẵn sàng nhận tài liệu...'}
+                </Text>
               </View>
             </View>
           </View>
+        )}
+      </ScrollView>
 
-          <Text style={[styles.radarHeadline, { color: theme.textPrimary }]}>
-            {scanning ? 'Đang tự động dò tìm máy tính...' : 'Đã kết nối tự động (Zero-Config)'}
-          </Text>
-          <Text style={[styles.radarDescription, { color: theme.textMuted }]}>
-            Giao thức P2P Wi-Fi cục bộ • Không qua máy chủ trung gian
-          </Text>
-
-          <TouchableOpacity
-            onPress={scan}
-            disabled={scanning}
-            style={[styles.rescanPill, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
-          >
-            <Text style={[styles.rescanText, { color: theme.primary }]}>
-              {scanning ? '🔄 Đang quét mạng...' : '🔄 Quét lại mạng'}
+      {/* ================= MODAL: NHẬP MÃ PIN ================= */}
+      <Modal visible={pinModalVisible} transparent animationType="fade">
+        <View style={styles.modalBackdrop}>
+          <View style={[styles.modalBox, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
+            <Text style={[styles.modalTitle, { color: theme.textPrimary }]}>Nhập mã PIN 6 số</Text>
+            <Text style={[styles.modalSub, { color: theme.textMuted }]}>
+              Nhập mã PIN hiển thị trên màn hình thiết bị bạn muốn gửi tệp tới:
             </Text>
-          </TouchableOpacity>
-        </View>
 
-        {/* Section Header */}
-        <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>MÁY TÍNH TIẾP NHẬN (P2P)</Text>
-          <Text style={[styles.autoBadge, { color: theme.emerald }]}>● Tự động ghép đôi</Text>
-        </View>
+            <TextInput
+              style={[
+                styles.modalInput,
+                { color: theme.textPrimary, borderColor: theme.primary, backgroundColor: theme.bgElevated },
+              ]}
+              placeholder="VD: 749218"
+              placeholderTextColor={theme.textMuted}
+              keyboardType="number-pad"
+              maxLength={6}
+              value={inputPin}
+              onChangeText={setInputPin}
+              autoFocus
+            />
 
-        {/* Peers List */}
-        <FlatList
-          data={peers}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => {
-            const isSelected = selectedPeer?.id === item.id || (!selectedPeer && peers[0]?.id === item.id)
-            return (
+            <View style={styles.modalBtnRow}>
               <TouchableOpacity
-                style={[
-                  styles.peerCard,
-                  {
-                    backgroundColor: theme.bgSurface,
-                    borderColor: isSelected ? theme.primary : theme.border,
-                  },
-                  isSelected && { borderWidth: 2 },
-                ]}
-                onPress={() => setSelectedPeer(item)}
-                activeOpacity={0.8}
+                style={[styles.modalBtnCancel, { borderColor: theme.border }]}
+                onPress={() => setPinModalVisible(false)}
               >
-                <View style={[styles.peerIcon, { backgroundColor: isSelected ? `${theme.primary}20` : theme.bgElevated }]}>
-                  <Text style={styles.peerIconText}>💻</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <View style={styles.peerTitleRow}>
-                    <Text style={[styles.peerName, { color: theme.textPrimary }]}>{item.name}</Text>
-                    <View style={[styles.onlineBadge, { backgroundColor: `${theme.emerald}20` }]}>
-                      <Text style={[styles.onlineText, { color: theme.emerald }]}>Sẵn sàng</Text>
-                    </View>
-                  </View>
-                  <Text style={[styles.peerMeta, { color: theme.textMuted }]}>
-                    Mạng Wi-Fi nội bộ • Cổng {item.port} • Tốc độ tối đa
-                  </Text>
-                </View>
-                {isSelected && (
-                  <View style={[styles.selectedBadge, { backgroundColor: theme.primary }]}>
-                    <Text style={styles.selectedBadgeText}>✓</Text>
-                  </View>
-                )}
+                <Text style={[styles.modalBtnText, { color: theme.textMuted }]}>Hủy</Text>
               </TouchableOpacity>
-            )
-          }}
-        />
 
-        {/* Action Bottom Section */}
-        <View style={styles.actionSection}>
-          <TouchableOpacity
-            style={[
-              styles.sendButton,
-              { backgroundColor: theme.primary },
-              transferring && { opacity: 0.7 },
-            ]}
-            onPress={handlePickAndSend}
-            disabled={transferring}
-            activeOpacity={0.8}
-          >
-            {transferring ? (
-              <View style={styles.transferringRow}>
-                <ActivityIndicator color="#ffffff" size="small" />
-                <Text style={styles.sendButtonText}>
-                  Đang bắn tệp... {Math.round(progress * 100)}%
+              <TouchableOpacity
+                style={[styles.modalBtnSubmit, { backgroundColor: theme.primary }]}
+                onPress={handleSendByPin}
+              >
+                <Text style={[styles.modalBtnText, { color: '#ffffff', fontWeight: '700' }]}>
+                  Chọn tệp & Gửi
                 </Text>
-              </View>
-            ) : (
-              <Text style={styles.sendButtonText}>
-                🚀 Bắn Tệp Sang {selectedPeer?.name?.replace(/\s*\(.*\)/, '') || 'Máy Tính'}
-              </Text>
-            )}
-          </TouchableOpacity>
-
-          <View style={[styles.infoBanner, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}>
-            <Text style={styles.infoBannerIcon}>🔒</Text>
-            <Text style={[styles.infoBannerText, { color: theme.textMuted }]}>
-              {t.drop.listening}
-            </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
+      </Modal>
     </View>
   )
 }
@@ -216,15 +503,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 16,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 14,
     borderBottomWidth: 1,
   },
   brandRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+    marginBottom: 12,
   },
   dropLogo: {
     width: 44,
@@ -237,183 +525,286 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '800',
-    letterSpacing: -0.3,
   },
   subtitle: {
     fontSize: 12,
     marginTop: 2,
   },
-  content: {
+  tabSegment: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 3,
+  },
+  segmentBtn: {
     flex: 1,
+    paddingVertical: 8,
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  segmentText: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  content: {
     padding: 16,
+    gap: 16,
+  },
+  tabContent: {
+    gap: 16,
   },
   radarCard: {
-    alignItems: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 16,
-    borderRadius: 20,
+    padding: 20,
+    borderRadius: 16,
     borderWidth: 1,
-    marginBottom: 18,
+    alignItems: 'center',
   },
   radarOuterRing: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 110,
+    height: 110,
+    borderRadius: 55,
     borderWidth: 1.5,
-    borderStyle: 'dashed',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
   },
   radarMiddleRing: {
-    width: 74,
-    height: 74,
-    borderRadius: 37,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   radarCenterCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#06b6d4',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
   },
   radarIcon: {
-    fontSize: 22,
+    fontSize: 24,
   },
   radarHeadline: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '700',
-    marginBottom: 4,
+    marginTop: 14,
   },
   radarDescription: {
-    fontSize: 11,
+    fontSize: 12,
     textAlign: 'center',
-    marginBottom: 12,
+    marginTop: 4,
+    marginBottom: 14,
   },
-  rescanPill: {
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 20,
+  actionButtonsRow: {
+    flexDirection: 'row',
+    gap: 10,
+    width: '100%',
+  },
+  actionBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 6,
+    borderRadius: 10,
     borderWidth: 1,
+    alignItems: 'center',
+    gap: 4,
   },
-  rescanText: {
+  actionBtnIcon: {
+    fontSize: 18,
+  },
+  actionBtnText: {
     fontSize: 11,
     fontWeight: '700',
   },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-    paddingHorizontal: 4,
+  sectionCard: {
+    padding: 16,
+    borderRadius: 16,
+    borderWidth: 1,
   },
   sectionTitle: {
     fontSize: 11,
     fontWeight: '800',
     letterSpacing: 0.8,
+    marginBottom: 12,
   },
-  autoBadge: {
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  peerCard: {
+  peerItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 14,
-    borderRadius: 14,
+    padding: 12,
+    borderRadius: 12,
     borderWidth: 1,
-    marginBottom: 10,
+    marginBottom: 8,
     gap: 12,
   },
-  peerIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
+  peerIconBox: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  peerIconText: {
-    fontSize: 22,
+  peerIcon: {
+    fontSize: 20,
   },
-  peerTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  peerInfo: {
+    flex: 1,
   },
   peerName: {
     fontSize: 14,
     fontWeight: '700',
-    flex: 1,
   },
-  onlineBadge: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
-  },
-  onlineText: {
-    fontSize: 10,
-    fontWeight: '800',
-  },
-  peerMeta: {
+  peerSub: {
     fontSize: 11,
-    marginTop: 3,
-  },
-  selectedBadge: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  selectedBadgeText: {
-    color: '#ffffff',
-    fontSize: 13,
-    fontWeight: '900',
-  },
-  actionSection: {
-    marginTop: 'auto',
-    paddingTop: 12,
-    gap: 10,
+    marginTop: 2,
   },
   sendButton: {
     paddingVertical: 14,
-    borderRadius: 14,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  transferringRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    marginTop: 8,
   },
   sendButtonText: {
     color: '#ffffff',
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '800',
   },
-  infoBanner: {
+  sendingRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
-    borderRadius: 10,
-    borderWidth: 1,
     gap: 8,
   },
-  infoBannerIcon: {
-    fontSize: 13,
+  receiveCard: {
+    padding: 24,
+    borderRadius: 16,
+    borderWidth: 1,
+    alignItems: 'center',
   },
-  infoBannerText: {
-    fontSize: 11,
+  receiveTitle: {
+    fontSize: 13,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
+  receiveSub: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 6,
+    marginBottom: 18,
+  },
+  qrWrapper: {
+    padding: 12,
+    backgroundColor: '#ffffff',
+    borderRadius: 14,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  qrContainer: {
+    backgroundColor: '#ffffff',
+  },
+  pinDisplayRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 20,
+  },
+  pinDigitBox: {
+    width: 44,
+    height: 56,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pinDigitText: {
+    fontSize: 28,
+    fontWeight: '900',
+  },
+  refreshPinBtn: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    marginTop: 14,
+  },
+  refreshPinText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  listeningBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 20,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+  },
+  pulseDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#10b981',
+  },
+  listeningText: {
+    color: '#10b981',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  modalBackdrop: {
     flex: 1,
-    lineHeight: 15,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  modalBox: {
+    width: '100%',
+    borderRadius: 16,
+    borderWidth: 1,
+    padding: 24,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+  },
+  modalSub: {
+    fontSize: 13,
+    marginTop: 4,
+    marginBottom: 16,
+  },
+  modalInput: {
+    borderWidth: 1.5,
+    borderRadius: 10,
+    padding: 14,
+    fontSize: 22,
+    fontWeight: '800',
+    letterSpacing: 6,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  modalBtnRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  modalBtnCancel: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  modalBtnSubmit: {
+    flex: 2,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalBtnText: {
+    fontSize: 14,
   },
 })
