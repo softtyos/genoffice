@@ -8,6 +8,8 @@ import {
   ScrollView,
   TextInput,
   Alert,
+  Image,
+  useWindowDimensions,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
@@ -23,6 +25,10 @@ interface DocumentViewerModalProps {
 }
 
 export function DocumentViewerModal({ document, visible, onClose }: DocumentViewerModalProps) {
+  const { width } = useWindowDimensions()
+  const isSmall = width < 375
+  const isTablet = width >= 768
+
   const { theme, t, saveActiveDocument, beamDocumentToDesktop } = useApp()
 
   // Viewer States
@@ -209,10 +215,10 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
             </View>
 
             <View style={styles.titleBox}>
-              <Text style={[styles.docTitle, { color: theme.textPrimary }]} numberOfLines={1}>
+              <Text style={[styles.docTitle, { color: theme.textPrimary, fontSize: isSmall ? 13 : 14 }]} numberOfLines={1}>
                 {document.name}
               </Text>
-              <Text style={[styles.docMeta, { color: theme.textMuted }]}>
+              <Text style={[styles.docMeta, { color: theme.textMuted }]} numberOfLines={1} ellipsizeMode="tail">
                 {formatFileSize(document.size)} • {new Date(document.modifiedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </Text>
             </View>
@@ -223,11 +229,17 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
             <TouchableOpacity
               onPress={handleBeam}
               disabled={sendingDrop}
-              style={[styles.beamBtn, { backgroundColor: theme.primary }]}
+              style={[
+                styles.beamBtn,
+                { backgroundColor: theme.primary },
+                isSmall && { paddingHorizontal: 8, paddingVertical: 6 },
+              ]}
               activeOpacity={0.8}
             >
-              <Ionicons name="send" size={13} color="#ffffff" style={{ marginRight: 5 }} />
-              <Text style={styles.beamBtnText}>{sendingDrop ? '...' : 'Gửi Desktop'}</Text>
+              <Ionicons name="send" size={isSmall ? 11 : 13} color="#ffffff" style={{ marginRight: 4 }} />
+              <Text style={[styles.beamBtnText, isSmall && { fontSize: 11 }]}>
+                {sendingDrop ? '...' : (isSmall ? 'Desktop' : 'Gửi Desktop')}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={handleShare} style={[styles.iconBtn, { backgroundColor: theme.bgElevated }]} activeOpacity={0.7}>
@@ -309,7 +321,7 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
           <View style={styles.body}>
             {editorMode === 'view' ? (
               <ScrollView style={styles.readerScroll} contentContainerStyle={styles.readerContent}>
-                <View style={[styles.documentPaper, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
+                <View style={[styles.documentPaper, { backgroundColor: theme.bgSurface, borderColor: theme.border }, isTablet && { maxWidth: 760, alignSelf: 'center', width: '100%' }]}>
                   <Text style={[styles.paperHeader, { color: theme.primary }]}>
                     {document.type === 'markdown' ? 'MARKDOWN DOCUMENT' : 'MICROSOFT WORD (DOCX)'}
                   </Text>
@@ -488,7 +500,7 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
             {document.slideData && (
               <View style={styles.slidesContainer}>
                 {/* Slide Card Canvas */}
-                <View style={[styles.slideCanvas, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
+                <View style={[styles.slideCanvas, { backgroundColor: theme.bgSurface, borderColor: theme.border }, isTablet && { maxWidth: 840, alignSelf: 'center', width: '100%' }]}>
                   <View style={styles.slideHeader}>
                     <Text style={[styles.slideBrandTag, { color: theme.amber }]}>SLIDES PRESENTATION</Text>
                     <Text style={[styles.slideNumberBadge, { backgroundColor: theme.bgElevated, color: theme.textMuted }]}>
@@ -634,7 +646,7 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
             </View>
 
             <ScrollView style={styles.readerScroll} contentContainerStyle={styles.readerContent}>
-              <View style={[styles.pdfPaper, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
+              <View style={[styles.pdfPaper, { backgroundColor: theme.bgSurface, borderColor: theme.border }, isTablet && { maxWidth: 760, alignSelf: 'center', width: '100%' }]}>
                 {/* PDF Stamp & Header */}
                 <View style={styles.pdfHeaderRow}>
                   <View style={[styles.pdfFormatTag, { backgroundColor: `${theme.rose}20`, borderColor: theme.rose }]}>
@@ -653,12 +665,29 @@ export function DocumentViewerModal({ document, visible, onClose }: DocumentView
                 <View style={[styles.pdfDivider, { backgroundColor: theme.border }]} />
 
                 <View style={styles.pdfPageContentBox}>
-                  <Text style={[styles.pdfParagraph, { color: theme.textPrimary, fontSize: 15, lineHeight: 24 }]}>
-                    {document.pdfData?.contentSummary && document.pdfData.contentSummary[activePdfPage - 1]
-                      ? document.pdfData.contentSummary[activePdfPage - 1]
-                      : document.textContent ||
-                        `Tài liệu PDF điện tử "${document.name}". Mọi chữ ký số và dữ liệu bảo mật đều được xác thực cục bộ.`}
-                  </Text>
+                  {document.pdfData?.pageImages && document.pdfData.pageImages[activePdfPage - 1] ? (
+                    <View style={styles.scannedImageViewerWrap}>
+                      <Image
+                        source={{ uri: document.pdfData.pageImages[activePdfPage - 1] }}
+                        style={styles.scannedImageViewer}
+                        resizeMode="contain"
+                      />
+                      {document.pdfData.watermarkText ? (
+                        <View style={styles.watermarkViewerOverlay} pointerEvents="none">
+                          <Text style={styles.watermarkViewerText}>
+                            {document.pdfData.watermarkText}
+                          </Text>
+                        </View>
+                      ) : null}
+                    </View>
+                  ) : (
+                    <Text style={[styles.pdfParagraph, { color: theme.textPrimary, fontSize: 15, lineHeight: 24 }]}>
+                      {document.pdfData?.contentSummary && document.pdfData.contentSummary[activePdfPage - 1]
+                        ? document.pdfData.contentSummary[activePdfPage - 1]
+                        : document.textContent ||
+                          `Tài liệu PDF điện tử "${document.name}". Mọi chữ ký số và dữ liệu bảo mật đều được xác thực cục bộ.`}
+                    </Text>
+                  )}
                 </View>
 
                 {/* E-Signature Box */}
@@ -784,7 +813,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
+    minWidth: 0,
     gap: 10,
+    marginRight: 8,
   },
   closeBtn: {
     padding: 6,
@@ -798,6 +829,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     borderRadius: 6,
     borderWidth: 1,
+    flexShrink: 0,
   },
   typeBadgeText: {
     fontSize: 10,
@@ -805,6 +837,7 @@ const styles = StyleSheet.create({
   },
   titleBox: {
     flex: 1,
+    minWidth: 0,
   },
   docTitle: {
     fontSize: 14,
@@ -1254,6 +1287,43 @@ const styles = StyleSheet.create({
   pdfPageContentBox: {
     paddingVertical: 8,
     minHeight: 180,
+  },
+  scannedImageViewerWrap: {
+    width: '100%',
+    height: 480,
+    borderRadius: 12,
+    overflow: 'hidden',
+    position: 'relative',
+    backgroundColor: '#00000010',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scannedImageViewer: {
+    width: '100%',
+    height: '100%',
+  },
+  watermarkViewerOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  watermarkViewerText: {
+    fontSize: 26,
+    fontWeight: '900',
+    color: 'rgba(239, 68, 68, 0.32)',
+    transform: [{ rotate: '-35deg' }],
+    borderWidth: 2,
+    borderColor: 'rgba(239, 68, 68, 0.4)',
+    borderStyle: 'dashed',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    letterSpacing: 2,
+    textTransform: 'uppercase',
   },
   signedHash: {
     fontSize: 9,

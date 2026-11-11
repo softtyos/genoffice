@@ -10,6 +10,7 @@ import {
   TextInput,
   ScrollView,
   Modal,
+  useWindowDimensions,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import * as DocumentPicker from 'expo-document-picker'
@@ -21,6 +22,18 @@ import { getQrModules } from '../utils/qr'
 
 export function DropScreen() {
   const { theme, t, importAndOpenUri, openDocument } = useApp()
+  const { width } = useWindowDimensions()
+  const isSmall = width < 375
+  const isTablet = width >= 768
+
+  // Calculate dynamic PIN digit box size so all 6 digits ALWAYS fit in one horizontal line
+  const cardPadding = isSmall ? 16 : 24
+  const availablePinRowWidth = Math.min(width - (isSmall ? 32 : 48) - cardPadding * 2, isTablet ? 480 : 380)
+  const pinGap = isSmall ? 5 : 8
+  const pinBoxWidth = Math.max(34, Math.min(46, Math.floor((availablePinRowWidth - pinGap * 5) / 6)))
+  const pinBoxHeight = Math.round(pinBoxWidth * 1.25)
+  const pinFontSize = Math.round(pinBoxWidth * 0.55)
+
   const [activeTab, setActiveTab] = useState<'send' | 'receive'>('send')
 
   // Send State
@@ -240,7 +253,8 @@ export function DropScreen() {
   const renderQrView = () => {
     if (!qrMatrix || qrMatrix.length === 0) return null
     const matrixSize = qrMatrix.length
-    const cellSize = Math.floor(180 / matrixSize)
+    const qrSize = Math.max(140, Math.min(isSmall ? 160 : 190, width * 0.45))
+    const cellSize = Math.floor(qrSize / matrixSize)
 
     return (
       <View style={styles.qrContainer}>
@@ -270,10 +284,10 @@ export function DropScreen() {
           <View style={[styles.dropLogo, { backgroundColor: theme.bgElevated, borderColor: theme.border, borderWidth: 1 }]}>
             <Ionicons name="swap-horizontal-outline" size={22} color={theme.primary} />
           </View>
-          <View>
-            <Text style={[styles.title, { color: theme.textPrimary }]}>Chuyển file</Text>
-            <Text style={[styles.subtitle, { color: theme.textMuted }]}>
-              Chuyển tệp không dây trực tiếp giữa điện thoại và máy tính
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <Text style={[styles.title, { color: theme.textPrimary }]} numberOfLines={1}>Chuyển file</Text>
+            <Text style={[styles.subtitle, { color: theme.textMuted }]} numberOfLines={1} ellipsizeMode="tail">
+              Truyền tệp trực tiếp qua mạng Wi-Fi nội bộ
             </Text>
           </View>
         </View>
@@ -311,21 +325,21 @@ export function DropScreen() {
         </View>
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={[styles.content, isTablet && { maxWidth: 640, alignSelf: 'center', width: '100%' }]}>
         {/* ================= TAB 1: GỬI TỆP ================= */}
         {activeTab === 'send' && (
           <View style={styles.tabContent}>
             {/* 1-Touch Clean Device Action Card */}
-            <View style={[styles.radarCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
+            <View style={[styles.radarCard, { backgroundColor: theme.bgSurface, borderColor: theme.border, padding: cardPadding }]}>
               <View style={[styles.deviceIconCircle, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}>
                 <Ionicons name="desktop-outline" size={36} color={theme.primary} />
               </View>
 
-              <Text style={[styles.radarHeadline, { color: theme.textPrimary }]}>
+              <Text style={[styles.radarHeadline, { color: theme.textPrimary }]} numberOfLines={1}>
                 {scanning ? 'Đang dò tìm máy tính...' : (selectedPeer?.name || 'Máy tính của bạn')}
               </Text>
-              <Text style={[styles.radarDescription, { color: '#10b981', fontWeight: '600' }]}>
-                {scanning ? 'Đang quét mạng Wi-Fi...' : 'Đã kết nối tự động • Sẵn sàng chuyển tệp 1-Chạm'}
+              <Text style={[styles.radarDescription, { color: '#10b981', fontWeight: '600' }]} numberOfLines={1} ellipsizeMode="tail">
+                {scanning ? 'Đang quét mạng Wi-Fi...' : 'Đã kết nối tự động • Sẵn sàng'}
               </Text>
 
               {/* Big 1-Touch Button */}
@@ -341,14 +355,16 @@ export function DropScreen() {
                 {transferring ? (
                   <View style={styles.sendingRow}>
                     <ActivityIndicator color="#ffffff" size="small" />
-                    <Text style={styles.sendButtonText}>
+                    <Text style={[styles.sendButtonText, { fontSize: isSmall ? 13 : 15 }]} numberOfLines={1}>
                       Đang chuyển tệp... {Math.round(progress * 100)}%
                     </Text>
                   </View>
                 ) : (
                   <View style={styles.sendingRow}>
                     <Ionicons name="send" size={16} color="#ffffff" style={{ marginRight: 6 }} />
-                    <Text style={styles.sendButtonText}>Chọn tệp & Gửi sang Máy tính (1-Chạm)</Text>
+                    <Text style={[styles.sendButtonText, { fontSize: isSmall ? 13 : 15 }]} numberOfLines={1}>
+                      Chọn tệp & Gửi sang Máy tính
+                    </Text>
                   </View>
                 )}
               </TouchableOpacity>
@@ -359,8 +375,8 @@ export function DropScreen() {
                   style={[styles.actionBtn, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
                   onPress={handleScanQrFromCamera}
                 >
-                  <Ionicons name="qr-code-outline" size={18} color={theme.textPrimary} style={{ marginRight: 6 }} />
-                  <Text style={[styles.actionBtnText, { color: theme.textPrimary }]}>Quét mã QR</Text>
+                  <Ionicons name="qr-code-outline" size={16} color={theme.textPrimary} style={{ marginRight: 5 }} />
+                  <Text style={[styles.actionBtnText, { color: theme.textPrimary }]} numberOfLines={1}>Quét mã QR</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -368,8 +384,8 @@ export function DropScreen() {
                   onPress={scan}
                   disabled={scanning}
                 >
-                  <Ionicons name="refresh-outline" size={18} color={theme.textPrimary} style={{ marginRight: 6 }} />
-                  <Text style={[styles.actionBtnText, { color: theme.textPrimary }]}>Dò tìm lại Wi-Fi</Text>
+                  <Ionicons name="refresh-outline" size={16} color={theme.textPrimary} style={{ marginRight: 5 }} />
+                  <Text style={[styles.actionBtnText, { color: theme.textPrimary }]} numberOfLines={1}>Dò tìm lại</Text>
                 </TouchableOpacity>
               </View>
 
@@ -377,8 +393,8 @@ export function DropScreen() {
                 onPress={() => setPinModalVisible(true)}
                 style={{ marginTop: 12 }}
               >
-                <Text style={{ fontSize: 11, color: theme.textMuted, textDecorationLine: 'underline' }}>
-                  Hoặc kết nối từ xa bằng mã PIN (nếu không cùng Wi-Fi)
+                <Text style={{ fontSize: 11, color: theme.textMuted, textDecorationLine: 'underline' }} numberOfLines={1}>
+                  Hoặc kết nối từ xa bằng mã PIN 6 số
                 </Text>
               </TouchableOpacity>
             </View>
@@ -388,7 +404,7 @@ export function DropScreen() {
         {/* ================= TAB 2: NHẬN TỆP ================= */}
         {activeTab === 'receive' && (
           <View style={styles.tabContent}>
-            <View style={[styles.receiveCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
+            <View style={[styles.receiveCard, { backgroundColor: theme.bgSurface, borderColor: theme.border, padding: cardPadding }]}>
               <Text style={[styles.receiveTitle, { color: theme.textPrimary }]}>MÃ KẾT NỐI CỦA BẠN</Text>
               <Text style={[styles.receiveSub, { color: theme.textMuted }]}>
                 Giữ màn hình này mở. Nhập mã PIN 6 số trên Máy tính hoặc quét mã QR dưới đây.
@@ -397,14 +413,22 @@ export function DropScreen() {
               {/* QR Code Container */}
               <View style={styles.qrWrapper}>{renderQrView()}</View>
 
-              {/* Big 6-Digit PIN Display */}
-              <View style={styles.pinDisplayRow}>
+              {/* Big 6-Digit PIN Display - Never wraps onto row 2 */}
+              <View style={[styles.pinDisplayRow, { gap: pinGap }]}>
                 {myPin.split('').map((digit, i) => (
                   <View
                     key={i}
-                    style={[styles.pinDigitBox, { backgroundColor: theme.bgElevated, borderColor: theme.border }]}
+                    style={[
+                      styles.pinDigitBox,
+                      {
+                        width: pinBoxWidth,
+                        height: pinBoxHeight,
+                        backgroundColor: theme.bgElevated,
+                        borderColor: theme.border,
+                      },
+                    ]}
                   >
-                    <Text style={[styles.pinDigitText, { color: theme.primary }]}>{digit}</Text>
+                    <Text style={[styles.pinDigitText, { color: theme.primary, fontSize: pinFontSize }]}>{digit}</Text>
                   </View>
                 ))}
               </View>

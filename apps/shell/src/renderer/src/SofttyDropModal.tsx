@@ -402,7 +402,8 @@ export function SofttyDropModal({ isOpen, onClose, port = 54321 }: SofttyDropMod
           background: var(--home-bg, #ffffff);
           color: var(--home-text, #0f172a);
           width: 580px;
-          max-width: 92vw;
+          max-width: 94vw;
+          max-height: 90vh;
           border-radius: 16px;
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
           border: 1px solid var(--home-border, #e2e8f0);
@@ -417,11 +418,14 @@ export function SofttyDropModal({ isOpen, onClose, port = 54321 }: SofttyDropMod
           padding: 18px 24px;
           border-bottom: 1px solid var(--home-border, #e2e8f0);
           background: var(--home-surface, #f8fafc);
+          flex-shrink: 0;
         }
         .drop-header-title {
           display: flex;
           align-items: center;
           gap: 12px;
+          min-width: 0;
+          flex: 1;
         }
         .drop-header-icon {
           font-size: 28px;
@@ -432,16 +436,23 @@ export function SofttyDropModal({ isOpen, onClose, port = 54321 }: SofttyDropMod
           display: flex;
           align-items: center;
           justify-content: center;
+          flex-shrink: 0;
         }
         .drop-header-title h3 {
           margin: 0;
           font-size: 16px;
           font-weight: 700;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         .drop-header-title p {
           margin: 2px 0 0 0;
           font-size: 12px;
           color: #64748b;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         .drop-close-btn {
           background: transparent;
@@ -451,6 +462,7 @@ export function SofttyDropModal({ isOpen, onClose, port = 54321 }: SofttyDropMod
           cursor: pointer;
           padding: 6px;
           border-radius: 6px;
+          flex-shrink: 0;
         }
         .drop-close-btn:hover {
           background: rgba(0, 0, 0, 0.05);
@@ -460,6 +472,7 @@ export function SofttyDropModal({ isOpen, onClose, port = 54321 }: SofttyDropMod
           display: flex;
           border-bottom: 1px solid var(--home-border, #e2e8f0);
           background: var(--home-surface, #f8fafc);
+          flex-shrink: 0;
         }
         .drop-tab {
           flex: 1;
@@ -483,6 +496,7 @@ export function SofttyDropModal({ isOpen, onClose, port = 54321 }: SofttyDropMod
           display: flex;
           flex-direction: column;
           gap: 16px;
+          overflow-y: auto;
         }
         .drop-target-section {
           display: flex;
@@ -528,11 +542,15 @@ export function SofttyDropModal({ isOpen, onClose, port = 54321 }: SofttyDropMod
           flex: 1;
           display: flex;
           flex-direction: column;
+          min-width: 0;
         }
         .drop-peer-name {
           font-size: 14px;
           font-weight: 700;
           color: #0f172a;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         .drop-peer-status {
           font-size: 11px;

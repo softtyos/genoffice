@@ -15,11 +15,18 @@ export interface TransferProgress {
   errorMessage?: string
 }
 
+export type ScanFilterType = 'original' | 'bw' | 'clean' | 'vibrant'
+export type ScanDocMode = 'a4' | 'receipt' | 'idcard'
+
 export interface ScannedPage {
   id: string
   uri: string
   width: number
   height: number
+  rotation?: number // 0, 90, 180, 270
+  filter?: ScanFilterType
+  docMode?: ScanDocMode
+  cropInsetPercent?: number // % cut off outer clutter/table
 }
 
 export interface UserProfile {
@@ -59,6 +66,8 @@ export interface PdfDocumentStructure {
   signedAt?: string
   signatureName?: string
   contentSummary: string[]
+  pageImages?: string[]
+  watermarkText?: string
 }
 
 export interface OfficeDocument {

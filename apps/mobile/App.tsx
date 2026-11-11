@@ -23,14 +23,18 @@ function MainTabs() {
   const [activeTab, setActiveTab] = useState<TabKey>('documents')
 
   useEffect(() => {
-    const t1 = setTimeout(() => setActiveTab('drop'), 3000)
-    const t2 = setTimeout(() => setActiveTab('scanner'), 6000)
-    const t3 = setTimeout(() => setActiveTab('profile'), 9000)
-    return () => {
-      clearTimeout(t1)
-      clearTimeout(t2)
-      clearTimeout(t3)
+    const handleUrl = (event: { url: string }) => {
+      const url = event.url
+      if (url.includes('tab=documents') || url.includes('/documents')) setActiveTab('documents')
+      else if (url.includes('tab=drop') || url.includes('/drop')) setActiveTab('drop')
+      else if (url.includes('tab=scanner') || url.includes('/scanner')) setActiveTab('scanner')
+      else if (url.includes('tab=profile') || url.includes('/profile')) setActiveTab('profile')
     }
+    const sub = Linking.addEventListener('url', handleUrl)
+    Linking.getInitialURL().then(url => {
+      if (url) handleUrl({ url })
+    })
+    return () => sub.remove()
   }, [])
 
   return (

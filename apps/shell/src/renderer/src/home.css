@@ -2262,6 +2262,55 @@ body.vib .home {
   }
 }
 
+@media (max-width: 768px) {
+  .sidebar {
+    width: 62px;
+    padding: 14px 6px;
+    align-items: center;
+  }
+
+  .sidebar-brand-title,
+  .sidebar-section-title,
+  .nav-item span:not(.nav-icon),
+  .sidebar-footer {
+    display: none;
+  }
+
+  .sidebar-logo {
+    padding: 0;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: 10px 0;
+  }
+
+  .content {
+    padding: 20px 14px 30px;
+  }
+
+  .quick-card {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+
+  .recent-columns,
+  .recent-item {
+    grid-template-columns: 24px minmax(0, 1fr) 28px;
+  }
+
+  .recent-columns .col-star,
+  .recent-columns .col-modified,
+  .recent-columns .col-share,
+  .recent-star,
+  .recent-modified,
+  .recent-share {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

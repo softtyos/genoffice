@@ -9,12 +9,17 @@ import {
   TextInput,
   FlatList,
   Alert,
+  useWindowDimensions,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useApp } from '../context/AppContext'
 import { OfficeDocument, OfficeDocType } from '../types'
 
 export function DocumentsScreen() {
+  const { width } = useWindowDimensions()
+  const isSmall = width < 375
+  const isTablet = width >= 768
+
   const {
     theme,
     t,
@@ -133,9 +138,9 @@ export function DocumentsScreen() {
             source={require('../../assets/icon.png')}
             style={styles.brandLogoImage}
           />
-          <View>
-            <Text style={[styles.brandTitle, { color: theme.textPrimary }]}>Softty Office</Text>
-            <Text style={[styles.brandSubtitle, { color: theme.textMuted }]}>{t.home.subtitle}</Text>
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <Text style={[styles.brandTitle, { color: theme.textPrimary }]} numberOfLines={1}>Softty Office</Text>
+            <Text style={[styles.brandSubtitle, { color: theme.textMuted }]} numberOfLines={1} ellipsizeMode="tail">{t.home.subtitle}</Text>
           </View>
         </View>
 
@@ -157,7 +162,14 @@ export function DocumentsScreen() {
         </View>
       </View>
 
-      <ScrollView style={styles.scrollArea} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollArea}
+        contentContainerStyle={[
+          styles.scrollContent,
+          isTablet && { maxWidth: 720, alignSelf: 'center', width: '100%' },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Quick Open & Create Ribbon */}
         <View style={styles.quickRibbon}>
           {/* Main Open Local File Card */}
@@ -173,8 +185,8 @@ export function DocumentsScreen() {
               <Ionicons name="folder-open-outline" size={22} color={theme.primary} />
             </View>
             <View style={styles.openFileTextBox}>
-              <Text style={[styles.openFileTitle, { color: theme.textPrimary }]}>{t.home.openFile}</Text>
-              <Text style={[styles.openFileDesc, { color: theme.textMuted }]}>{t.home.openFileDesc}</Text>
+              <Text style={[styles.openFileTitle, { color: theme.textPrimary }]} numberOfLines={1}>{t.home.openFile}</Text>
+              <Text style={[styles.openFileDesc, { color: theme.textMuted }]} numberOfLines={1} ellipsizeMode="tail">{t.home.openFileDesc}</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color={theme.textMuted} />
           </TouchableOpacity>
@@ -188,7 +200,7 @@ export function DocumentsScreen() {
               <View style={[styles.quickCreateIconBox, { backgroundColor: theme.bgElevated, borderColor: theme.border, borderWidth: 1 }]}>
                 <Ionicons name="document-text-outline" size={20} color={theme.primary} />
               </View>
-              <Text style={[styles.quickCreateLabel, { color: theme.textPrimary }]}>{t.home.newDoc}</Text>
+              <Text style={[styles.quickCreateLabel, { color: theme.textPrimary, fontSize: isSmall ? 10.5 : 11 }]} numberOfLines={1}>{t.home.newDoc}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -198,7 +210,7 @@ export function DocumentsScreen() {
               <View style={[styles.quickCreateIconBox, { backgroundColor: theme.bgElevated, borderColor: theme.border, borderWidth: 1 }]}>
                 <Ionicons name="grid-outline" size={20} color={theme.emerald} />
               </View>
-              <Text style={[styles.quickCreateLabel, { color: theme.textPrimary }]}>{t.home.newSheet}</Text>
+              <Text style={[styles.quickCreateLabel, { color: theme.textPrimary, fontSize: isSmall ? 10.5 : 11 }]} numberOfLines={1}>{t.home.newSheet}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -208,7 +220,7 @@ export function DocumentsScreen() {
               <View style={[styles.quickCreateIconBox, { backgroundColor: theme.bgElevated, borderColor: theme.border, borderWidth: 1 }]}>
                 <Ionicons name="easel-outline" size={20} color={theme.amber} />
               </View>
-              <Text style={[styles.quickCreateLabel, { color: theme.textPrimary }]}>{t.home.newSlide}</Text>
+              <Text style={[styles.quickCreateLabel, { color: theme.textPrimary, fontSize: isSmall ? 10.5 : 11 }]} numberOfLines={1}>{t.home.newSlide}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -218,7 +230,7 @@ export function DocumentsScreen() {
               <View style={[styles.quickCreateIconBox, { backgroundColor: theme.bgElevated, borderColor: theme.border, borderWidth: 1 }]}>
                 <Ionicons name="code-slash-outline" size={20} color={theme.purple} />
               </View>
-              <Text style={[styles.quickCreateLabel, { color: theme.textPrimary }]}>{t.home.newMd}</Text>
+              <Text style={[styles.quickCreateLabel, { color: theme.textPrimary, fontSize: isSmall ? 10.5 : 11 }]} numberOfLines={1}>{t.home.newMd}</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>
@@ -310,7 +322,7 @@ export function DocumentsScreen() {
                           {item.type.toUpperCase()}
                         </Text>
                       </View>
-                      <Text style={[styles.docCardMetaText, { color: theme.textMuted }]}>
+                      <Text style={[styles.docCardMetaText, { color: theme.textMuted }]} numberOfLines={1} ellipsizeMode="tail">
                         {formatFileSize(item.size)} • {new Date(item.modifiedAt).toLocaleDateString('vi-VN')}
                       </Text>
                     </View>
@@ -389,6 +401,9 @@ const styles = StyleSheet.create({
   scrollArea: {
     flex: 1,
   },
+  scrollContent: {
+    paddingBottom: 32,
+  },
   quickRibbon: {
     padding: 16,
     gap: 12,
@@ -415,6 +430,7 @@ const styles = StyleSheet.create({
   },
   openFileTextBox: {
     flex: 1,
+    minWidth: 0,
   },
   openFileTitle: {
     fontSize: 15,
@@ -509,6 +525,7 @@ const styles = StyleSheet.create({
   },
   docCardDetails: {
     flex: 1,
+    minWidth: 0,
   },
   docCardName: {
     fontSize: 13,

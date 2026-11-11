@@ -13,7 +13,7 @@ const chromePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome
 
 const rawScreenshots = [
   {
-    file: resolve(rootDir, 'dist/store-assets/google-play/screenshot_1_documents.png'),
+    file: resolve(outDir, 'ios_clean_1_documents.png'),
     badgeVi: 'BỘ CÔNG CỤ VĂN PHÒNG',
     titleVi: 'Trình đọc tài liệu Đa năng',
     descVi: 'Mở và xem mượt mà file Word, Excel, PowerPoint & PDF mọi lúc mọi nơi',
@@ -22,31 +22,31 @@ const rawScreenshots = [
     descEn: 'Open & view Word, Excel, PowerPoint & PDF effortlessly anytime, anywhere',
   },
   {
-    file: resolve(rootDir, 'dist/store-assets/google-play/screenshot_2_scanner.png'),
+    file: resolve(outDir, 'ios_clean_2_scanner.png'),
     badgeVi: 'MÁY QUÉT CAMERA',
     titleVi: 'Quét tài liệu & Hóa đơn',
-    descVi: 'Tự động nhận diện khung viền, làm nét thông minh và xuất PDF nhiều trang',
+    descVi: 'Chụp ảnh tài liệu, xử lý sắc nét và đóng gói thành file PDF đa trang',
     badgeEn: 'CAMERA SCANNER',
     titleEn: 'Smart Document Scanner',
-    descEn: 'Auto edge detection, contrast enhancement & multi-page PDF export',
+    descEn: 'Capture documents, auto-enhance and export multi-page PDF files',
   },
   {
-    file: resolve(rootDir, 'dist/store-assets/google-play/screenshot_3_drop.png'),
-    badgeVi: 'SOFTTY DROP',
-    titleVi: 'Bắn file sang Máy tính',
-    descVi: 'Truyền dữ liệu tức thì giữa điện thoại và máy tính qua mạng Wi-Fi cục bộ',
-    badgeEn: 'SOFTTY DROP',
+    file: resolve(outDir, 'ios_clean_3_drop.png'),
+    badgeVi: 'CHUYỂN FILE KHÔNG DÂY',
+    titleVi: 'Chuyển file sang Máy tính',
+    descVi: 'Kết nối 1-chạm không dây tốc độ cao giữa iPhone và máy tính Mac / PC',
+    badgeEn: 'FILE TRANSFER',
     titleEn: 'Instant PC File Transfer',
-    descEn: 'Lightning-fast wireless transfer to your Mac & PC over local Wi-Fi',
+    descEn: '1-tap high-speed wireless transfer between iPhone and Mac / PC',
   },
   {
-    file: resolve(rootDir, 'dist/store-assets/google-play/screenshot_4_scanned_pages.png'),
-    badgeVi: 'QUẢN LÝ TẬP TIN',
-    titleVi: 'Sắp xếp & Xuất PDF',
-    descVi: 'Xem trước, xoay lật, thêm bớt trang và chia sẻ tài liệu cực nhanh',
-    badgeEn: 'FILE MANAGEMENT',
-    titleEn: 'Organize & Share PDF',
-    descEn: 'Reorder, rotate, batch scan and share your documents in seconds',
+    file: resolve(outDir, 'ios_clean_4_profile.png'),
+    badgeVi: 'TÙY BIẾN & ĐỒNG BỘ',
+    titleVi: 'Tài khoản & Cài đặt',
+    descVi: 'Tùy chỉnh giao diện Sáng / Tối, hỗ trợ song ngữ và ngoại tuyến 100%',
+    badgeEn: 'SETTINGS & PRIVACY',
+    titleEn: 'Accounts & Customization',
+    descEn: 'Dark & Light theme, bilingual support and 100% offline privacy',
   },
 ];
 
@@ -175,7 +175,27 @@ async function generateScreenshots() {
     const targetPath = join(outDir, `iphone_6.7_screenshot_${i + 1}.png`);
     await page.screenshot({ path: targetPath, type: 'png' });
     await page.close();
-    console.log(`  ✓ Đã tạo: ${targetPath}`);
+    console.log(`  ✓ Đã tạo iPhone: ${targetPath}`);
+
+    // Generate iPad 13" screenshot (2048 x 2732)
+    const ipadHtmlContent = htmlContent
+      .replace('width: 1290px;', 'width: 2048px;')
+      .replace('height: 2796px;', 'height: 2732px;')
+      .replace('width: 1060px;', 'width: 1500px;')
+      .replace('height: 2000px;', 'height: 1950px;')
+      .replace('font-size: 78px;', 'font-size: 100px;')
+      .replace('font-size: 34px;', 'font-size: 44px;')
+      .replace('font-size: 26px;', 'font-size: 34px;');
+
+    const ipadPage = await browser.newPage({
+      viewport: { width: 2048, height: 2732 },
+      deviceScaleFactor: 1,
+    });
+    await ipadPage.setContent(ipadHtmlContent);
+    const ipadTargetPath = join(outDir, `ipad_13_screenshot_${i + 1}.png`);
+    await ipadPage.screenshot({ path: ipadTargetPath, type: 'png' });
+    await ipadPage.close();
+    console.log(`  ✓ Đã tạo iPad: ${ipadTargetPath}`);
   }
 
   await browser.close();

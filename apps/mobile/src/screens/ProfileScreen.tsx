@@ -9,6 +9,7 @@ import {
   Linking,
   ScrollView,
   Modal,
+  useWindowDimensions,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { SofttyAuthService } from '../services/auth'
@@ -16,6 +17,10 @@ import { useApp, ThemeMode } from '../context/AppContext'
 import { Language } from '../i18n'
 
 export function ProfileScreen() {
+  const { width } = useWindowDimensions()
+  const isSmall = width < 375
+  const isTablet = width >= 768
+
   const { theme, themeMode, setThemeMode, language, setLanguage, t, refreshDocuments } = useApp()
   const [user, setUser] = useState(SofttyAuthService.getCurrentUser())
   const [legalModal, setLegalModal] = useState<'terms' | 'privacy' | null>(null)
@@ -76,7 +81,14 @@ export function ProfileScreen() {
         <Text style={[styles.title, { color: theme.textPrimary }]}>{t.profile.title}</Text>
       </View>
 
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={[
+          styles.scrollContent,
+          isTablet && { maxWidth: 680, alignSelf: 'center', width: '100%' },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Softty Account Card */}
         <View style={[styles.sectionCard, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
           <Text style={[styles.sectionCardTitle, { color: theme.cyan }]}>
@@ -92,12 +104,12 @@ export function ProfileScreen() {
               </View>
               <View style={styles.userDetails}>
                 <View style={styles.userNameRow}>
-                  <Text style={[styles.userName, { color: theme.textPrimary }]}>{user.name}</Text>
+                  <Text style={[styles.userName, { color: theme.textPrimary }]} numberOfLines={1}>{user.name}</Text>
                   <View style={[styles.tierBadge, { backgroundColor: `${theme.emerald}20` }]}>
                     <Text style={[styles.tierBadgeText, { color: theme.emerald }]}>{t.profile.tierBadge}</Text>
                   </View>
                 </View>
-                <Text style={[styles.userEmail, { color: theme.textMuted }]}>{user.email}</Text>
+                <Text style={[styles.userEmail, { color: theme.textMuted }]} numberOfLines={1} ellipsizeMode="tail">{user.email}</Text>
               </View>
 
               <TouchableOpacity
@@ -146,6 +158,7 @@ export function ProfileScreen() {
                     {
                       backgroundColor: active ? theme.primary : theme.bgElevated,
                       borderColor: active ? theme.primary : theme.border,
+                      paddingVertical: isSmall ? 8 : 10,
                     },
                   ]}
                 >
@@ -155,7 +168,7 @@ export function ProfileScreen() {
                     color={active ? '#ffffff' : theme.textPrimary}
                     style={{ marginRight: 6 }}
                   />
-                  <Text style={[styles.pillText, { color: active ? '#ffffff' : theme.textPrimary }]}>
+                  <Text style={[styles.pillText, { color: active ? '#ffffff' : theme.textPrimary, fontSize: isSmall ? 11 : 12 }]} numberOfLines={1}>
                     {item.label}
                   </Text>
                 </TouchableOpacity>
@@ -187,13 +200,14 @@ export function ProfileScreen() {
                     {
                       backgroundColor: active ? theme.primary : theme.bgElevated,
                       borderColor: active ? theme.primary : theme.border,
+                      paddingVertical: isSmall ? 8 : 10,
                     },
                   ]}
                 >
                   <Text style={[styles.pillCode, { color: active ? '#ffffff' : theme.primary }]}>
                     {item.code}
                   </Text>
-                  <Text style={[styles.pillText, { color: active ? '#ffffff' : theme.textPrimary }]}>
+                  <Text style={[styles.pillText, { color: active ? '#ffffff' : theme.textPrimary, fontSize: isSmall ? 11 : 12 }]} numberOfLines={1}>
                     {item.label}
                   </Text>
                 </TouchableOpacity>
@@ -434,6 +448,7 @@ const styles = StyleSheet.create({
   },
   userDetails: {
     flex: 1,
+    minWidth: 0,
   },
   userNameRow: {
     flexDirection: 'row',
